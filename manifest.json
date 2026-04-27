@@ -1,0 +1,38 @@
+{
+  "name": "SI-Cog CDA",
+  "short_name": "SI-Cog CDA",
+  "description": "SI-Cog CDA (Clinical Decision Architecture) — 감각통합·인지 임상 의사결정 통합 시스템",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#2E7D32",
+  "orientation": "portrait",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "education"],
+  "shortcuts": [
+    { "name": "CDA-OBS1",  "short_name": "OBS1",  "url": "./Phase A - cda-obs1/index.html" },
+    { "name": "CDA-OBS2",  "short_name": "OBS2",  "url": "./Phase A - cda-obs2/index.html" },
+    { "name": "CDA-FLAG1", "short_name": "FLAG1", "url": "./Phase B - cda-flag1/index.html" },
+    { "name": "CDA-FLAG2", "short_name": "FLAG2", "url": "./Phase B - cda-flag2/index.html" },
+    { "name": "CDA-STD1",  "short_name": "STD1",  "url": "./Phase C - cda-std1/index.html" },
+    { "name": "CDA-STD2",  "short_name": "STD2",  "url": "./Phase C - cda-std2/index.html" },
+    { "name": "CDA-RPT",   "short_name": "RPT",   "url": "./Phase D - cda-rpt/index.html" },
+    { "name": "CDA-ACE",   "short_name": "ACE",   "url": "./Phase E - cda-ace/index.html" },
+    { "name": "CDA-MSC",   "short_name": "MSC",   "url": "./Phase F - cda-msc/index.html" }
+  ]
+}

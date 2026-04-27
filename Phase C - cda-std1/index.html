@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CDA-STD1 · K-CSP2 분할점수 경계값표</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#7DB0C7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CDA-STD1">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+    body {
+      margin: 24px;
+      background: #f6f8fa;
+      color: #172033;
+      font-family: "Malgun Gothic", "맑은 고딕", Arial, sans-serif;
+      font-size: 14px;
+    }
+    header {
+      margin-bottom: 22px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1f3b68;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f3b68;
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .nav a {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid #c8d1dc;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #1f3b68;
+      text-decoration: none;
+    }
+    .nav a.active {
+      background: #1f3b68;
+      border-color: #1f3b68;
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .nav a:focus-visible {
+      outline: 3px solid #7aa7e8;
+      outline-offset: 2px;
+    }
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .form-actions button {
+      min-width: 72px;
+      padding: 7px 12px;
+      border: 1px solid #1f3b68;
+      border-radius: 6px;
+      background: #1f3b68;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .form-actions button.secondary {
+      background: #ffffff;
+      color: #1f3b68;
+    }
+    .form-actions button[aria-expanded="true"] {
+      background: #d6e4f0;
+      color: #1f3b68;
+    }
+    .save-status {
+      min-height: 20px;
+      color: #2f5496;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .entry-cell[contenteditable="true"] {
+      cursor: text;
+    }
+    .entry-cell[contenteditable="true"]:focus {
+      outline: 0;
+      box-shadow: inset 0 0 0 2px #1f3b68;
+      background-color: #fff6a3 !important;
+    }
+    .result-cell {
+      color: #172033;
+    }
+    .sheet {
+      display: none;
+      margin: 0 0 36px;
+    }
+    .sheet.active {
+      display: block;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #d8dee8;
+      background: #ffffff;
+      padding: 12px;
+    }
+    table.sheet-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    #sheet-1 .table-wrap {
+      overflow: hidden;
+      padding: 14px;
+    }
+    #sheet-1 table.sheet-table {
+      min-width: 980px;
+    }
+    #sheet-1 .table-scale-frame {
+      width: 100%;
+      overflow: visible;
+    }
+    #sheet-1 .table-scale-inner {
+      width: max-content;
+      transform-origin: top left;
+    }
+    #sheet-1.references-collapsed col.reference-area,
+    #sheet-1.references-collapsed .reference-area {
+      display: none;
+    }
+    #sheet-1 .reference-cell {
+      color: #777777 !important;
+      font-size: 7pt !important;
+      line-height: 1.15;
+      padding: 2px 3px !important;
+      text-align: center !important;
+      vertical-align: middle !important;
+    }
+    #sheet-1.references-expanded .reference-cell,
+    #sheet-1.references-expanded .reference-label {
+      display: table-cell;
+    }
+    #sheet-1 .reference-label {
+      color: #666666 !important;
+      font-size: 7pt !important;
+      font-weight: 700;
+      line-height: 1.15;
+      padding: 2px 3px !important;
+      text-align: left !important;
+      vertical-align: middle !important;
+    }
+    .sheet-table td {
+      box-sizing: border-box;
+      min-height: 22px;
+      padding: 4px 6px;
+      border: 1px solid #d9d9d9;
+      vertical-align: bottom;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+      body {
+        margin: 12px;
+        background: #ffffff;
+      }
+      header,
+      .nav,
+      h2 {
+        display: none;
+      }
+      .form-actions {
+        display: none;
+      }
+      .sheet:not(#sheet-1) {
+        display: none !important;
+      }
+      #sheet-1 {
+        display: block !important;
+      }
+      #sheet-1 col.reference-area,
+      #sheet-1 .reference-area {
+        display: none !important;
+      }
+      #sheet-1 .table-scale-inner {
+        transform: none !important;
+      }
+      #sheet-1 .table-scale-frame {
+        height: auto !important;
+      }
+      #sheet-1 table.sheet-table {
+        min-width: 0 !important;
+        width: 100% !important;
+      }
+      .table-wrap {
+        border: 0;
+        padding: 0;
+        overflow: visible;
+      }
+      .sheet {
+        display: block;
+        page-break-after: always;
+      }
+    }
+  /* child-bar */
+  .child-bar{background:#7DB0C7;color:#fff;padding:6px 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}
+  .child-bar select{padding:4px 8px;border:none;border-radius:4px;font-size:13px;min-width:130px;color:#333}
+  .cb-btn{padding:4px 10px;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700}
+  .cb-add{background:#43a047;color:#fff}.cb-del{background:#e53935;color:#fff}
+  .cb-st{font-size:11px;opacity:.75;margin-left:6px}
+  @media print{.child-bar{display:none!important}}
+  </style>
+</head>
+<body>
+<div id="child-bar" class="child-bar no-print">
+  <span>👶 아동:</span>
+  <select id="child-select" onchange="onStd1ChildChange()"><option value="">-- 아동 선택 --</option></select>
+  <button class="cb-btn cb-add" onclick="addStd1Child()">+ 새 아동</button>
+  <button class="cb-btn cb-del" onclick="deleteStd1Child()">삭제</button>
+  <span class="cb-st" id="cb-status"></span>
+</div>
+  <header>
+    <h1>K-CSP2_분할점수_경계값표</h1>
+    <nav class="nav">
+      <a href="#sheet-1" class="active">원점수 자동판정</a>
+<a href="#sheet-2">분할점수 경계값표</a>
+<a href="#sheet-3">5단계 분류 기준</a>
+<a href="#sheet-4">영역별 백분위</a>
+<a href="#sheet-5">산출근거</a>
+    </nav>
+    <div class="form-actions" aria-label="입력값 관리">
+      <button type="button" id="save-inputs">저장</button>
+      <button type="button" id="reset-inputs" class="secondary" onclick="window.kcsp2ResetAll && window.kcsp2ResetAll()">초기화</button>
+      <button type="button" id="toggle-references" class="secondary" aria-expanded="false">기준값 보기</button>
+      <button type="button" id="print-main" class="secondary">인쇄</button>
+      <button type="button" id="copy-main" class="secondary">메인표 복사</button>
+      <button type="button" id="export-json" class="secondary">JSON 내보내기</button>
+      <span id="save-status" class="save-status" role="status" aria-live="polite"></span>
+    </div>
+  </header>
+  
+<section class="sheet active references-collapsed" id="sheet-1">
+  <h2>원점수 자동판정</h2>
+  <div class="table-wrap">
+    <table class="sheet-table">
+      <colgroup>
+<col style="width:190px">
+<col style="width:110px">
+<col style="width:170px">
+<col style="width:125px">
+<col style="width:125px">
+<col style="width:260px">
+<col style="width:18px">
+<col style="width:18px">
+<col style="width:58px">
+<col style="width:36px">
+<col style="width:36px">
+<col style="width:36px">
+<col style="width:36px">
+<col style="width:44px">
+<col style="width:44px">
+<col style="width:44px">
+<col style="width:44px">
+<col style="width:44px">
+      </colgroup>
+      <tbody>
+<tr><td colspan="6" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:16pt;color:#2f5496;font-weight:700;text-align:center;vertical-align:middle;height:31px">K-CSP2 원점수 자동 판정</td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td><td style="height:31px"></td></tr>
+<tr><td colspan="6" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#666666;text-align:center;vertical-align:middle">노란 칸에 원점수를 입력하면 5단계 분류와 백분위 범위가 자동으로 표시됩니다.</td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td></tr>
+<tr><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;vertical-align:bottom;height:22px">아동명</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;vertical-align:bottom;height:22px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;vertical-align:bottom;height:22px">생년월일</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;vertical-align:bottom;height:22px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;vertical-align:bottom;height:22px">검사일</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;vertical-align:bottom;height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td><td style="height:22px"></td></tr>
+<tr><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:42px">영역</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:42px">원점수<br>(입력)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:42px">5단계 분류</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:42px">백분위 범위</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:42px">SD 범위</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:42px">해석</td><td style="height:42px"></td><td style="height:42px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">영역</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">b1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">b2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">b3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">b4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">pct1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">pct2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">pct3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">pct4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:42px">pct5</td></tr>
+<tr><td colspan="6" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#2f5496;font-weight:700;background-color:#d6e4f0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">사분 (Quadrants)</td><td ></td><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">추구</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">18</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">41</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">53</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">2~4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">5~86</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">87~95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">96~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">추구 (Seeking)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">회피</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">22</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">42</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">53</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">2~11</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">12~84</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">85~96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">97~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">회피 (Avoiding)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">민감</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">14</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">33</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">47</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">2~6</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">7~85</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">86~95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">96~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">민감 (Sensitivity)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">등록</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">16</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">35</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">46</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1~3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">4~7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">8~87</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">88~96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">97~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">등록 (Registration)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">청각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">18</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">25</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">&lt;1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1~11</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">12~84</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">85~96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">97~99</td></tr>
+<tr><td colspan="6" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#2f5496;font-weight:700;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">감각 섹션 (Sensory)</td><td ></td><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">시각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">14</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">17</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">2~4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">5~87</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">88~96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">97~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">청각 (Auditory)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">촉각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">20</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">26</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1~2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">3~8</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">9~89</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">90~96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">97~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">시각 (Visual)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">움직임</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">16</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">21</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">2~5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">6~86</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">87~95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">96~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">촉각 (Touch)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">몸위치</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">16</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">20</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">2~6</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">7~88</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">89~95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">96~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">움직임 (Movement)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">구강감각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">0</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">8</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">23</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">31</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">&lt;1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1~5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">6~85</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">86~95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">96~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">몸위치 (Body Position)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">행위</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">19</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">24</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">2~4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">5~88</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">89~95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">96~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">구강감각 (Oral Sensory)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">사회정서</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">14</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">30</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom;height:28px">36</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">&lt;1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">1~4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">5~86</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">87~95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom;height:28px">96~99</td></tr>
+<tr><td colspan="6" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#2f5496;font-weight:700;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">행동 섹션 (Behavioral)</td><td ></td><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">주의집중</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">8</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">17</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;vertical-align:bottom">21</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">1~3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">4~8</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">9~91</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">92~96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#999999;vertical-align:bottom">97~99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">행위 (Conduct)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">사회정서 (Social Emotional)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px">주의집중 (Attention)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;background-color:#fff9c4;border-left:2px solid #2f5496;border-right:2px solid #2f5496;border-top:2px solid #2f5496;border-bottom:2px solid #2f5496;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;height:28px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle;height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td><td style="height:28px"></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-2">
+  <h2>분할점수 경계값표</h2>
+  <div class="table-wrap">
+    <table class="sheet-table">
+      <colgroup>
+<col style="width:91px">
+<col style="width:56px">
+<col style="width:98px">
+<col style="width:98px">
+<col style="width:98px">
+<col style="width:98px">
+<col style="width:98px">
+<col style="width:63px">
+      </colgroup>
+      <tbody>
+<tr><td colspan="8" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;text-align:center;vertical-align:middle;height:27px">K-CSP2 (한국판 아동 감각프로파일2) 분할 점수 경계값표</td></tr>
+<tr><td colspan="8" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#666666;text-align:center;vertical-align:middle">대상연령: 3세0개월 ~ 14세11개월 | 데이터: 28개 결과지 (364건 100% 검증)</td></tr>
+<tr><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">영역</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">SD</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">또래보다<br>매우 적음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">또래보다<br>적음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">또래와<br>유사</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">또래보다<br>많음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">또래보다<br>매우 많음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:40px">항목수</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px"></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px">≤-2SD<br>(~2%ile)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px">-2SD~-1SD<br>(3~16%ile)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px">-1SD~+1SD<br>(17~84%ile)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px">+1SD~+2SD<br>(85~97%ile)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px">≥+2SD<br>(98~99%ile)</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:8pt;color:#ffffff;background-color:#4472c4;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle;white-space:pre-wrap;height:46px"></td></tr>
+<tr><td colspan="8" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#2f5496;font-weight:700;background-color:#d6e4f0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">사분 (Quadrants)</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">추구</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">11.26</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">8~18</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">19~41</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">42~53</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥54</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">26</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">회피</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">10.22</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5~22</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">23~42</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">43~53</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥54</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">26</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">민감</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">9.26</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5~14</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">15~33</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">34~47</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥48</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">26</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">등록</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">9.64</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5~16</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">17~35</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">36~46</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥47</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">26</td></tr>
+<tr><td colspan="8" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#2f5496;font-weight:700;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">감각 섹션 (Sensory)</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">청각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5.32</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">3~7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">8~18</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">19~25</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥26</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">8</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">시각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">3.74</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">3~5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">6~14</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">15~17</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥18</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">7</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">촉각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5.5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5~20</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">21~26</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥27</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">11</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">움직임</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">4.57</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">3~4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5~16</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">17~21</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥22</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">7</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">몸위치</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">4.7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">3~7</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">8~16</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">17~20</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥21</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">7</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">구강감각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">7.72</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤0</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1~8</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">9~23</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">24~31</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥32</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">9</td></tr>
+<tr><td colspan="8" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;color:#2f5496;font-weight:700;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">행동 섹션 (Behavioral)</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">행위</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5.32</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">2~4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5~19</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">20~24</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥25</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">10</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">사회정서</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">8.25</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">6~14</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">15~30</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">31~36</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥37</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">10</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">주의집중</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">4.44</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5~8</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">9~17</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">18~21</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥22</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">8</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-3">
+  <h2>5단계 분류 기준</h2>
+  <div class="table-wrap">
+    <table class="sheet-table">
+      <colgroup>
+<col style="width:161px">
+<col style="width:112px">
+<col style="width:133px">
+<col style="width:220px">
+      </colgroup>
+      <tbody>
+<tr><td colspan="4" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;text-align:center;vertical-align:middle;height:27px">감각프로파일2 5단계 분류 기준</td></tr>
+<tr><td ></td><td ></td><td ></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">분류</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">SD 범위</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">백분위 범위</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">의미</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">또래보다 매우 적음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≤ -2SD</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">~2%ile 이하</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">규준집단의 98%보다 관련 반응을 덜 나타냄</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">또래보다 적음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-2SD ~ -1SD</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">3~16%ile</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">규준집단의 84%보다 관련 반응을 덜 나타냄</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">또래와 유사</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-1SD ~ +1SD</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">17~84%ile</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">규준 대다수와 유사한 감각처리 패턴</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">또래보다 많음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">+1SD ~ +2SD</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">85~97%ile</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">규준집단의 84%보다 관련 반응을 더 나타냄</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">또래보다 매우 많음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">≥ +2SD</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">98~99%ile 이상</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">규준집단의 98%보다 관련 반응을 더 나타냄</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-4">
+  <h2>영역별 백분위</h2>
+  <div class="table-wrap">
+    <table class="sheet-table">
+      <colgroup>
+<col style="width:91px">
+<col style="width:77px">
+<col style="width:77px">
+<col style="width:77px">
+<col style="width:77px">
+<col style="width:77px">
+      </colgroup>
+      <tbody>
+<tr><td colspan="6" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;text-align:center;vertical-align:middle;height:27px">영역별 관찰된 백분위 범위 (28개 결과지)</td></tr>
+<tr><td ></td><td ></td><td ></td><td ></td><td ></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">영역</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">매우적음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">적음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">유사</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">많음</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:11pt;color:#ffffff;font-weight:700;background-color:#2f5496;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">매우많음</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">추구</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5-86</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">87-95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">96-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">회피</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">12-84</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">85-96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">97-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">민감</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">7-85</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">86-95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">96-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">등록</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1-3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">8-87</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">88-96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">97-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">청각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">&lt;1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">12-84</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">85-96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">97-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">시각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5-87</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">88-96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">97-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">촉각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1-2</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">3-8</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">9-89</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">90-96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">97-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">움직임</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">2-5</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">6-86</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">87-95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">96-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">몸위치</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">7-88</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">89-95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">96-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">구강감각</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">&lt;1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">6-85</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">86-95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">96-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">행위</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">2-4</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5-88</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">89-95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">96-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">사회정서</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">&lt;1</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">5-86</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">87-95</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">96-99</td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:left;vertical-align:middle">주의집중</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">1-3</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">-</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#e2efda;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">9-91</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fff3e0;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">92-96</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;background-color:#fce4ec;border-left:1px solid #666666;border-right:1px solid #666666;border-top:1px solid #666666;border-bottom:1px solid #666666;text-align:center;vertical-align:middle">97-99</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-5">
+  <h2>산출근거</h2>
+  <div class="table-wrap">
+    <table class="sheet-table">
+      <colgroup>
+<col style="width:105px">
+<col style="width:220px">
+<col style="width:78px">
+      </colgroup>
+      <tbody>
+<tr><td colspan="3" style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:14pt;color:#2f5496;font-weight:700;vertical-align:bottom;height:27px">분할 점수 경계값 산출근거</td></tr>
+<tr><td ></td><td ></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;vertical-align:bottom">산출 방법</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">매뉴얼의 Cronbach Alpha &amp; SEM → SD 역산 (SEM = SD × √(1-α))</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">28개 K-CSP2 결과지(3세0개월~11세2개월)의 원점수-분류 관찰값으로 경계 보정</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">관찰 데이터 364건 100% 일치하도록 경계값 미세조정</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom"></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;vertical-align:bottom">분류 기준</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">Mean ± 1SD = 또래와 유사 ↔ 또래보다 많음/적음 경계</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">Mean ± 2SD = 또래보다 많음/적음 ↔ 또래보다 매우 많음/매우 적음 경계</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom"></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;vertical-align:bottom">규준 표본</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">장애 진단 없는 한국 아동 700명 (남 350, 여 350)</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">서울경기 46.6%, 충청/전라/제주 33.1%, 강원/경상 20.3%</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">표준화 연구 시행: 2019~2020년</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom"></td><td ></td></tr>
+<tr><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;font-weight:700;vertical-align:bottom">주의사항</td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">이 경계값은 관찰 데이터 기반 역추출 결과입니다.</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">관찰되지 않은 구간(특히 적음/매우적음 하한값)은 SD 기반 추정치이므로</td><td ></td></tr>
+<tr><td ></td><td style="font-family:&quot;맑은 고딕&quot;,&quot;Malgun Gothic&quot;,Arial,sans-serif;font-size:10pt;vertical-align:bottom">실제 매뉴얼 규준표와 ±1~2점 차이가 있을 수 있습니다.</td><td ></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+  <script>
+    window.kcsp2ResetAll = function () {
+      try {
+        localStorage.removeItem("kcsp2-boundary-inputs-v1");
+      } catch (error) {
+        // Some local file browser contexts restrict localStorage.
+      }
+
+      const sheet = document.getElementById("sheet-1");
+      if (!sheet) return;
+
+      const rows = Array.from(sheet.querySelectorAll("tr"));
+      const infoRow = rows[3];
+      if (infoRow) {
+        [1, 3, 5].forEach((index) => {
+          if (infoRow.cells[index]) infoRow.cells[index].textContent = "";
+        });
+      }
+
+      rows.forEach((row) => {
+        const cells = row.cells;
+        if (cells.length < 6) return;
+
+        const label = (cells[0].textContent || "").trim();
+        const inputStyle = cells[1].getAttribute("style") || "";
+        const isScoreRow = label.includes("(") && inputStyle.includes("#fff9c4");
+        if (!isScoreRow) return;
+
+        [1, 2, 3, 4, 5].forEach((index) => {
+          cells[index].textContent = "";
+        });
+      });
+
+      const status = document.getElementById("save-status");
+      if (status) status.textContent = "초기화됨";
+    };
+  </script>
+  <script>
+    (function () {
+      const storageKey = "kcsp2-boundary-inputs-v1";
+      const tabs = Array.from(document.querySelectorAll(".nav a[href^='#sheet-']"));
+      const sheets = Array.from(document.querySelectorAll(".sheet"));
+      const sheet1 = document.getElementById("sheet-1");
+      const rows = Array.from(sheet1.querySelectorAll("tr"));
+      const tableWrap = sheet1.querySelector(".table-wrap");
+      const scoreTable = sheet1.querySelector("table.sheet-table");
+      const saveButton = document.getElementById("save-inputs");
+      const resetButton = document.getElementById("reset-inputs");
+      const toggleReferencesButton = document.getElementById("toggle-references");
+      const printButton = document.getElementById("print-main");
+      const copyButton = document.getElementById("copy-main");
+      const exportJsonButton = document.getElementById("export-json");
+      const status = document.getElementById("save-status");
+      let statusTimer = 0;
+
+      function showSheet(id, updateHash) {
+        const target = document.getElementById(id) ? id : (sheets[0] && sheets[0].id);
+        if (!target) return;
+
+        sheets.forEach((sheet) => {
+          const isActive = sheet.id === target;
+          sheet.classList.toggle("active", isActive);
+          sheet.hidden = !isActive;
+        });
+
+        tabs.forEach((tab) => {
+          const isActive = tab.getAttribute("href") === "#" + target;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-selected", String(isActive));
+        });
+
+        if (updateHash) {
+          history.replaceState(null, "", "#" + target);
+        }
+        if (target === "sheet-1") {
+          window.requestAnimationFrame(fitScoreTable);
+        }
+      }
+
+      function setStatus(text) {
+        window.clearTimeout(statusTimer);
+        status.textContent = text;
+        if (text) {
+          statusTimer = window.setTimeout(() => {
+            status.textContent = "";
+          }, 1800);
+        }
+      }
+
+      function setupResponsiveFrame() {
+        if (!tableWrap || !scoreTable || scoreTable.closest(".table-scale-inner")) return;
+
+        const frame = document.createElement("div");
+        const inner = document.createElement("div");
+        frame.className = "table-scale-frame";
+        inner.className = "table-scale-inner";
+        tableWrap.insertBefore(frame, scoreTable);
+        frame.appendChild(inner);
+        inner.appendChild(scoreTable);
+      }
+
+      function fitScoreTable() {
+        const frame = sheet1.querySelector(".table-scale-frame");
+        const inner = sheet1.querySelector(".table-scale-inner");
+        if (!frame || !inner || !scoreTable) return;
+
+        inner.style.transform = "none";
+        frame.style.height = "auto";
+
+        const availableWidth = Math.max(320, tableWrap.clientWidth);
+        const naturalWidth = Math.max(1, scoreTable.offsetWidth);
+        const scale = Math.max(0.42, Math.min(1.12, availableWidth / naturalWidth));
+
+        inner.style.transform = `scale(${scale})`;
+        frame.style.height = `${inner.scrollHeight * scale}px`;
+      }
+
+      function cleanText(value) {
+        return value.replace(/\s+/g, " ").trim();
+      }
+
+      function scoreLabel(value) {
+        return cleanText(value).replace(/\s*\(.+$/, "");
+      }
+
+      function parseScore(value) {
+        const match = cleanText(value).match(/^-?\d+(?:\.\d+)?/);
+        return match ? Number(match[0]) : NaN;
+      }
+
+      function normalizeScore(value) {
+        const number = parseScore(value);
+        if (!Number.isFinite(number)) return "";
+        return String(number);
+      }
+
+      function cellText(cell) {
+        return cleanText(cell ? cell.textContent : "");
+      }
+
+      function findReferenceStart(cells) {
+        for (const start of [3, 8]) {
+          if (!cells[start]) continue;
+          const limits = [1, 2, 3, 4].map((offset) => parseScore(cellText(cells[start + offset])));
+          if (cellText(cells[start]) && limits.every(Number.isFinite)) {
+            return start;
+          }
+        }
+        return -1;
+      }
+
+      function markReferenceCells(cells, start) {
+        if (start === -1) return;
+        cells[start].classList.add("reference-label");
+        for (let index = start + 1; index <= Math.min(start + 9, cells.length - 1); index += 1) {
+          cells[index].classList.add("reference-cell");
+        }
+      }
+
+      function markReferenceArea(row) {
+        const cells = Array.from(row.cells);
+        if (!cells.length) return;
+
+        const rightStart = cells[0].colSpan === 6 ? 1 : 6;
+        for (let index = rightStart; index < cells.length; index += 1) {
+          cells[index].classList.add("reference-area");
+        }
+      }
+
+      Array.from(scoreTable.querySelectorAll("col")).forEach((col, index) => {
+        if (index >= 6) {
+          col.classList.add("reference-area");
+        }
+      });
+      rows.forEach(markReferenceArea);
+
+      const criteria = new Map();
+      rows.forEach((row) => {
+        const cells = Array.from(row.cells);
+        const start = findReferenceStart(cells);
+        if (start === -1) return;
+
+        markReferenceCells(cells, start);
+        criteria.set(cellText(cells[start]), {
+          limits: [1, 2, 3, 4].map((offset) => parseScore(cellText(cells[start + offset]))),
+          percentiles: [5, 6, 7, 8, 9].map((offset) => cellText(cells[start + offset])),
+        });
+      });
+
+      const editableCells = [];
+      const scoreRows = [];
+
+      function focusEditableCell(cell) {
+        if (!cell) return;
+        cell.focus();
+        const range = document.createRange();
+        range.selectNodeContents(cell);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+
+      function commitScoreCell(cell) {
+        cell.textContent = normalizeScore(cell.textContent);
+        evaluateRow(cell.parentElement);
+        window.requestAnimationFrame(fitScoreTable);
+      }
+
+      function moveScoreCell(cell, direction) {
+        const index = scoreRows.findIndex((row) => row.cells[1] === cell);
+        if (index === -1) return;
+
+        commitScoreCell(cell);
+        const targetIndex = Math.max(0, Math.min(scoreRows.length - 1, index + direction));
+        focusEditableCell(scoreRows[targetIndex].cells[1]);
+      }
+
+      function registerInputCell(cell, key, type, label) {
+        cell.contentEditable = "true";
+        cell.spellcheck = false;
+        cell.classList.add("entry-cell");
+        cell.dataset.inputKey = key;
+        cell.dataset.inputType = type;
+        cell.setAttribute("role", "textbox");
+        cell.setAttribute("aria-label", label);
+        editableCells.push(cell);
+
+        cell.addEventListener("keydown", (event) => {
+          if (type === "score" && (event.key === "Enter" || event.key === "ArrowDown" || event.key === "ArrowUp")) {
+            event.preventDefault();
+            moveScoreCell(cell, event.key === "ArrowUp" || event.shiftKey ? -1 : 1);
+          } else if (event.key === "Enter") {
+            event.preventDefault();
+            cell.blur();
+          }
+        });
+
+        cell.addEventListener("beforeinput", (event) => {
+          if (type === "score" && event.data && !/[\d.-]/.test(event.data)) {
+            event.preventDefault();
+          }
+        });
+
+        cell.addEventListener("input", () => {
+          if (type === "score") {
+            evaluateRow(cell.parentElement);
+          }
+          window.requestAnimationFrame(fitScoreTable);
+          setStatus("수정됨");
+        });
+
+        cell.addEventListener("blur", () => {
+          if (type === "score") {
+            cell.textContent = normalizeScore(cell.textContent);
+            evaluateRow(cell.parentElement);
+          }
+          window.requestAnimationFrame(fitScoreTable);
+        });
+      }
+
+      const childInfoRow = rows[3];
+      if (childInfoRow) {
+        [
+          [1, "childName", "아동명"],
+          [3, "birthDate", "생년월일"],
+          [5, "testDate", "검사일"],
+        ].forEach(([index, key, label]) => {
+          if (childInfoRow.cells[index]) {
+            registerInputCell(childInfoRow.cells[index], key, "text", label);
+          }
+        });
+      }
+
+      rows.forEach((row) => {
+        const cells = row.cells;
+        if (cells.length < 6) return;
+
+        const label = scoreLabel(cells[0].textContent);
+        if (!criteria.has(label) || !cells[1]) return;
+
+        registerInputCell(cells[1], `score:${label}`, "score", `${label} 원점수`);
+        [2, 3, 4, 5].forEach((index) => cells[index].classList.add("result-cell"));
+        scoreRows.push(row);
+      });
+
+      function clearResults(row) {
+        [2, 3, 4, 5].forEach((index) => {
+          row.cells[index].textContent = "";
+        });
+      }
+
+      function evaluateRow(row) {
+        const label = scoreLabel(row.cells[0].textContent);
+        const rule = criteria.get(label);
+        const score = parseScore(row.cells[1].textContent);
+        if (!rule || !Number.isFinite(score)) {
+          clearResults(row);
+          return;
+        }
+
+        const bucket =
+          score <= rule.limits[0] ? 0 :
+          score <= rule.limits[1] ? 1 :
+          score <= rule.limits[2] ? 2 :
+          score <= rule.limits[3] ? 3 : 4;
+
+        row.cells[2].textContent = [
+          "또래보다 매우 적음",
+          "또래보다 적음",
+          "또래와 유사",
+          "또래보다 많음",
+          "또래보다 매우 많음",
+        ][bucket];
+        row.cells[3].textContent = rule.percentiles[bucket];
+        row.cells[4].textContent = [
+          "≤ -2SD",
+          "-2SD ~ -1SD",
+          "-1SD ~ +1SD",
+          "+1SD ~ +2SD",
+          "≥ +2SD",
+        ][bucket];
+        row.cells[5].textContent = [
+          "또래의 98%보다 반응 적음",
+          "또래의 84%보다 반응 적음",
+          "또래와 유사한 수준",
+          "또래의 84%보다 반응 많음",
+          "또래의 98%보다 반응 많음",
+        ][bucket];
+      }
+
+      function evaluateAll() {
+        scoreRows.forEach(evaluateRow);
+      }
+
+      function clearAllInputs() {
+        editableCells.forEach((cell) => {
+          cell.textContent = "";
+        });
+        scoreRows.forEach((row) => {
+          row.cells[1].textContent = "";
+          clearResults(row);
+        });
+        window.requestAnimationFrame(fitScoreTable);
+      }
+
+      function collectInputData() {
+        return editableCells.reduce((data, cell) => {
+          data[cell.dataset.inputKey] = cellText(cell);
+          return data;
+        }, {});
+      }
+
+      function applyInputData(data) {
+        clearAllInputs();
+        editableCells.forEach((cell) => {
+          if (Object.prototype.hasOwnProperty.call(data, cell.dataset.inputKey)) {
+            cell.textContent = data[cell.dataset.inputKey] || "";
+          }
+        });
+        evaluateAll();
+      }
+
+      function loadInputData() {
+        try {
+          const saved = localStorage.getItem(storageKey);
+          applyInputData(saved ? JSON.parse(saved) : {});
+        } catch (error) {
+          applyInputData({});
+        }
+      }
+
+      function saveInputData() {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(collectInputData()));
+          setStatus("저장됨");
+        } catch (error) {
+          setStatus("저장 실패");
+        }
+      }
+
+      function resetInputData() {
+        try {
+          localStorage.removeItem(storageKey);
+        } catch (error) {
+          // localStorage may be unavailable in some restricted browser contexts.
+        }
+        clearAllInputs();
+        setStatus("초기화됨");
+      }
+
+      function setReferencesExpanded(expanded) {
+        sheet1.classList.toggle("references-expanded", expanded);
+        sheet1.classList.toggle("references-collapsed", !expanded);
+        toggleReferencesButton.setAttribute("aria-expanded", String(expanded));
+        toggleReferencesButton.textContent = expanded ? "기준값 숨기기" : "기준값 보기";
+        window.requestAnimationFrame(fitScoreTable);
+      }
+
+      function mainCellsForRow(row) {
+        const cells = Array.from(row.cells);
+        if (!cells.length) return [];
+        if (cells[0].colSpan === 6) return [cells[0]];
+        return cells.slice(0, 6);
+      }
+
+      function buildMainTableClone() {
+        const table = document.createElement("table");
+        table.style.borderCollapse = "collapse";
+        table.style.fontFamily = "\"Malgun Gothic\", Arial, sans-serif";
+
+        const colgroup = document.createElement("colgroup");
+        Array.from(scoreTable.querySelectorAll("col")).slice(0, 6).forEach((col) => {
+          colgroup.appendChild(col.cloneNode(true));
+        });
+        table.appendChild(colgroup);
+
+        const tbody = document.createElement("tbody");
+        rows.forEach((row) => {
+          const clonedRow = document.createElement("tr");
+          mainCellsForRow(row).forEach((cell) => {
+            const clonedCell = cell.cloneNode(true);
+            clonedCell.removeAttribute("contenteditable");
+            clonedCell.removeAttribute("role");
+            clonedCell.removeAttribute("aria-label");
+            clonedRow.appendChild(clonedCell);
+          });
+          tbody.appendChild(clonedRow);
+        });
+        table.appendChild(tbody);
+        return table;
+      }
+
+      function mainTablePlainText() {
+        return rows
+          .map((row) => mainCellsForRow(row).map((cell) => cellText(cell)).join("\t"))
+          .join("\n");
+      }
+
+      async function copyMainTable() {
+        const table = buildMainTableClone();
+        const html = table.outerHTML;
+        const text = mainTablePlainText();
+
+        try {
+          if (navigator.clipboard && window.ClipboardItem) {
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                "text/html": new Blob([html], { type: "text/html" }),
+                "text/plain": new Blob([text], { type: "text/plain" }),
+              }),
+            ]);
+          } else {
+            const holder = document.createElement("div");
+            holder.style.position = "fixed";
+            holder.style.left = "-9999px";
+            holder.innerHTML = html;
+            document.body.appendChild(holder);
+            const range = document.createRange();
+            range.selectNode(holder);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand("copy");
+            selection.removeAllRanges();
+            holder.remove();
+          }
+          setStatus("메인표 복사됨");
+        } catch (error) {
+          setStatus("복사 실패");
+        }
+      }
+
+      function printMainTable() {
+        showSheet("sheet-1", false);
+        setReferencesExpanded(false);
+        window.requestAnimationFrame(() => window.print());
+      }
+
+      function exportJSONData() {
+        const inputs = collectInputData();
+        const sections = {};
+        const patient = {};
+        Object.entries(inputs).forEach(([k, v]) => {
+          if (k.startsWith("score:")) {
+            const raw = v === "" ? null : Number(v);
+            sections[k.slice(6)] = Number.isFinite(raw) ? raw : null;
+          } else {
+            patient[k] = v;
+          }
+        });
+        const data = {
+          version: "std1_csp2_v1",
+          exportedAt: new Date().toISOString(),
+          patient,
+          sections
+        };
+        const name = (patient.childName || "unnamed").replace(/[^\w가-힣]/g, "_").slice(0, 30);
+        const date = (patient.testDate || new Date().toISOString().slice(0, 10)).replace(/-/g, "");
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `std1_csp2_${name}_${date}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        setStatus("JSON 내보내기 완료");
+      }
+
+      tabs.forEach((tab) => {
+        tab.setAttribute("role", "tab");
+        tab.addEventListener("click", (event) => {
+          event.preventDefault();
+          showSheet(tab.getAttribute("href").slice(1), true);
+        });
+      });
+
+      saveButton.addEventListener("click", saveInputData);
+      resetButton.addEventListener("click", resetInputData);
+      toggleReferencesButton.addEventListener("click", () => {
+        setReferencesExpanded(!sheet1.classList.contains("references-expanded"));
+      });
+      printButton.addEventListener("click", printMainTable);
+      copyButton.addEventListener("click", copyMainTable);
+      exportJsonButton.addEventListener("click", exportJSONData);
+      window.addEventListener("resize", fitScoreTable);
+      window.addEventListener("orientationchange", fitScoreTable);
+      setupResponsiveFrame();
+      loadInputData();
+      document.querySelector(".nav")?.setAttribute("role", "tablist");
+      showSheet(location.hash ? location.hash.slice(1) : "sheet-1", false);
+      setReferencesExpanded(false);
+      window.requestAnimationFrame(fitScoreTable);
+    })();
+  </script>
+<script>
+// ── IndexedDB 공유 헬퍼 (STD1) ──────────────────────────────
+const STD1_STORE='std1';
+let std1ChildId=null;
+const Std1ChildDB=(()=>{
+  const DN='si-cog-cda',V=1;let _db=null;
+  function open(){
+    if(_db)return Promise.resolve(_db);
+    return new Promise((res,rej)=>{
+      const r=indexedDB.open(DN,V);
+      r.onupgradeneeded=e=>{
+        const db=e.target.result;
+        if(!db.objectStoreNames.contains('children'))
+          db.createObjectStore('children',{keyPath:'id',autoIncrement:true});
+        ['obs1','obs2','std1','std2','rpt','ace'].forEach(s=>{
+          if(!db.objectStoreNames.contains(s))
+            db.createObjectStore(s,{keyPath:'childId'});
+        });
+      };
+      r.onsuccess=e=>{_db=e.target.result;res(_db);};
+      r.onerror=e=>rej(e.target.error);
+    });
+  }
+  function tx(store,mode,fn){
+    return open().then(db=>new Promise((res,rej)=>{
+      const t=db.transaction(store,mode);
+      const req=fn(t.objectStore(store));
+      req.onsuccess=e=>res(e.target.result);
+      req.onerror=e=>rej(e.target.error);
+    }));
+  }
+  return{
+    listChildren:()=>tx('children','readonly',s=>s.getAll()),
+    addChild:name=>tx('children','readwrite',s=>s.add({name,createdAt:new Date().toISOString()})),
+    deleteChild:id=>tx('children','readwrite',s=>s.delete(id)),
+    saveData:(store,cid,data)=>tx(store,'readwrite',s=>s.put({childId:cid,data,savedAt:new Date().toISOString()})),
+    loadData:(store,cid)=>tx(store,'readonly',s=>s.get(cid)).then(r=>r?r.data:null),
+  };
+})();
+
+function setStd1CbStatus(msg){const el=document.getElementById('cb-status');if(el)el.textContent=msg;}
+
+function collectStd1Data(){
+  const sections={},patient={};
+  document.querySelectorAll('.entry-cell[data-input-key]').forEach(cell=>{
+    const k=cell.dataset.inputKey, v=cell.textContent.trim();
+    if(k.startsWith('score:')){
+      const num=v===''?null:Number(v);
+      sections[k.slice(6)]=Number.isFinite(num)?num:null;
+    } else {
+      patient[k]=v;
+    }
+  });
+  return{version:'std1_csp2_v1',exportedAt:new Date().toISOString(),patient,sections};
+}
+
+async function saveToStd1IDB(){
+  if(!std1ChildId)return;
+  await Std1ChildDB.saveData(STD1_STORE,std1ChildId,collectStd1Data());
+  setStd1CbStatus('저장됨 '+new Date().toLocaleTimeString());
+}
+
+async function refreshStd1ChildList(selectId){
+  const children=await Std1ChildDB.listChildren();
+  const sel=document.getElementById('child-select');
+  sel.innerHTML='<option value="">-- 아동 선택 --</option>';
+  children.forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.id;o.textContent=c.name;
+    if(c.id===selectId)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+async function onStd1ChildChange(){
+  const sel=document.getElementById('child-select');
+  const id=Number(sel.value)||null;
+  std1ChildId=id;
+  if(!id){setStd1CbStatus('');return;}
+  const data=await Std1ChildDB.loadData(STD1_STORE,id).catch(()=>null);
+  if(data&&data.sections){
+    // patient info
+    if(data.patient){
+      const fields=['childName','birthDate','testDate'];
+      const keys=['childName','birthDate','testDate'];
+      document.querySelectorAll('.entry-cell[data-input-key]').forEach(cell=>{
+        const k=cell.dataset.inputKey;
+        if(data.patient[k]!==undefined) cell.textContent=data.patient[k]||'';
+        else if(data.sections&&data.sections[k.replace('score:','')]!==undefined){
+          const v=data.sections[k.replace('score:','')];
+          cell.textContent=v===null?'':String(v);
+        }
+      });
+      // trigger evaluation
+      document.querySelectorAll('.entry-cell[data-input-type="score"]').forEach(cell=>{
+        cell.dispatchEvent(new Event('blur'));
+      });
+    }
+    setStd1CbStatus('선택됨');
+  }
+  setStd1CbStatus(id?'선택됨':'');
+}
+
+async function addStd1Child(){
+  const name=prompt('새 아동 이름을 입력하세요:');
+  if(!name||!name.trim())return;
+  const id=await Std1ChildDB.addChild(name.trim());
+  await refreshStd1ChildList(id);
+  std1ChildId=id;
+  document.getElementById('child-select').value=id;
+  setStd1CbStatus('새 아동 생성됨');
+}
+
+async function deleteStd1Child(){
+  if(!std1ChildId){alert('아동을 먼저 선택하세요.');return;}
+  const sel=document.getElementById('child-select');
+  const name=sel.options[sel.selectedIndex]?.text||'선택된 아동';
+  if(!confirm(`'${name}'의 모든 데이터를 삭제하시겠습니까?`))return;
+  await Std1ChildDB.deleteChild(std1ChildId);
+  std1ChildId=null;
+  await refreshStd1ChildList(null);
+  setStd1CbStatus('삭제됨');
+}
+
+// 저장 버튼에 IDB 저장 연동
+document.getElementById('save-inputs').addEventListener('click',()=>saveToStd1IDB().catch(()=>setStd1CbStatus('IDB 저장 실패')));
+
+// 초기 아동 목록 로드
+(async()=>{ await refreshStd1ChildList(null).catch(()=>{}); })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+
+<a href="../" id="pwa-back-btn" title="메인으로 돌아가기" style="
+  position:fixed;
+  bottom:calc(20px + env(safe-area-inset-bottom, 0px));
+  right:calc(20px + env(safe-area-inset-right, 0px));
+  z-index:2147483647;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 18px;
+  background:linear-gradient(135deg,#7DB0C7,#5a90ab);
+  color:#fff;
+  border-radius:50px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.25);
+  font-family:'Malgun Gothic','맑은 고딕',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  letter-spacing:.3px;
+  transition:all .2s ease">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 12H5M12 5l-7 7 7 7"/>
+  </svg>
+  <span>메인으로</span>
+</a>
+</body>
+</html>

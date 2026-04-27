@@ -1,0 +1,3148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACE - 중재 목표 & 활동 추천 엔진</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1565C0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ACE">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+
+:root{--primary:#1565C0;--primary-dark:#0D47A1;--secondary:#FFA726;--success:#4CAF50;--danger:#EF5350;--warning:#FBC02D;--bg:#f5f5f5;--card-bg:#fff;--text-primary:#212121;--text-secondary:#757575;--text-light:#bdbdbd;--border:#e0e0e0;--shadow:0 2px 4px rgba(0,0,0,.1);--shadow-lg:0 4px 8px rgba(0,0,0,.15);--radius:12px;--radius-pill:20px;--font-family:'Malgun Gothic','맑은 고딕',sans-serif;--spacing:8px;--color-si:#E55D62;--color-gf:#43A047;--color-oc:#1565C0;--color-cog:#F9A825}*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:var(--font-family);background-color:var(--bg);color:var(--text-primary);line-height:1.6}h1,h2,h3{margin-bottom:calc(var(--spacing)*1.5);font-weight:600}h1{font-size:1.75rem}h2{font-size:1.5rem}h3{font-size:1.25rem}.top-bar{position:sticky;top:0;z-index:1000;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:calc(var(--spacing)*2);box-shadow:var(--shadow-lg)}.top-bar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.top-bar-title h1{margin:0;color:#fff;font-size:1.5rem}.top-bar-subtitle{color:rgba(255,255,255,.85);font-size:.75rem;margin-top:calc(var(--spacing)*.5)}.child-select{padding:calc(var(--spacing)*.75) calc(var(--spacing)*1);border:1px solid rgba(255,255,255,.3);border-radius:var(--radius-pill);background-color:rgba(255,255,255,.1);color:#fff;font-family:var(--font-family);font-size:.85rem;cursor:pointer;min-width:140px}.tab-bar{display:flex;gap:calc(var(--spacing)*.75);padding:calc(var(--spacing)*1.5) calc(var(--spacing)*2);background-color:var(--card-bg);border-bottom:1px solid var(--border);overflow-x:auto}.tab-btn{flex-shrink:0;padding:calc(var(--spacing)*.75) calc(var(--spacing)*1.5);border:2px solid var(--border);border-radius:var(--radius-pill);background-color:transparent;color:var(--text-secondary);font-family:var(--font-family);font-size:.9rem;font-weight:500;cursor:pointer;transition:all .3s ease;white-space:nowrap}.tab-btn.active{background-color:var(--primary);color:#fff;border-color:var(--primary)}.main-content{max-width:1400px;margin:0 auto;padding:calc(var(--spacing)*2)}.tab-content{display:none}.tab-content.active{display:block}.card{background-color:var(--card-bg);border-radius:var(--radius);padding:calc(var(--spacing)*2.5);margin-bottom:calc(var(--spacing)*1.5);box-shadow:var(--shadow)}.card.placeholder{text-align:center;padding:calc(var(--spacing)*4);border:2px dashed var(--border);color:var(--text-secondary)}.btn{padding:calc(var(--spacing)*1) calc(var(--spacing)*2);border:none;border-radius:var(--radius);font-family:var(--font-family);font-size:.95rem;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:calc(var(--spacing)*.5);white-space:nowrap}.btn-primary{background-color:var(--primary);color:#fff}.btn-outline{background-color:transparent;color:var(--primary);border:2px solid var(--primary)}.btn-danger{background-color:var(--danger);color:#fff}.btn-success{background-color:var(--success);color:#fff}.btn-large{padding:calc(var(--spacing)*1.5) calc(var(--spacing)*3);font-size:1.05rem}.btn-sm{padding:calc(var(--spacing)*.5) calc(var(--spacing)*1);font-size:.85rem}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:calc(var(--spacing)*2)}.form-label{display:flex;flex-direction:column;gap:calc(var(--spacing)*.5);font-weight:500;font-size:.95rem}.form-input,.form-select{padding:calc(var(--spacing)*1) calc(var(--spacing)*1.25);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-family);font-size:.95rem;color:var(--text-primary);background-color:#fafafa}.form-input:focus,.form-select:focus{outline:0;border-color:var(--primary);background-color:#fff}.domain-input-item{display:grid;grid-template-columns:2fr 1fr 1fr;gap:calc(var(--spacing)*1.5);margin-bottom:calc(var(--spacing)*1.5);padding-bottom:calc(var(--spacing)*1.5);border-bottom:1px solid var(--border)}.domain-input-item:last-child{border-bottom:none}.domain-input-item input{padding:calc(var(--spacing)*.75) calc(var(--spacing)*1);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-family);font-size:.95rem;background-color:#fff}.action-bar{display:flex;gap:calc(var(--spacing)*1);margin-top:calc(var(--spacing)*2);justify-content:flex-end}.toast{position:fixed;bottom:calc(var(--spacing)*2);right:calc(var(--spacing)*2);padding:calc(var(--spacing)*1.5) calc(var(--spacing)*2);background-color:var(--text-primary);color:#fff;border-radius:var(--radius);box-shadow:var(--shadow-lg);font-size:.95rem;z-index:2000;opacity:0;transform:translateY(100px);transition:all .3s ease;pointer-events:none}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background-color:var(--success)}.toast.error{background-color:var(--danger)}.mt-2{margin-top:calc(var(--spacing)*2)}.mt-3{margin-top:calc(var(--spacing)*3)}.mt-4{margin-top:calc(var(--spacing)*4)}.mb-2{margin-bottom:calc(var(--spacing)*2)}.text-muted{color:var(--text-secondary);font-size:.9rem}.badge{display:inline-block;padding:calc(var(--spacing)*.25) calc(var(--spacing)*1);border-radius:var(--radius-pill);font-size:.8rem;font-weight:600}.badge-si{background-color:rgba(229,93,98,.2);color:var(--color-si)}.badge-gf{background-color:rgba(67,160,71,.2);color:var(--color-gf)}.badge-oc{background-color:rgba(21,101,192,.2);color:var(--color-oc)}.badge-cog{background-color:rgba(249,168,37,.2);color:var(--color-cog)}.progress-bar{width:100%;height:24px;background-color:#e0e0e0;border-radius:var(--radius-pill);overflow:hidden;margin:var(--spacing) 0}.progress-fill{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:600;transition:width .3s ease}.goal-card{background-color:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:calc(var(--spacing)*1.5);margin-bottom:var(--spacing)}.activity-card{background-color:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:calc(var(--spacing)*1.5);margin-bottom:var(--spacing)}.activity-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:500}.activity-content{display:none;margin-top:var(--spacing)}.activity-content.show{display:block}.session-timeline{position:relative;padding-left:calc(var(--spacing)*4)}.timeline-item{position:relative;padding:calc(var(--spacing)*1.5) 0;margin-bottom:calc(var(--spacing)*2);border-left:2px solid var(--primary)}.timeline-item::before{content:'';position:absolute;left:calc(var(--spacing)*-.75);top:var(--spacing);width:12px;height:12px;background-color:var(--primary);border-radius:50%}.timeline-item .time{font-weight:600;color:var(--primary);font-size:.9rem}.timeline-item .phase{font-weight:500;margin-top:calc(var(--spacing)*.5)}.urgency-badge{padding:calc(var(--spacing)*.5) calc(var(--spacing)*1);border-radius:var(--radius-pill);font-size:.75rem;font-weight:600;margin-right:calc(var(--spacing)*.5)}.urgency-immediate{background-color:rgba(244,67,54,.2);color:#d32f2f}.urgency-priority{background-color:rgba(255,152,0,.2);color:#f57c00}.urgency-monitor{background-color:rgba(33,150,243,.2);color:#1976d2}.program-card{background-color:#fafafa;border:1px solid var(--border);border-radius:var(--radius);padding:calc(var(--spacing)*1.5);margin-bottom:var(--spacing)}.program-card h4{margin-bottom:calc(var(--spacing)*.5);color:var(--primary)}.program-card .tools{font-size:.85rem;color:var(--text-secondary)}.program-card .role{font-size:.85rem;margin-top:calc(var(--spacing)*.5);font-style:italic}.rf-table{width:100%;border-collapse:collapse;margin-top:var(--spacing)}.rf-table th{background-color:#f5f5f5;padding:calc(var(--spacing)*.75);border-bottom:2px solid var(--border);text-align:left;font-weight:600;font-size:.9rem}.rf-table td{padding:calc(var(--spacing)*.75);border-bottom:1px solid var(--border)}.rf-table tr:hover{background-color:#fafafa}@media (max-width:768px){:root{--spacing:6px}.form-grid{grid-template-columns:1fr}.domain-input-item{grid-template-columns:1fr}.top-bar-content{flex-direction:column;align-items:flex-start}.action-bar{flex-direction:column}}@media print{.top-bar,.tab-bar,.action-bar,.btn{display:none}body{background-color:#fff}.card{box-shadow:none;border:1px solid var(--border)}}
+  
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-bar-content">
+      <div class="top-bar-title">
+        <h1>ACE - 중재 목표 & 활동 추천 엔진</h1>
+        <p class="top-bar-subtitle">평가 데이터 기반 개인화된 중재 계획 수립</p>
+      </div>
+      <select id="childSelect" class="child-select">
+        <option value="">+ 신규 아동</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="profile">1. 프로필</button>
+    <button class="tab-btn" data-tab="cascade">2. 캐스케이드</button>
+    <button class="tab-btn" data-tab="redflags">3. Red Flag</button>
+    <button class="tab-btn" data-tab="goals">4. 목표</button>
+    <button class="tab-btn" data-tab="activities">5. 활동 & 세션</button>
+    <button class="tab-btn" data-tab="export">6. 내보내기</button>
+  </div>
+
+  <div class="main-content">
+    <div id="profile" class="tab-content active">
+      <div class="card">
+        <h2>아동 정보 입력</h2>
+        <div class="form-grid">
+          <div class="form-label">
+            <label for="childName">아동 이름</label>
+            <input type="text" id="childName" class="form-input" placeholder="예: 김철수">
+          </div>
+          <div class="form-label">
+            <label for="childBirth">생년월일</label>
+            <input type="date" id="childBirth" class="form-input">
+          </div>
+          <div class="form-label">
+            <label for="evalDate">평가일</label>
+            <input type="date" id="evalDate" class="form-input">
+          </div>
+          <div class="form-label">
+            <label for="childDiagnosis">진단</label>
+            <select id="childDiagnosis" class="form-select">
+              <option value="">선택</option>
+              <option value="ASD">ASD</option>
+              <option value="ADHD">ADHD</option>
+              <option value="DCD">DCD</option>
+              <option value="ID">ID</option>
+              <option value="CP">CP</option>
+              <option value="SLD">SLD</option>
+              <option value="DD">DD</option>
+              <option value="GDD">GDD</option>
+              <option value="DOWN">다운증후군</option>
+              <option value="OTHER">기타</option>
+            </select>
+          </div>
+          <div class="form-label">
+            <label for="ageMonths">월령</label>
+            <input type="number" id="ageMonths" class="form-input" readonly>
+          </div>
+          <div class="form-label">
+            <label for="evaluator">평가자</label>
+            <input type="text" id="evaluator" class="form-input" placeholder="홍길동 치료사">
+          </div>
+        </div>
+
+        <div id="domainInputs" style="margin-top:calc(var(--spacing)*3)"></div>
+
+        <div class="action-bar">
+          <button class="btn btn-outline" id="importJSONBtn">📂 JSON 가져오기</button>
+          <button class="btn btn-outline" id="mergeImportBtn" style="border-color:#E55D62;color:#E55D62;">📂 ①/③ 가져오기</button>
+          <button class="btn btn-primary btn-large" id="saveBtnTop">저장</button>
+          <button class="btn btn-success btn-large" id="generateBtnTop">▶ 추천 생성</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cascade" class="tab-content">
+      <div id="cascadeContent" class="card placeholder">
+        <p>먼저 프로필을 입력하고 [▶ 추천 생성]을 클릭하세요.</p>
+      </div>
+    </div>
+
+    <div id="redflags" class="tab-content">
+      <div id="redflagsContent" class="card placeholder">
+        <p>먼저 프로필을 입력하고 [▶ 추천 생성]을 클릭하세요.</p>
+      </div>
+    </div>
+
+    <div id="goals" class="tab-content">
+      <div id="goalsContent" class="card placeholder">
+        <p>먼저 프로필을 입력하고 [▶ 추천 생성]을 클릭하세요.</p>
+      </div>
+    </div>
+
+    <div id="activities" class="tab-content">
+      <div id="activitiesContent" class="card placeholder">
+        <p>먼저 프로필을 입력하고 [▶ 추천 생성]을 클릭하세요.</p>
+      </div>
+    </div>
+
+    <div id="export" class="tab-content">
+      <div class="card">
+        <h2>결과 내보내기</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--spacing);margin-bottom:calc(var(--spacing)*2)">
+          <button class="btn btn-primary" id="exportJSON">📥 JSON</button>
+          <button class="btn btn-primary" id="exportPrint">🖨️ 인쇄</button>
+          <button class="btn btn-primary" id="exportParent">👨‍👩‍👧 부모가이드</button>
+        </div>
+        <div class="mt-4">
+          <h3>저장된 아동</h3>
+          <div id="childrenList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  
+  <script>
+// ============================================================
+// ACE Engine - Integrated Build
+// ============================================================
+
+// ── DATA: JSON Databases ──
+const DATA_ACTIVITIES_OC=[{"id":"OC-A1","domain":"OC","name":"감각식이+주의측정","cluster":"OC1_ATT","tier":"A","targetCells":["ATT-DX02","ATT-DX01","ATT-DX04","ATT-DX16"],"evidence":"SP→ATT 캐스케이드 배제(원칙2)","materials":["heavy work기구","진동방석","타이머","기록지"],"procedure":["기저선측정(과제지속시간)","감각식이10분(heavy work/진동방석)","동일과제 재측정+비교"],"progressCriteria":"감각식이 후 지속시간 50%↑ = SP기반 확정","variations":{"ADHD":"MPH전후 비교 추가","ASD":"감각프로파일 맞춤"},"setting":["clinic"],"sessionTiming":"도입 0~5분","ageRange":[24,216],"cascadePosition":1},{"id":"OC-A2","domain":"OC","name":"구조화 환경 실험","cluster":"OC1_ATT","tier":"A","targetCells":["ATT-DX02","ATT-DX04","ATT-DX16"],"evidence":"구조화반응=EF확정(원칙5)","materials":["칸막이","시각타이머","일반/구조화 환경"],"procedure":["일반환경 과제수행","동일과제 구조화환경(칸막이+타이머+1:1)","개선률 산출"],"progressCriteria":"구조화 후 2배↑ = EF확정","variations":{"ID":"과제난이도 추가조정","교실":"일반화 설계"},"setting":["clinic"],"sessionTiming":"도입 5~15분","ageRange":[24,216],"cascadePosition":1},{"id":"OC-A3","domain":"OC","name":"촉구위계 프로토콜","cluster":"OC1_ATT","tier":"A","targetCells":["ATT-DX04","ATT-DX02","ATT-DX16"],"evidence":"촉구감소=진전정량화(원칙6)","materials":["촉구기록지","6단계위계표"],"procedure":["현재 촉구수준 확인","4주간 동일수준 안정화","1단계 감소 시도"],"progressCriteria":"4주마다 1단계 감소","variations":{"ID":"최대촉구부터","ADHD":"시각촉구 우선"},"setting":["clinic"],"sessionTiming":"평가 기간","ageRange":[24,216],"cascadePosition":1},{"id":"OC-A4","domain":"OC","name":"흥미도별 주의비교","cluster":"OC1_ATT","tier":"A","targetCells":["ATT-DX02"],"evidence":"ADHD 감별(Q3)","materials":["선호과제","비선호과제","타이머"],"procedure":["선호과제 지속시간","비선호과제 지속시간","비율 산출(10:1이상=ADHD시사)"],"progressCriteria":"비선호과제 지속시간 50%↑","variations":{"보상":"제공 시 변화 추가 측정"},"setting":["clinic"],"sessionTiming":"본활동 10~30분","ageRange":[24,216],"cascadePosition":1},{"id":"OC-A5","domain":"OC","name":"지시단계 점진확장","cluster":"OC2_WM","tier":"A","targetCells":["WM-DX02","WM-DX04","WM-DX07","WM-DX16"],"evidence":"WM용량 직접확장(Q11)","materials":["시각카드","지시기록지"],"procedure":["현재 최대 정확단계수 확인","해당수준 안정화(정확도 80%)","+1단계 확장"],"progressCriteria":"4주마다 +1단계(최대→정확80%)","variations":{"ID":"시각지원 상시","SLD":"학업맥락 적용"},"setting":["clinic"],"sessionTiming":"본활동 12~22분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A6","domain":"OC","name":"시각지원 WM보상","cluster":"OC2_WM","tier":"A","targetCells":["WM-DX02","WM-DX04","WM-DX07","WM-DX01","WM-DX16"],"evidence":"외부WM보상(Q12)","materials":["그림카드","체크리스트","사진"],"procedure":["청각만 기저선","시각카드 추가","개선률 산출+효과적 시각유형 확인"],"progressCriteria":"시각추가 시 정확도 30%↑","variations":{"ASD":"관심사 시각재료","다운":"사진>그림>글자"},"setting":["clinic"],"sessionTiming":"본활동 12~22분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A7","domain":"OC","name":"구어시연+자기교시","cluster":"OC2_WM","tier":"A","targetCells":["WM-DX02","WM-DX07","WM-DX16"],"evidence":"음운루프 활성화(Q13)","materials":["자기교시카드"],"procedure":["\"다시 말해볼까?\" 촉구","시연 후 수행 비교","자기교시(\"먼저OO 다음XX\") 훈련"],"progressCriteria":"자발적 시연 출현","variations":{"SLD":"음운인식훈련 병행","ADHD":"짧은시연부터"},"setting":["clinic"],"sessionTiming":"본활동 12~22분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A8","domain":"OC","name":"청킹(chunking) 전략교수","cluster":"OC2_WM","tier":"A","targetCells":["WM-DX16","WM-DX07"],"evidence":"WM효율화(Q19)","materials":["범주카드","색상코딩"],"procedure":["무작위 항목 기억 기저선","범주묶기 교수(과일/문구)","교수 후 용량 비교"],"progressCriteria":"청킹 후 용량 +2항목","variations":{"일상적용":"준비물=학교+집+특별"},"setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A9","domain":"OC","name":"Go/No-Go 훈련","cluster":"OC6_INH","tier":"A","targetCells":["INH-DX02","INH-DX14","INH-DX16"],"evidence":"반응억제 직접훈련(Q52)","materials":["Go/No-Go 카드게임","타이머"],"procedure":["느린속도 Go/No-Go","정지정확도80%→속도↑","빠른속도 목표 정지율>80%"],"progressCriteria":"정지실패 50%↓ (8주)","variations":{"ADHD":"MPH 투약 시간 고려","정서행동":"FBA 병행"},"setting":["clinic"],"sessionTiming":"본활동 12~22분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A10","domain":"OC","name":"Stop-Think-Do","cluster":"OC6_INH","tier":"A","targetCells":["INH-DX02","INH-DX14","INH-DX16"],"evidence":"자기교시기반 억제(Meichenbaum)","materials":["Stop카드","Think카드","Do카드","3단계 시각"],"procedure":["\"멈추기!\"(빨강카드)","\"생각하기\"(노랑카드: 뭐 해야 하지?)","\"하기\"(초록카드)"],"progressCriteria":"자발적 \"멈추기\" 출현","variations":{"ADHD":"감각break 선행","ASD":"시각규칙카드"},"setting":["clinic"],"sessionTiming":"본활동 12~22분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A11","domain":"OC","name":"지연만족 점진확장","cluster":"OC6_INH","tier":"A","targetCells":["INH-DX02","INH-DX16"],"evidence":"Hot EF 훈련(Q54)","materials":["보상물","타이머","대기전략카드"],"procedure":["현재 대기 가능 시간 확인","대기전략 교수(그림그리기, 노래)","10초씩 확장"],"progressCriteria":"4주마다 대기시간 2배↑","variations":{"토큰보드":"병행: 토큰→큰보상"},"setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A12","domain":"OC","name":"차례대기 게임","cluster":"OC6_INH","tier":"A","targetCells":["INH-DX02","INH-DX01","INH-DX16"],"evidence":"사회적 억제 훈련(Q56)","materials":["보드게임(2인→3인→4인)","차례카드"],"procedure":["1:1 보드게임 차례","2인→3인 확대","교실 소집단 전이"],"progressCriteria":"소집단(4인) 차례대기 가능","variations":{"ASD":"시각적 차례표시","ADHD":"짧은턴부터"},"setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":2},{"id":"OC-A13","domain":"OC","name":"CO-OP GPDC 교수","cluster":"OC3_PO","tier":"A","targetCells":["PO-DX02","PO-DX01","PO-DX07","PO-DX16"],"evidence":"CO-OP 프로토콜(Polatajko)","materials":["CO-OP 매뉴얼","GPDC카드","DPA"],"procedure":["Goal(목표사진)","Plan(순서그리기)","Do(실행)","Check(자기확인)"],"progressCriteria":"3과제 이상 자발적 GPDC 사용","variations":{"ASD":"시각Plan","ADHD":"짧은과제부터","SLD":"학업과제"},"setting":["clinic"],"sessionTiming":"본활동 22~32분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A14","domain":"OC","name":"시각스케줄 도입","cluster":"OC3_PO","tier":"A","targetCells":["PO-DX01","PO-DX02","PO-DX04","PO-DX16"],"evidence":"외부계획보상(Q21)","materials":["사진순서카드","벨크로보드"],"procedure":["과제 시각스케줄 제작","스케줄 따라 수행","자발적 스케줄 참조 훈련"],"progressCriteria":"자발적 스케줄 확인 80%","variations":{"ASD":"전활동 시각화","ID":"사진>그림","교실":"일반화"},"setting":["clinic"],"sessionTiming":"본활동 22~32분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A15","domain":"OC","name":"체크리스트 자기점검","cluster":"OC3_PO","tier":"A","targetCells":["PO-DX02","PO-DX07","PO-DX16"],"evidence":"외부조직화(Q22)","materials":["체크리스트 양식","스티커"],"procedure":["체크리스트 제작(3항목)","\"보고→확인→체크\" 루틴","항목 수 확장(3→5→7)"],"progressCriteria":"자발적 체크 100%","variations":{"SLD":"학업체크리스트","가정":"준비물체크리스트"},"setting":["clinic"],"sessionTiming":"본활동 22~32분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A16","domain":"OC","name":"과제분해 훈련","cluster":"OC3_PO","tier":"A","targetCells":["PO-DX02","PO-DX04","PO-DX16"],"evidence":"계획능력핵심(Q23)","materials":["과제분석표","단계카드"],"procedure":["전체과제 제시(관찰)","치료사 분해 시범","아동 자기분해 연습(\"뭐 먼저?\")"],"progressCriteria":"자발적 과제분해 출현","variations":{"ID":"2단계부터","CO-OP":"Plan과 통합"},"setting":["clinic"],"sessionTiming":"본활동 22~32분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A17","domain":"OC","name":"시각순서카드 훈련","cluster":"OC4_SEQ","tier":"A","targetCells":["SEQ-DX16","SEQ-DX02","SEQ-DX04"],"evidence":"외부순서보상(Q32)","materials":["사진순서카드(3~7단계)"],"procedure":["3단계 카드+수행","카드자발참조","카드fading(1장씩 제거)"],"progressCriteria":"카드없이 3단계 정확수행","variations":{"ASD":"기존루틴 카드화","ID":"backward chaining"},"setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A18","domain":"OC","name":"역방향연쇄","cluster":"OC4_SEQ","tier":"A","targetCells":["SEQ-DX04","SEQ-DX16"],"evidence":"backward chaining(Q38)","materials":["과제분석표","단계별 교구"],"procedure":["마지막단계 시범+수행","마지막2단계","전체확장"],"progressCriteria":"전체단계 독립수행","variations":{"자조활동":"옷입기, 신발 우선 적용"},"setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A19","domain":"OC","name":"종결루틴 교수","cluster":"OC4_SEQ","tier":"A","targetCells":["SEQ-DX16","SEQ-DX02"],"evidence":"종결규칙(Q34)","materials":["종결체크리스트(\"정리?✓확인?✓제출?✓\")","\"끝\"카드"],"procedure":["종결3단계 시각화","매과제 종결루틴 적용","자발적 종결"],"progressCriteria":"자발적 종결 70%+","variations":{"특수교사":"교실 종결루틴 공유"},"setting":["clinic"],"sessionTiming":"마무리 38~42분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A20","domain":"OC","name":"전환예고 루틴","cluster":"OC5_CF","tier":"A","targetCells":["CF-DX01","CF-DX14","CF-DX16"],"evidence":"예측가능성(Q41)","materials":["시각카운트다운(5→3→1→변경)","전환카드"],"procedure":["5분 전 시각예고","1분 전 재예고","전환 실행","성공 강화"],"progressCriteria":"예고 시 전환거부 80%↓","variations":{"ASD":"모든 전환에 예고 상시","불안":"추가 예고시간"},"setting":["clinic"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A21","domain":"OC","name":"규칙변경 게임","cluster":"OC5_CF","tier":"A","targetCells":["CF-DX01","CF-DX16"],"evidence":"WCST 원리 적용(Q42)","materials":["규칙변경 카드게임(색→모양→수)","시각규칙카드"],"procedure":["1규칙 안정(색)","규칙변경 시각단서+수행","변경빈도↑, 단서fading"],"progressCriteria":"WCST 보속오류 30%↓","variations":{"ASD":"점진변화(90%유지+10%변화)","속도":"느린속도→빠른속도"},"setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A22","domain":"OC","name":"Plan A / Plan B 전략","cluster":"OC5_CF","tier":"A","targetCells":["CF-DX01","CF-DX16"],"evidence":"대안탐색(Q45,Q50)","materials":["Plan A/B 카드","브레인스토밍 보드"],"procedure":["\"이거 안 되면 뭐 해?\" 자기질문","Plan B 카드 준비","자발적 대안탐색"],"progressCriteria":"자발적 대안 2개+","variations":{"Superflex":"프로그램 통합 가능"},"setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A23","domain":"OC","name":"점진적 유연성 확장","cluster":"OC5_CF","tier":"A","targetCells":["CF-DX01"],"evidence":"ASD 점진변화 원칙","materials":["일과표","변경표시(★=새로운것)"],"procedure":["일과90%유지+10%변경(★표시)","4주마다 변경비율↑","★없이도 변경수용"],"progressCriteria":"30%변경 수용","variations":{"사회적이야기":"병행: \"바뀌어도 괜찮아\""},"setting":["clinic"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":3},{"id":"OC-A24","domain":"OC","name":"시각비교 자기점검","cluster":"OC7_SM","tier":"A","targetCells":["SM-DX01","SM-DX16"],"evidence":"Toglia 자기인식(Q60)","materials":["완성예시 사진","자기산출물","비교카드"],"procedure":["완성예시 옆에 배치","\"같아? 달라?\" 자기비교","차이점 구어화"],"progressCriteria":"자발적 비교 출현","variations":{"ASD":"비구어비교(시각매칭)","ID":"사진기준"},"setting":["clinic"],"sessionTiming":"기능참여 32~38분","ageRange":[24,216],"cascadePosition":4},{"id":"OC-A25","domain":"OC","name":"Meichenbaum 자기교시 4단계","cluster":"OC7_SM","tier":"A","targetCells":["SM-DX01","SM-DX16"],"evidence":"자기교시훈련(Q68)","materials":["4단계카드(외적모델→외적자기→내적자기→내적)"],"procedure":["치료사 모델(\"나는 지금 OO\")","아동 소리내어 자기교시","속삭임→내적언어"],"progressCriteria":"내적자기교시 단계 도달","variations":{"ASD":"시각자기교시카드 장기유지 가능"},"setting":["clinic"],"sessionTiming":"기능참여 32~38분","ageRange":[24,216],"cascadePosition":4},{"id":"OC-A26","domain":"OC","name":"확인루틴(Check Routine)","cluster":"OC7_SM","tier":"A","targetCells":["SM-DX16","SM-DX01"],"evidence":"확인습관형성(Q69)","materials":["확인체크리스트(\"멈추기→확인→제출\")"],"procedure":["확인3단계 시각화","매과제 확인루틴","자발적 확인"],"progressCriteria":"자발적 확인 80%","variations":{"모든과제":"종결 전 확인루틴 삽입"},"setting":["clinic"],"sessionTiming":"마무리 38~42분","ageRange":[24,216],"cascadePosition":4},{"id":"OC-A27","domain":"OC","name":"피드백 재프레이밍","cluster":"OC7_SM","tier":"A","targetCells":["SM-DX01","SM-DX12"],"evidence":"피드백활용(Q62,Q65)","materials":["긍정/교정 피드백카드"],"procedure":["긍정피드백 80%+교정20% 비율","\"도움\" 재프레이밍","교정피드백 수용"],"progressCriteria":"교정피드백→수정행동 출현","variations":{"ASD":"구체적+시각적","불안":"긍정비율↑↑"},"setting":["clinic"],"sessionTiming":"기능참여 30~40분","ageRange":[24,216],"cascadePosition":4},{"id":"OC-A28","domain":"OC","name":"Time Timer 상시도입","cluster":"OC8_TM","tier":"A","targetCells":["TM-DX02","TM-DX16"],"evidence":"시간맹 보상(Q70)","materials":["Time Timer","기록지"],"procedure":["Time Timer 소개+시간감각 교수","모든 과제에 Time Timer 배치","시간경과 자기인식"],"progressCriteria":"Time Timer 자발적 확인","variations":{"ADHD":"교실+가정 상시","ASD":"루틴 시간 시각화"},"setting":["clinic"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":4},{"id":"OC-A29","domain":"OC","name":"시간예측 훈련","cluster":"OC8_TM","tier":"A","targetCells":["TM-DX02","TM-DX16"],"evidence":"시간예측(Q71)","materials":["시간예측기록지(\"몇 분?→실제→비교\")"],"procedure":["과제 전 \"몇 분 걸릴까?\" 예측","수행+실제시간 기록","예측-실제 비교"],"progressCriteria":"예측-실제 오차 30%↓","variations":{"매과제":"적용: 습관화"},"setting":["clinic"],"sessionTiming":"기능참여 32~40분","ageRange":[24,216],"cascadePosition":4},{"id":"OC-A30","domain":"OC","name":"시간블록 시각화","cluster":"OC8_TM","tier":"A","targetCells":["TM-DX02","TM-DX16"],"evidence":"시간배분(Q73)","materials":["색상시간블록(쉬운=초록, 어려운=빨강)"],"procedure":["과제시간 블록 나누기","색상코딩(쉬운/어려운)","시간배분 자기계획"],"progressCriteria":"자발적 시간배분 계획","variations":{"SLD":"시험시간 배분 적용","교실":"일반화"},"setting":["clinic"],"sessionTiming":"기능참여 32~40분","ageRange":[24,216],"cascadePosition":4}];
+const DATA_ACTIVITIES_SI=[{"id":"SI-A1","domain":"SI","name":"무거운 담요 동굴","cluster":"SR_OR","tier":"A","cellId":"P1-A1","crossCell":"ASD×SOR","relatedBehaviorClusters":["10군","4군","5군"],"category":"조절 기반","purpose":"깊은 압력을 통한 각성 하향 조절, 안전 공간 제공","procedure":"치료실에 무거운 담요·쿠션으로 '동굴' 구성. 아동이 자발적으로 들어감. 담요 무게는 체중의 약 10%","sessionTiming":"도입 0~5분","homeSchool":"기상 후 핫도그 말기, 벽 밀기","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A2","domain":"SI","name":"전정 그네 - 선형 운동","cluster":"VL","tier":"A","cellId":"P1-A2","crossCell":"DCD×체성감각","relatedBehaviorClusters":["1군","6군"],"category":"등록 강화","purpose":"전정계 활성화, 신체위치 인식 향상","procedure":"치료사가 조절하는 선형 그네에서 앞뒤 운동. 5~10분 반복. 아동의 반응에 따라 속도 조절","sessionTiming":"도입 5~15분","homeSchool":"트램폴린 5분 기상 후 루틴","setting":["clinic"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A3","domain":"SI","name":"고유수용 - Heavy Work 루틴","cluster":"PP","tier":"A","cellId":"P1-A3","crossCell":"ADHD×각성 조절","relatedBehaviorClusters":["3군","4군"],"category":"각성 최적화","purpose":"고유수용 입력으로 신체 인식 증대, 행동 조절","procedure":"벽 밀기(10회), 점프(20회), 무거운 물건 나르기. 매일 또는 학습/과제 전 5~10분 실시","sessionTiming":"도입 0~5분 / 전 세션","homeSchool":"매일 아침+과제 전+학교 쉬는 시간","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A4","domain":"SI","name":"촉각 탈감작 - 질감 위계","cluster":"TI","tier":"A","cellId":"P1-A4","crossCell":"ASD×촉각 방어","relatedBehaviorClusters":["2군","5군"],"category":"과반응 완화","purpose":"촉각 역치 확대, 다양한 질감 수용","procedure":"단계: 도구→장갑→손가락끝→손바닥. 점토, 슬라임, 모래, 물 순차적 노출. 아동 주도, 강제 금지","sessionTiming":"본활동 10~25분","homeSchool":"일상 생활 속 질감 경험(세수, 옷감, 음식)","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A5","domain":"SI","name":"양측 협응 - 미들라인 활동","cluster":"MC","tier":"A","cellId":"P1-A5","crossCell":"DCD×협응 장애","relatedBehaviorClusters":["6군","7군"],"category":"운동 협응","purpose":"양손 사용 기술, 정중선 교차 능력","procedure":"마주보기 그리기(큰 동작), 양손 악기 연주, 양손 공예(종이접기, 매듭). 비우세손 활성화 강조","sessionTiming":"본활동 15~30분","homeSchool":"음식 준비(반죽), 양손 악기(드럼), 스포츠(배드민턴)","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A6","domain":"SI","name":"자세 조절 - Prone Extension","cluster":"PL","tier":"A","cellId":"P1-A6","crossCell":"CP×저긴장","relatedBehaviorClusters":["1군","8군"],"category":"자세 안정","purpose":"등근육 활성화, 항중력 자세","procedure":"짐볼 위에서 prone extension(팔 뻗기), 보드 타기, 비행기 자세. 점진적 강화","sessionTiming":"도입 0~10분 / 기능참여 전","homeSchool":"집에서 쿠션 위 비행기자세 연습","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A7","domain":"SI","name":"균형 훈련 - 평균대/한발서기","cluster":"BP","tier":"B","cellId":"P2-A1","crossCell":"DCD×균형 문제","relatedBehaviorClusters":["6군","8군"],"category":"대근육 기능","purpose":"정적/동적 균형 능력","procedure":"한발 서기(10초부터 확장), 평균대 보행, 눈감고 균형. 안전 스펀지 바닥","sessionTiming":"본활동 15~30분","homeSchool":"놀이터 활동, 계단 오르기 강조","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A8","domain":"SI","name":"회전 감각 - 회전 그네","cluster":"VL","tier":"B","cellId":"P2-A2","crossCell":"ASD×전정 저반응","relatedBehaviorClusters":["3군","10군"],"category":"감각 등록 촉진","purpose":"전정계 자극, 공간 지향성 향상","procedure":"회전 그네(느린 속도)→회전 방향 변경. 5분 이내, 구역질 주의. 회전 후 조용한 자세 운동","sessionTiming":"도입 5~10분","homeSchool":"회전의자 회전놀이(짧고 천천히)","setting":["clinic","home"],"ageRange":[36,216],"cascadePosition":2},{"id":"SI-A9","domain":"SI","name":"쓰기 준비 - Tripod Grasp 훈련","cluster":"FM","tier":"A","cellId":"P1-A7","crossCell":"DCD×필기 어려움","relatedBehaviorClusters":["7군","9군"],"category":"소근육 기능","purpose":"연필 잡기 정상화, 필기 준비","procedure":"굵은 연필→세 연필로 진행. 모래/점토→종이로 단계. 손목 안정 보조도구 사용","sessionTiming":"본활동 15~30분","homeSchool":"그리기, 쓰기 연습(짧은 시간, 자주)","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":3},{"id":"SI-A10","domain":"SI","name":"손내 조작 - In-hand Manipulation","cluster":"FM","tier":"A","cellId":"P1-A8","crossCell":"DCD×세밀 운동","relatedBehaviorClusters":["7군","9군"],"category":"소근육 기능","purpose":"손가락 개별화, 손내 물건 이동 능력","procedure":"동전 손내 이동(translation), 연필 회전(rotation), 물건 위치 변환(shift). 단계적 난이도","sessionTiming":"본활동 15~25분","homeSchool":"단추 끼우기, 지퍼 당기기, 숟가락 사용","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":3},{"id":"SI-A11","domain":"SI","name":"가위질 훈련 - 점진적 난이도","cluster":"FM","tier":"A","cellId":"P1-A9","crossCell":"DCD×도구사용","relatedBehaviorClusters":["7군"],"category":"도구 사용","purpose":"가위 조작, 양손 협응","procedure":"개폐 연습→직선절단(굵은 선)→곡선→자유형. 왼손잡이 가위 준비","sessionTiming":"본활동 15~30분","homeSchool":"종이 오리기, 문제지 오리기","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":3},{"id":"SI-A12","domain":"SI","name":"호흡 조절 - 불안 감소","cluster":"OR","tier":"B","cellId":"P2-A3","crossCell":"불안장애×과활성화","relatedBehaviorClusters":["2군","5군"],"category":"자율신경 조절","purpose":"호흡을 통한 각성 하향, 불안 완화","procedure":"복식호흡 교수(배 확장→수축), 부는 활동(풍선, 비눗방울), 심호흡 게임","sessionTiming":"도입 0~5분 / 과제 전 전환","homeSchool":"자기 전 호흡 루틴, 스트레스 시 호흡 활용","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A13","domain":"SI","name":"보드게임 - 사회적 상호작용","cluster":"MC","tier":"B","cellId":"P2-A4","crossCell":"ASD×사회성","relatedBehaviorClusters":["10군","11군"],"category":"사회적 기술","purpose":"차례 지키기, 규칙 따르기, 상호작용","procedure":"단순 보드게임(1:1→소집단)으로 확대. 시각적 차례 표시, 시간 타이머","sessionTiming":"본활동 20~40분","homeSchool":"가족 보드게임, 교실 그룹 활동","setting":["clinic","home","school"],"ageRange":[36,216],"cascadePosition":2},{"id":"SI-A14","domain":"SI","name":"공동주의 - Joint Attention 게임","cluster":"MC","tier":"A","cellId":"P1-A10","crossCell":"ASD×의사소통","relatedBehaviorClusters":["10군","11군"],"category":"사회적 기술","purpose":"공동주의 발달, 사회적 상호작용","procedure":"치료사와 3점주의 게임(나-아동-물건). 아동 관심사 활용, 주의 유도 촉구","sessionTiming":"도입 5~15분","homeSchool":"부모와 공동주의 놀이, '봐봐!' 상호작용","setting":["clinic","home"],"ageRange":[24,120],"cascadePosition":2},{"id":"SI-A15","domain":"SI","name":"모방 활동 - Imitation Cycle","cluster":"MC","tier":"A","cellId":"P1-A11","crossCell":"ASD×상징놀이","relatedBehaviorClusters":["10군","11군"],"category":"상징 능력","purpose":"동작 모방, 상징놀이 기초","procedure":"단순 신체 동작(박수)→악기→물건 조작 모방. 치료사 모델링 후 아동 모방","sessionTiming":"본활동 10~20분","homeSchool":"노래+동작, 역할놀이","setting":["clinic","home"],"ageRange":[24,120],"cascadePosition":2},{"id":"SI-A16","domain":"SI","name":"깊은 압력 - Swaddling/Deep Pressure","cluster":"SR_OR","tier":"B","cellId":"P2-A5","crossCell":"트라우마×안전감","relatedBehaviorClusters":["2군","5군"],"category":"안전감 형성","purpose":"신체 경계 확립, 진정 효과","procedure":"무거운 담요로 싸기(swaddling), 아동 선택권 존중. 편안함 신호 확인 필수","sessionTiming":"마무리 35~40분","homeSchool":"자기 전 담요 말기, 안전한 코너 구성","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A17","domain":"SI","name":"공기 흡입 활동 - Oral Sensory","cluster":"SR_OR","tier":"C","cellId":"P3-A1","crossCell":"편식×구강감각","relatedBehaviorClusters":["2군","15군"],"category":"구강감각","purpose":"구강감각 탈감작, 음식 수용 확대","procedure":"짚으로 음료 빨기→구강근육 활성화. 비식품 구강자극(구강진동도구)부터 시작","sessionTiming":"본활동 10~20분","homeSchool":"음료 마시기(다양한 질감), 음식 준비 참여","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A18","domain":"SI","name":"대운동 기술 - Jumping Pattern","cluster":"BP","tier":"B","cellId":"P2-A6","crossCell":"CP×이동 기술","relatedBehaviorClusters":["1군","6군","8군"],"category":"대근육 기능","purpose":"점프 동작 발달, 순발력","procedure":"양발 점프(제자리)→스텝 점프→도약. 기초 신발→스포츠화로 진행","sessionTiming":"본활동 15~30분","homeSchool":"트램폴린, 줄넘기, 놀이터 뛰기","setting":["clinic","home","school"],"ageRange":[36,216],"cascadePosition":2},{"id":"SI-A19","domain":"SI","name":"정렬 감각 - Body Awareness 활동","cluster":"PP","tier":"B","cellId":"P2-A7","crossCell":"DCD×신체인식","relatedBehaviorClusters":["6군"],"category":"신체 인식","purpose":"신체 부위 인식, 공간 관계 이해","procedure":"신체 그림 그리기, 신체 부위 명명 게임, 거울 활동, 신체 닿기 게임","sessionTiming":"본활동 10~20분","homeSchool":"몸춤 노래, 신체 부위 놀이","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A20","domain":"SI","name":"짐볼 활동 - Vestibular+Core Stability","cluster":"SR_PP","tier":"B","cellId":"P2-A8","crossCell":"GDD×발달촉진","relatedBehaviorClusters":["1군","6군"],"category":"자세·감각","purpose":"전정계+고유수용 통합, 체간안정","procedure":"짐볼 위에서 앉기(안정화)→탄성 운동→손 닿기. 크기는 발달수준 적절","sessionTiming":"본활동 10~25분","homeSchool":"짐볼 탈 기 (감독 필수), 핀볼 활동","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A21","domain":"SI","name":"시각 추적 - Eye Gaze + Ocular Motor","cluster":"VP","tier":"C","cellId":"P3-A2","crossCell":"DCD×시각-운동","relatedBehaviorClusters":["13군","14군"],"category":"시각 기능","purpose":"안구 운동, 시각 추적 능력","procedure":"손가락→진자→대상 추적. 좌→우, 위→아래, 원형 경로. 속도 조절","sessionTiming":"도입 5~10분","homeSchool":"장난감 추적 놀이, 책장 넘기기","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":1},{"id":"SI-A22","domain":"SI","name":"촉각 변별 - Stereognosis Game","cluster":"SR_TI","tier":"B","cellId":"P2-A9","crossCell":"DCD×감각 처리","relatedBehaviorClusters":["7군"],"category":"체성감각","purpose":"촉각 변별력, 물체 인식","procedure":"주머니 속 물건 찾기, 촉각 매칭(같은 질감 찾기), 모래 보물찾기","sessionTiming":"본활동 5~15분","homeSchool":"집 물건 촉각 탐색, 요리 재료 만지기","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A23","domain":"SI","name":"양손 협응 - Bimanual Coordination","cluster":"MC_FM","tier":"A","cellId":"P1-A12","crossCell":"DCD×양손 문제","relatedBehaviorClusters":["4군","7군"],"category":"협응 기능","purpose":"양손 역할 분담, 협응","procedure":"양손 악기, 종이접기(한손 고정 + 한손 작동), 펀칭(한손 안정 + 한손 펀치)","sessionTiming":"본활동 15~30분","homeSchool":"공예, 음악, 스포츠(배드민턴, 탁구)","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A24","domain":"SI","name":"놀이터 기구 적응","cluster":"BP_VL","tier":"C","cellId":"P3-A3","crossCell":"DCD×환경 적응","relatedBehaviorClusters":["6군","8군"],"category":"기능적 전이","purpose":"실제 환경에서의 운동 기술 적용","procedure":"미끄럼틀, 그네, 정글짐, 시소 순차적 도전. 안전 거리 확인, 필요시 신체 지원","sessionTiming":"기능참여 30~45분","homeSchool":"주말 놀이터 방문, 운동 도구 사용","setting":["school"],"ageRange":[36,216],"cascadePosition":3},{"id":"SI-A25","domain":"SI","name":"상징놀이 - Symbolic Play","cluster":"MC","tier":"B","cellId":"P2-A10","crossCell":"ASD×상징능력","relatedBehaviorClusters":["10군","11군"],"category":"인지·사회","purpose":"상징적 사고 발달, 창의성","procedure":"역할놀이(병원, 가게), 손인형 극, 블록 건설 놀이. 시각적 구조화 제공","sessionTiming":"본활동 20~40분","homeSchool":"가정 역할놀이, 장난감 활용","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":2},{"id":"SI-A26","domain":"SI","name":"미세 운동 - Fine Motor Play","cluster":"FM","tier":"A","cellId":"P1-A13","crossCell":"DCD×미세운동","relatedBehaviorClusters":["7군","9군"],"category":"소근육 기능","purpose":"미세 운동 기술 개발, 손가락 유연성","procedure":"구슬 끼우기, 끈 꿰기, 단추 끼우기, 핀셋으로 물건 집기. 단계적 난이도","sessionTiming":"본활동 15~25분","homeSchool":"비즈 팔찌 만들기, 가정 ADL 참여","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":3},{"id":"SI-A27","domain":"SI","name":"불규칙 표면 - Uneven Surface Locomotion","cluster":"BP","tier":"C","cellId":"P3-A4","crossCell":"DCD×환경 적응","relatedBehaviorClusters":["6군"],"category":"대근육 기능","purpose":"다양한 지형에서의 움직임, 균형반응","procedure":"스펀지 바닥 걷기, 모래 위 걷기, 언덕 오르내리기, 불규칙 장애물","sessionTiming":"본활동 20~30분","homeSchool":"야외활동(숲, 해변, 공원)","setting":["clinic","home","school"],"ageRange":[24,216],"cascadePosition":3},{"id":"SI-A28","domain":"SI","name":"시각-운동 통합 - Visual-Motor Integration","cluster":"FM_VP","tier":"A","cellId":"P1-A14","crossCell":"DCD×시각-운동","relatedBehaviorClusters":["7군","13군"],"category":"통합 기능","purpose":"눈과 손 협응, 조화로운 운동","procedure":"색칠하기, 도형 따라그리기, 미로 찾기, 사격 게임. 속도→정확도 강조","sessionTiming":"본활동 15~30분","homeSchool":"색칠, 스티커 붙이기, 퍼즐","setting":["clinic","home"],"ageRange":[24,216],"cascadePosition":3}];
+const DATA_ACTIVITIES_GF=[{"id":"GF-A1","domain":"GF","name":"장애물 코스 - 운동계획","cluster":"GM_Prax","tier":"A","cellId":"A-1","crossCell":"DCD×GM-Prax","relatedMotorClusters":["GM5","GM4"],"category":"운동계획","purpose":"Praxis 3단계(Ideation→Planning→Execution) 촉진","procedure":"3~5단계 코스 제시→아동이 순서 계획→실행→자기 점검. 시각순서카드 활용. 새 코스마다 재계획 유도","cascadeStage":"GM","ptCollaboration":"보행패턴 분석 제공","setting":["clinic"],"sessionTiming":"본활동 10~30분","ageRange":[24,216],"cascadePosition":2},{"id":"GF-A2","domain":"GF","name":"Heavy Work → 운동과제 연계","cluster":"GM_Prax","tier":"A","cellId":"A-1","crossCell":"DCD×SP","relatedMotorClusters":["GM5"],"category":"감각 기반","purpose":"SP 기반 운동계획 활성화 (Q21 반영)","procedure":"heavy work 10분(밀기/당기기/나르기) → 즉시 새 운동과제 제시. 개시 잠복기 비교로 SP 기반 확인","cascadeStage":"SP→GM","ptCollaboration":"보행 보조 관찰","setting":["clinic"],"sessionTiming":"도입 0~10분","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A3","domain":"GF","name":"가위질·도구사용 단계별","cluster":"FM_Prax","tier":"A","cellId":"A-2","crossCell":"DCD×FM-Prax","relatedMotorClusters":["FM6","FM3","FM4"],"category":"도구 Praxis","purpose":"소근육 Praxis 촉진: 도구파지→양손협응→방향조절","procedure":"가위 개폐 리듬→직선→곡선→자유형. 비우세손 종이회전 동시훈련. CO-OP: \"먼저 열고, 닫으면서 앞으로\" 구어리허설","cascadeStage":"FM","ptCollaboration":"필요시 손 포지셔닝 확인","setting":["clinic"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":3},{"id":"GF-A4","domain":"GF","name":"전정-고유수용 → 자세조절","cluster":"PS","tier":"A","cellId":"A-3","crossCell":"DCD×PS","relatedMotorClusters":["GM1","GM4"],"category":"자세 안정성","purpose":"자세 안정성의 감각적 기반 강화 (캐스케이드 2단계)","procedure":"선형/회전 그네+고유수용(heavy work, 관절압축)+항중력 과제(prone ext, 비행기자세). 진동방석·웨이트조끼 효과 확인(Q1)","cascadeStage":"SP→PS","ptCollaboration":"체간근력강화 병행. 교실: 진동방석/발판","setting":["clinic"],"sessionTiming":"도입~본활동 0~15분","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A5","domain":"GF","name":"적응적 감각충족 + 운동계획","cluster":"GM","tier":"A","cellId":"A-4","crossCell":"ASD×SP-Prop","relatedMotorClusters":["GM6","GM5"],"category":"고유수용 충족","purpose":"고유수용 추구를 적응적 활동으로 전환, 힘조절 향상","procedure":"감각다이어트: 시간대별 heavy work 배치. 무브앤싯 쿠션, 저항밴드, 피젯. \"학습준비도 향상전략\" 프레이밍. Alert Program 활용","cascadeStage":"SP","ptCollaboration":"교사협업: 감각전략 교실허용. 시간대별 감각다이어트표","setting":["clinic","home","school"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A6","domain":"GF","name":"촉각 탈감작 → 손기능 연결","cluster":"FM","tier":"A","cellId":"A-5","crossCell":"ASD×SP-Tact","relatedMotorClusters":["FM2","FM3"],"category":"촉각 탈감작","purpose":"촉각 과반응(SOR) 완화→손내조작·파지 기능 회복","procedure":"도구접촉→장갑→손가락끝→손바닥. 점토/슬라임/물/모래 위계적 노출. 강제노출 절대 금지. 아동 주도 탐색","cascadeStage":"SP→FM","ptCollaboration":"가정: 다양한 질감 경험(세수, 옷감)","setting":["clinic","home"],"sessionTiming":"본활동 10~25분","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A7","domain":"GF","name":"자기 각성 인식 + 감각전략","cluster":"GM","tier":"A","cellId":"A-6","crossCell":"ADHD×SP-Prop","relatedMotorClusters":["GM6","GM3"],"category":"각성 조절","purpose":"고유수용 기반 각성 조절→과제 지속 시간 향상","procedure":"Alert Program: \"내 엔진은 지금 얼마나 빠른가?\". 상황별 전략선택 학습. 트램폴린→착석과제→자기점검 순환","cascadeStage":"SP","ptCollaboration":"교실: 감각도구(무브앤싯, 저항밴드, 피젯)","setting":["clinic","home","school"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A8","domain":"GF","name":"VMI 기반 서사 중재","cluster":"FM_VP","tier":"A","cellId":"A-7","crossCell":"DCD×FM-VMI","relatedMotorClusters":["FM5","FM1"],"category":"시각-운동통합","purpose":"시각정보→손움직임 변환 촉진, 필압조절","procedure":"다감각 쓰기(모래/점토→종이). Beery VMI·K-DTVP-2 기반 목표설정. 고유수용 입력→필기과제(캐스케이드). 속도-정확도 균형","cascadeStage":"SP→PS→GM→FM","ptCollaboration":"가정: 필기대안(키보드)+감각쓰기연습","setting":["clinic","home"],"sessionTiming":"기능참여 25~40분","ageRange":[24,216],"cascadePosition":3},{"id":"GF-A9","domain":"GF","name":"고유수용 강화 → 힘조절·자세","cluster":"GM","tier":"A","cellId":"A-8","crossCell":"DCD×SP-Prop","relatedMotorClusters":["GM6","GM1"],"category":"고유수용 강화","purpose":"고유수용 변별 향상→힘등급화·관절위치인식","procedure":"무게감 활동(모래주머니, 저항밴드), 관절압축·견인, 진동도구. 다양한 무게 등급화 과제. 시각 피드백 활용","cascadeStage":"SP","ptCollaboration":"가정: 무거운 물건 나르기 일상화","setting":["clinic","home"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A10","domain":"GF","name":"SI + 재활 통합 (CP)","cluster":"PS","tier":"A","cellId":"A-9","crossCell":"CP×PS","relatedMotorClusters":["GM1","GM2"],"category":"자세+핸들링","purpose":"CP의 감각기반 자세안정화. OT-PT 역할 명확화","procedure":"SOR 고려 핸들링. 전정-고유수용 입력을 PT 치료 전 준비활동으로. 재활팀 협업 필수","cascadeStage":"SP→PS","ptCollaboration":"PT: 보장구·보행훈련. OT: 감각전략+기능","setting":["clinic"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A11","domain":"GF","name":"저긴장 자세 → 근긴장 지원","cluster":"PS","tier":"A","cellId":"A-10","crossCell":"다운×PS","relatedMotorClusters":["GM1","GM2"],"category":"저긴장 자세","purpose":"저긴장 기반 자세안정성 향상","procedure":"전정입력(그네, 볼스터스윙)+고유수용(heavy work, 관절압축)+항중력활동. 근긴장저하 보완. Beighton 확인","cascadeStage":"SP→PS","ptCollaboration":"PT: 체육활동·놀이터 활동 권장","setting":["clinic","home","school"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":1},{"id":"GF-A12","domain":"GF","name":"발달 촉진 - 이동·균형","cluster":"GM","tier":"A","cellId":"A-11","crossCell":"GDD×GM-Loco","relatedMotorClusters":["GM2","GM3"],"category":"발달 촉진","purpose":"전반적 발달지연의 운동발달 이정표 달성","procedure":"강한 감각입력(전정·고유수용)을 발달과제에 통합. 이동발달 위계: 기기→네발기기→걷기→달리기→점프. 보호자 중심 중재","cascadeStage":"SP→PS→GM","ptCollaboration":"PT: 이동발달 프로그램 병행","setting":["clinic","home"],"sessionTiming":"전 세션","ageRange":[24,216],"cascadePosition":2},{"id":"GF-B1","domain":"GF","name":"촉각변별 → 손내조작·운동계획","cluster":"FM","tier":"B","cellId":"B-1","crossCell":"DCD×SP-Tact","relatedMotorClusters":["FM2","FM3","GM5"],"category":"촉각 변별","purpose":"촉각변별 향상→stereognosis 발달→운동계획 기반","procedure":"주머니 속 물건찾기, 촉각매칭, 모래/쌀 보물찾기. 손전체(palm)와 손끝(fingertip) 모두 활용. 시각차단 점진적 도입","cascadeStage":"SP→FM","ptCollaboration":"가정: ADL 중 촉각경험 다양화","setting":["clinic","home"],"sessionTiming":"본활동 5~15분","ageRange":[24,216],"cascadePosition":1},{"id":"GF-B2","domain":"GF","name":"힘 등급화 - 정확도 향상","cluster":"GM","tier":"B","cellId":"B-2","crossCell":"DCD×GM-Force","relatedMotorClusters":["GM6","GM7"],"category":"힘 등급화","purpose":"고유수용 기반 힘등급화 능력 개발","procedure":"다양한 무게 물건 나르기(등급화), 점토조절(세게/약하게), 필압조절. 시각적 피드백→점진적 피드백 페이딩","cascadeStage":"SP→GM","ptCollaboration":"가정: 필압조절 연습","setting":["clinic","home"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":2},{"id":"GF-B3","domain":"GF","name":"전정 저반응 - 각성 상향","cluster":"GM","tier":"B","cellId":"B-3","crossCell":"ASD×SP-Vest","relatedMotorClusters":["GM1","GM2"],"category":"전정 저반응","purpose":"각성 수준 향상, 전정 등록 촉진","procedure":"강한 전정입력: 회전그네, 트램폴린, 스쿠터보드. 환경에 감각적으로 눈에띄는 요소 배치→탐색유도. 사회적 상호작용 연결","cascadeStage":"SP","ptCollaboration":"가정: 기상후 트램폴린5분","setting":["clinic","home"],"sessionTiming":"도입~조절 0~10분","ageRange":[24,216],"cascadePosition":1},{"id":"GF-B4","domain":"GF","name":"파지 발달 - 위계적 진행","cluster":"FM","tier":"B","cellId":"B-3-updated","crossCell":"DCD×FM-Grasp","relatedMotorClusters":["FM2","FM3"],"category":"파지 기능","purpose":"파지위계 진행, 손내조작 발달","procedure":"파지위계: 전손잡기→3지잡기→pincer. in-hand manipulation: 손끝이동, 회전, 위치전환. 단계적 난이도","cascadeStage":"SP→PS→FM","ptCollaboration":"가정: 일상 소근육 과제","setting":["clinic","home"],"sessionTiming":"본활동 15~30분","ageRange":[24,216],"cascadePosition":3},{"id":"GF-C1","domain":"GF","name":"의사소통 × 감각-운동","cluster":"FM","tier":"C","cellId":"C-1","crossCell":"의사소통×SP-Tact","relatedMotorClusters":["FM"],"category":"구강감각-운동","purpose":"구강 praxis 기초 구축 (SLP 협업)","procedure":"구강진동도구, 구강근육활성화, 호흡-발성 연결. SLP와 공동세션 또는 전략공유","cascadeStage":"SP→FM","ptCollaboration":"SLP 협업: 음운인식+감각 통합","setting":["clinic"],"sessionTiming":"본활동 15~25분","ageRange":[24,216],"cascadePosition":1},{"id":"GF-C2","domain":"GF","name":"시각-운동 학습 (SLD)","cluster":"FM_VP","tier":"C","cellId":"C-2","crossCell":"SLD×FM-VMI","relatedMotorClusters":["FM5","FM6"],"category":"시각-운동 학습","purpose":"시각-운동통합 학습과제","procedure":"다감각접근(모래/점토→종이). 도구사용 VMI 통합. 키보드 보상전략 병행","cascadeStage":"SP→PS→GM→FM→VP","ptCollaboration":"가정: 쓰기대안(키보드)+감각쓰기","setting":["clinic","home"],"sessionTiming":"본활동","ageRange":[24,216],"cascadePosition":3},{"id":"GF-C3","domain":"GF","name":"시지각 학습 (SLD)","cluster":"VP","tier":"C","cellId":"C-3","crossCell":"SLD×VP","relatedMotorClusters":["FM5","FM7"],"category":"시지각 학습","purpose":"시지각 기반 학습전략","procedure":"형태변별, 전경배경, 시각폐합, 공간관계. 읽기·쓰기에 시각전략 통합. 환경수정(조명, 대비)","cascadeStage":"VP","ptCollaboration":"가정: 시지각 놀이(숨은그림찾기)","setting":["clinic","home"],"sessionTiming":"본활동","ageRange":[24,216],"cascadePosition":3},{"id":"GF-C4","domain":"GF","name":"상지기능 최적화 (CP)","cluster":"FM","tier":"C","cellId":"C-7","crossCell":"CP×FM-Grasp","relatedMotorClusters":["FM2","FM3"],"category":"파지 기능","purpose":"CP 상지기능 최적화","procedure":"감각입력(고유수용, 촉각)→파지과제. 보조기기/스플린트 평가. NDT+SI 통합 접근","cascadeStage":"SP→PS→GM→FM","ptCollaboration":"PT: ROM+근력. OT: 기능적 파지","setting":["clinic"],"sessionTiming":"기능참여","ageRange":[24,216],"cascadePosition":3},{"id":"GF-C5","domain":"GF","name":"파지 발달 (다운증후군)","cluster":"FM","tier":"C","cellId":"C-8","crossCell":"다운×FM-Grasp","relatedMotorClusters":["FM2","FM3"],"category":"파지 발달","purpose":"저긴장 기반 파지패턴 발달","procedure":"관절과가동성 보상→co-contraction. 엄지대립 촉진. 내재근 활성화. 도구 그립 보조","cascadeStage":"SP→PS→FM","ptCollaboration":"PT: 상지근력. 보조도구 평가","setting":["clinic","home"],"sessionTiming":"본활동~기능참여","ageRange":[24,216],"cascadePosition":3},{"id":"GF-D1","domain":"GF","name":"이동·균형 기본","cluster":"GM","tier":"D","cellId":"D-4","crossCell":"GM/FM단독×GM-Loco","relatedMotorClusters":["GM2","GM3"],"category":"순수 이동","purpose":"감각기반 아닌 순수 이동·균형 훈련","procedure":"균형훈련(평균대, 한발서기), 보행훈련, 점프훈련. 근력+협응 직접접근","cascadeStage":"GM","ptCollaboration":"PT: 보행분석+균형훈련","setting":["clinic"],"sessionTiming":"본활동","ageRange":[24,216],"cascadePosition":2},{"id":"GF-D2","domain":"GF","name":"순수 힘조절","cluster":"GM","tier":"D","cellId":"D-5","crossCell":"GM/FM단독×GM-Force","relatedMotorClusters":["GM6"],"category":"순수 힘조절","purpose":"순수 힘등급화 훈련","procedure":"2~3단계힘변별→5단계힘등급화. 시각피드백 활용","cascadeStage":"GM","ptCollaboration":"가정: 필압조절 연습","setting":["clinic"],"sessionTiming":"본활동","ageRange":[24,216],"cascadePosition":2},{"id":"GF-D3","domain":"GF","name":"순수 파지·손내조작","cluster":"FM","tier":"D","cellId":"D-6","crossCell":"GM/FM단독×FM-Grasp","relatedMotorClusters":["FM2","FM3"],"category":"순수 파지","purpose":"순수 파지패턴·손내조작 발달 촉진","procedure":"파지위계: 전손잡기→3지잡기→pincer. in-hand manipulation: 손끝이동, 회전, 위치전환. 단계적 난이도","cascadeStage":"FM","ptCollaboration":"가정: 일상 소근육 과제","setting":["clinic","home"],"sessionTiming":"본활동","ageRange":[24,216],"cascadePosition":3},{"id":"GF-D4","domain":"GF","name":"미각·후각 변별","cluster":"SP","tier":"D","cellId":"D-7","crossCell":"편식×SP-Prop","relatedMotorClusters":[],"category":"미각후각변별","purpose":"맛·냄새 변별+식사연결","procedure":"냄새매칭, 맛분류, 요리참여(반죽, 재료탐색). 감각기반 음식선호 프로파일 작성","cascadeStage":"SP","ptCollaboration":"가정: 요리참여, 시장보기","setting":["clinic","home"],"sessionTiming":"본활동","ageRange":[24,216],"cascadePosition":1},{"id":"GF-D5","domain":"GF","name":"파지+자조 기능 (ID)","cluster":"FM","tier":"D","cellId":"D-8","crossCell":"ID×FM-Grasp","relatedMotorClusters":["FM2","FM8"],"category":"파지+자조","purpose":"ID 아동의 손기능+일상자조 발달","procedure":"감각입력→파지과제→자조과제(식사도구, 옷입기) 연계. 단순화+반복+시각단서","cascadeStage":"SP→PS→FM","ptCollaboration":"가정: ADL 기술 연습","setting":["clinic","home"],"sessionTiming":"기능참여","ageRange":[24,216],"cascadePosition":3}];
+const DATA_ACTIVITIES_COG=[{"id":"COG-A1","domain":"COG","name":"선호 놀이 3분 유지 훈련","cluster":"ATT-SUS","purpose":"단일 놀이 중간 이탈 없이 유지 (24M~)","procedure":["선호 장난감 탐색 세션 3분 유지 → 점진 연장","Womb Space에서 1~2분 진정 후 시작"],"materials":["선호 완구","타이머","스판덱스 해먹·빈백"],"progressCriteria":"4주마다 유지시간 +3분 (3분→6분→9분)","setting":["clinic","home"],"ageRange":[24,59],"variations":{"ASD":"감각프로파일 맞춤 환경","ADHD":"고유수용 입력 선행"},"redFlag":"36M에도 1분 미만 유지 → 신경발달 평가 의뢰"},{"id":"COG-A2","domain":"COG","name":"구조화 놀이 완성 훈련","cluster":"ATT-SUS","purpose":"구조화된 놀이를 이탈 없이 끝까지 수행 (32M~)","procedure":["블록 쌓기·삽입판 → 완성 시 즉각 강화","과제 전 2~3분 규칙적 신체 활동 후 이행"],"materials":["삽입판","블록","스티커 차트","감각 식이 스케줄 카드"],"progressCriteria":"4주마다 완성 과제 복잡도 +1단계","setting":["clinic","home"],"ageRange":[32,59],"variations":{"ADHD":"감각 식이 스케줄 우선"},"redFlag":"48M에도 구조화 놀이 3분 미유지"},{"id":"COG-A3","domain":"COG","name":"복잡 과제 5분+ 유지","cluster":"ATT-SUS","purpose":"복잡한 구조화 과제를 이탈 없이 수행 (48~51M)","procedure":["5단계 미술 활동·규칙 탁자 게임","과제 간 2~5분 움직임 휴식 도입"],"materials":["퍼즐(5~6조각)","빙고 게임","시각 타이머","트램폴린"],"progressCriteria":"4주마다 과제 유지시간 +5분","setting":["clinic","home"],"ageRange":[48,59],"variations":{},"redFlag":"52M에도 5분 과제 완수 불가"},{"id":"COG-A4","domain":"COG","name":"단일 과제 10분 유지 (Stage1)","cluster":"ATT-SUS","purpose":"단일 과제를 중간 이탈 없이 이어가기 (60M~)","procedure":["색칠하기·미로찾기 10분 목표","과제 전 10분 신체활동 루틴화"],"materials":["미로지","컬러링북","타이머","감각 식이 카드"],"progressCriteria":"4주마다 유지시간 +5분 (10분→15분→20분)","setting":["clinic","home","school"],"ageRange":[60,84],"variations":{"ADHD":"MPH 투약 전후 비교"},"redFlag":"72M에도 10분 과제 유지 불가"},{"id":"COG-A5","domain":"COG","name":"방해자극 환경 과제 유지","cluster":"ATT-SUS","purpose":"방해자극 1개 있는 환경에서 과제 유지 (72M~)","procedure":["라디오 켜놓고 퍼즐 완성","치료적 공의자/팽창식 디스크 쿠션 사용"],"materials":["8~12조각 직소 퍼즐","소음 차단 헤드폰","치료용 공의자"],"progressCriteria":"4주마다 방해자극 +1개 환경에서 정확도 80%+ 유지","setting":["clinic","school"],"ageRange":[72,84],"variations":{"ADHD":"헤드폰 보조 점진 제거"},"redFlag":"84M Stage 1 달성 기준 미충족 → 집중력 정밀 평가"},{"id":"COG-A6","domain":"COG","name":"다단계 과제 20분+ 완수","cluster":"ATT-SUS","purpose":"다단계 과제(읽기→질문 응답 등) 완수 (90M~)","procedure":["단락 읽기 + 3개 질문 응답 → 자기 체크","지적하기 전략 사용"],"materials":["짧은 독해 지문","자기점검표","손가락 가이드"],"progressCriteria":"4주마다 유지시간 +5분","setting":["clinic","home","school"],"ageRange":[90,119],"variations":{"ADHD":"과제 분절 체크리스트 병행","LD":"읽기 수준 맞춤"},"redFlag":"102M에도 20분 학습 과제 미유지 → ADHD 평가"},{"id":"COG-A7","domain":"COG","name":"장시간 30분 안정 집중","cluster":"ATT-SUS","purpose":"장시간 안정 집중 확인 (102~113M)","procedure":["30분 과제 타이머 분절 수행(10+10+10분)","Alert Program® 각성 수준 점검"],"materials":["타이머","집중력 자기기록 일지","Alert Program® 감각 전략 메뉴판"],"progressCriteria":"4주마다 무분절 집중시간 +10분","setting":["clinic","school"],"ageRange":[102,119],"variations":{"ADHD":"Alert Program® 상시 적용"},"redFlag":""},{"id":"COG-A8","domain":"COG","name":"소리 장난감 시선 향하기","cluster":"ATT-SEL","purpose":"소리 나는 장난감 1개에 시선 향하기 (24M)","procedure":["소리 장난감 1개 제시 → 시선 확인 → 강화","저입력 환경에서 시작"],"materials":["소리 완구 3종","소음 차단 환경"],"progressCriteria":"4주마다 공동주의 안정성 80%+","setting":["clinic","home"],"ageRange":[24,35],"variations":{"ASD":"시각·청각 복합 단서 우선"},"redFlag":"30M에도 공동주의 불안정 → ASD 선별 의뢰"},{"id":"COG-A9","domain":"COG","name":"2~5개 중 목표 사물 선택","cluster":"ATT-SEL","purpose":"2~5개 사물 중 이름 불린 것 선택 (28~52M)","procedure":["책상 위 그림카드 수 점진 증가(2→5개)","자극 감소 전략(방해 카드 부분 가리기)"],"materials":["그림카드 세트","가리개"],"progressCriteria":"4주마다 자극 수 +1개 (정확도 80% 유지)","setting":["clinic","home"],"ageRange":[28,60],"variations":{},"redFlag":"52M에도 3개 중 선택 불안정"},{"id":"COG-A10","domain":"COG","name":"전경-배경 분리 훈련","cluster":"ATT-SEL","purpose":"전경-배경 분리 (68M~)","procedure":["겹친 도형에서 특정 모양 찾기·숨은 그림 찾기","소음 차단 헤드폰·조명 조절"],"materials":["숨은그림 워크시트","겹침 도형 카드","헤드폰"],"progressCriteria":"4주마다 정확도 +15%","setting":["clinic","school"],"ageRange":[68,119],"variations":{"LD":"교실 환경 수정 병행"},"redFlag":"84M에도 전경-배경 불안정 → K-DTVP-2 의뢰"},{"id":"COG-A11","domain":"COG","name":"복잡 환경 목표 자극 탐색","cluster":"ATT-SEL","purpose":"복잡한 환경에서 목표 자극 탐색 (84~119M)","procedure":["글자 탐색 과제(특정 글자 찾아 O표시)·단어 찾기","과제 단순화 전략(가리개)"],"materials":["단어 찾기 워크시트","가리개"],"progressCriteria":"4주마다 자극 밀도 +1단계 (정확도 80%+ 유지)","setting":["clinic","school"],"ageRange":[84,119],"variations":{},"redFlag":"102M에도 소음 환경 선택주의 불안정"},{"id":"COG-A12","domain":"COG","name":"멈춰 지시 동작 중지","cluster":"ATT-ALT","purpose":"'안 돼/멈춰' 지시 시 동작 중지 (32~51M)","procedure":["음악 멈추면 자리 앉기·Simon Says 단순화","Womb Space에서 진정 후 규칙 게임 시작"],"materials":["음악 플레이어","정지 신호 카드","빈백"],"progressCriteria":"4주마다 정지 성공률 +20%","setting":["clinic","home"],"ageRange":[32,60],"variations":{"ASD":"시각적 정지 카드 상시"},"redFlag":"48M에도 '멈춰' 지시 50% 미만 성공"},{"id":"COG-A13","domain":"COG","name":"분류 규칙 전환 게임","cluster":"ATT-ALT","purpose":"분류 규칙 전환 게임 (68M~)","procedure":["색 분류 → '이제 모양으로' 규칙 전환","Alert Program® 각성 점검 후 유연성 과제 시작"],"materials":["블록·카드 세트","Alert Program® 체크차트"],"progressCriteria":"4주마다 규칙 전환 오류 수 50% 감소","setting":["clinic","school"],"ageRange":[68,119],"variations":{"ADHD":"감각 break 선행"},"redFlag":"84M에도 규칙 전환 2회 이상 오류"},{"id":"COG-A14","domain":"COG","name":"충동 반응 억제 (GPDC)","cluster":"ATT-ALT","purpose":"충동적 답 쓰기 억제 (90~113M)","procedure":["'문제 다 읽고 쓰기' 루틴 카드","GPDC PLAN 단계 자기 언어화 훈련"],"materials":["자기점검 카드","GPDC 카드"],"progressCriteria":"4주마다 충동 반응 비율 50% 감소","setting":["clinic","school"],"ageRange":[90,119],"variations":{"ADHD":"자기-안내 전략 내면화 강조"},"redFlag":"108M에도 충동 반응 안정화 미달 → ADHD 재평가"},{"id":"COG-A15","domain":"COG","name":"듣기+필기 동시 수행","cluster":"ATT-DIV","purpose":"듣기+필기 동시 수행 (96M~)","procedure":["교사 역할 놀이: 짧은 문장 불러주기 → 핵심 단어 받아쓰기","Alert Program® 각성 최적화 선행"],"materials":["짧은 문장 카드","필기 용지","Alert Program® 체크차트"],"progressCriteria":"4주마다 이중과제 양쪽 정확도 +15%","setting":["clinic","school"],"ageRange":[96,119],"variations":{"ADHD":"속도조절 전략 우선"},"redFlag":"108M에도 듣기+쓰기 동시 수행 불가 → 주의력 정밀 평가"},{"id":"COG-A16","domain":"COG","name":"교사 지시+자료 찾기 동시","cluster":"ATT-DIV","purpose":"교사 지시 들으며 자료 찾기 (102M~)","procedure":["2채널 과제: 동물 이름 듣기+책에서 그림 찾기","GPDC PLAN 주의 분배 전략 자기언어화"],"materials":["그림 찾기 책","단어 목록","GPDC 카드"],"progressCriteria":"4주마다 양쪽 채널 정확도 70%+ 목표","setting":["clinic","school"],"ageRange":[102,119],"variations":{},"redFlag":""},{"id":"COG-A17","domain":"COG","name":"대화하며 손 작업 유지","cluster":"ATT-DIV","purpose":"대화하며 손 작업 유지 (108M~)","procedure":["또래와 대화하면서 구슬 꿰기/색칠하기 동시 수행","감각 식이 선행(고유수용성 입력)"],"materials":["구슬 꿰기 세트","대화 주제 카드"],"progressCriteria":"4주마다 이중과제 시 양쪽 수행 질 80%+ 유지","setting":["clinic","school"],"ageRange":[108,144],"variations":{},"redFlag":"120M에도 이중과제 수행 시 한쪽 현저히 저하"},{"id":"COG-A18","domain":"COG","name":"수업 중 필기+경청+질문 동시","cluster":"ATT-DIV","purpose":"수업 중 필기+경청+질문 준비 동시 (120M~)","procedure":["모의 수업 상황: 강의 들으며 요약 필기 + 질문 메모","CO-OP GPDC 전체 적용"],"materials":["구조화된 필기 양식","GPDC 카드","강의 녹음"],"progressCriteria":"4주마다 3채널 동시 수행 질 평가","setting":["clinic","school"],"ageRange":[120,216],"variations":{},"redFlag":""},{"id":"COG-A19","domain":"COG","name":"사물 1개 즉시 회상","cluster":"MEM-STW","purpose":"방금 본 사물 1개 이름 말하기 (24M)","procedure":["보여주기 → 천 덮기 → '뭐였어?' 질문","최적 각성 상태에서 수행"],"materials":["일상 사물 3~5개","천"],"progressCriteria":"4주마다 회상 항목 +1개","setting":["clinic","home"],"ageRange":[24,59],"variations":{},"redFlag":"36M에도 1개 즉시 회상 불가 → 발달 평가"},{"id":"COG-A20","domain":"COG","name":"숫자 2~3개 순행 따라 말하기","cluster":"MEM-STW","purpose":"숫자 2개→3개 순행 따라 말하기 (36~60M)","procedure":["'나 따라 해봐: 2, 5' — 박자 맞춰 제시","니모닉 기술 도입(숫자에 이미지 연결)"],"materials":["숫자 카드"],"progressCriteria":"4주마다 순행 +1개","setting":["clinic","home"],"ageRange":[36,60],"variations":{},"redFlag":"48M에도 숫자 2개 순행 불안정"},{"id":"COG-A21","domain":"COG","name":"2단계 지시 기억 수행","cluster":"MEM-STW","purpose":"2단계 지시 기억하여 수행 (64~84M)","procedure":["'연필 가져와서 → 빨간 종이에 써봐'","목록 작성 전략 기초 도입"],"materials":["지시 카드(듣기용)","그림 메모 용지"],"progressCriteria":"4주마다 지시 단계 +1","setting":["clinic","home","school"],"ageRange":[64,84],"variations":{},"redFlag":"84M에도 2단계 지시 50% 미만 완수 → 작업기억 정밀 평가"},{"id":"COG-A22","domain":"COG","name":"숫자 4~5개 순행+역순 훈련","cluster":"MEM-STW","purpose":"숫자 4~5개 순행 + 역순 2~3개 (84~95M)","procedure":["역순 게임('거꾸로 말해봐')","GPDC PLAN 기억 전략 선택"],"materials":["화이트보드","숫자 타일"],"progressCriteria":"4주마다 순행+1 또는 역순+1","setting":["clinic","home","school"],"ageRange":[84,119],"variations":{"ADHD":"짧은 시연부터"},"redFlag":"102M에도 역순 2개 불안정 → 작업기억 심화 평가"},{"id":"COG-A23","domain":"COG","name":"3단계 지시 기억+암산","cluster":"MEM-STW","purpose":"3단계 지시 기억 수행 + 암산 중간 결과 유지 (84~113M)","procedure":["'가방 챙기고 → 이름 쓰고 → 자리 앉아'","1자리 덧셈 암산 + 중간값 유지"],"materials":["과제 카드(3단계)","메모지","암산 워크시트"],"progressCriteria":"4주마다 지시 +1단계 또는 암산 정확도 +20%","setting":["clinic","school"],"ageRange":[84,119],"variations":{},"redFlag":""},{"id":"COG-A24","domain":"COG","name":"짧은 문장 따라 말하기","cluster":"MEM-AUD","purpose":"2~3어절 문장 따라 말하기 (28~35M)","procedure":["'나비가 날아요' 반복 따라 말하기","리듬 활용, 청각 환경 최적화"],"materials":["짧은 동화책","조용한 환경"],"progressCriteria":"4주마다 +1~2어절","setting":["clinic","home"],"ageRange":[28,76],"variations":{},"redFlag":"40M에도 2어절 따라 말하기 불안정 → SLP 평가"},{"id":"COG-A25","domain":"COG","name":"단어 회상+긴 문장 따라 말하기","cluster":"MEM-AUD","purpose":"2~3개 단어 회상 + 5~7어절 문장 따라 말하기 (44~76M)","procedure":["3개 사물 이름 듣기 → 10초 대기 → 회상","상상하기 전략 도입"],"materials":["사물 그림카드","짧은 이야기 지문"],"progressCriteria":"4주마다 회상 항목 +1개","setting":["clinic","home"],"ageRange":[44,84],"variations":{},"redFlag":""},{"id":"COG-A26","domain":"COG","name":"숨긴 사물 찾기","cluster":"MEM-VIS","purpose":"3~5개 사물 중 숨긴 것 찾기 (36~55M)","procedure":["소품 3개 제시 → 1개 제거 → '뭐가 없어졌어?'","상상하기 전략(사물 배열 '사진 찍기') 모델링"],"materials":["소품 세트"],"progressCriteria":"4주마다 항목 수 +1개","setting":["clinic","home"],"ageRange":[36,79],"variations":{},"redFlag":"52M에도 3개 중 숨긴 것 50% 미답"},{"id":"COG-A27","domain":"COG","name":"그림 순서 기억 후 재현","cluster":"MEM-VIS","purpose":"3~4개 그림 순서 기억 후 재현 (68~79M)","procedure":["순서카드 3개 제시 → 덮기 → 순서대로 배열","이야기 만들기(재구성 전략)"],"materials":["순서 그림카드"],"progressCriteria":"4주마다 순서 항목 +1개","setting":["clinic","home"],"ageRange":[68,84],"variations":{},"redFlag":""},{"id":"COG-A28","domain":"COG","name":"복합 도형 기억 재현","cluster":"MEM-VIS","purpose":"복잡한 도형 기억 후 재현 (96M~)","procedure":["복합 도형 10초 관찰 → 가린 후 그리기","부분→전체 분석('먼저 큰 사각형, 그 안에 원')"],"materials":["복합 도형 카드(단계별)","그리기 용지","타이머"],"progressCriteria":"4주마다 복합 요소 +1개 또는 정확도 +15%","setting":["clinic","school"],"ageRange":[96,119],"variations":{},"redFlag":"108M에도 3요소 복합 도형 재현 불가 → 시지각·작업기억 연합 평가"},{"id":"COG-A29","domain":"COG","name":"지도/도표 위치 기억","cluster":"MEM-VIS","purpose":"지도/도표에서 위치 기억 (102M~)","procedure":["간단한 지도(5개 건물) 30초 관찰 → 위치 표시","니모닉(건물에 이야기 연결)+공간 조직화"],"materials":["간단한 지도 워크시트(5→8→12개 위치)","GPDC 카드"],"progressCriteria":"4주마다 위치 항목 +2개","setting":["clinic","school"],"ageRange":[102,119],"variations":{},"redFlag":""},{"id":"COG-A30","domain":"COG","name":"시각 패턴 기억 재구성","cluster":"MEM-VIS","purpose":"시각 패턴 기억 후 재구성 (108M~)","procedure":["3×3 격자에 색칠된 패턴 5초 관찰 → 빈 격자에 재현","행 단위 '사진 찍기' 전략"],"materials":["격자 패턴 카드(단계별)","색연필","빈 격자지"],"progressCriteria":"4주마다 격자 크기 +1단계 (2×2→3×3→4×4)","setting":["clinic","school"],"ageRange":[108,119],"variations":{},"redFlag":""},{"id":"COG-A31","domain":"COG","name":"놀이 2단계 순서 자발 수행","cluster":"MEM-PRO","purpose":"놀이 2단계 순서 자발 수행 (28M~)","procedure":["손씻기 2단계 루틴·블록 쌓고 넣기","루틴 그림카드+기계적 암기-스크립트"],"materials":["루틴 카드(그림+글)"],"progressCriteria":"4주마다 루틴 단계 +1","setting":["clinic","home"],"ageRange":[28,89],"variations":{},"redFlag":"40M에도 2단계 루틴 자발 수행 불가"},{"id":"COG-A32","domain":"COG","name":"시연 전략 자발 사용","cluster":"MEM-PRO","purpose":"시연 전략(입으로 반복) 자발 사용 (90M~)","procedure":["외울 때 작게 반복 말하기 모델링","CO-OP 스캐폴딩 접근: 시범→소리내어→내면화"],"materials":["기억 전략 포스터"],"progressCriteria":"4주마다 자발 사용률 +20%","setting":["clinic","school"],"ageRange":[90,119],"variations":{},"redFlag":""},{"id":"COG-A33","domain":"COG","name":"범주화·이미지 연상+절차 자동화","cluster":"MEM-PRO","purpose":"범주화 전략·이미지 연상법 + 학습 절차 5단계 자동화 (96~113M)","procedure":["단어를 동물/식물로 묶어 기억·그림 연상","GPDC PLAN 기억 전략 선택","수학 풀이 절차 5단계 카드 → 점진 제거"],"materials":["기억 전략 워크시트","풀이 절차 카드","GPDC 카드"],"progressCriteria":"4주마다 전략 자발 사용률 +20%","setting":["clinic","school"],"ageRange":[96,119],"variations":{},"redFlag":""},{"id":"COG-A34","domain":"COG","name":"크기·도형 변별 (TOD)","cluster":"PER-FSD","purpose":"크기 2지선다 + 3종 도형 삽입판 (24~35M)","procedure":["대형·소형 블록 '큰 거 줘' 지시","도형판 삽입 → 형태 이름 말하기"],"materials":["크기 블록 세트","도형 삽입판","도형 카드"],"progressCriteria":"4주마다 변별 정확도 +15%","setting":["clinic","home"],"ageRange":[24,55],"variations":{},"redFlag":"36M에도 크기 2지선다 불안정"},{"id":"COG-A35","domain":"COG","name":"5종 도형+크기순 배열+틀린그림찾기","cluster":"PER-FSD","purpose":"5종 도형 이름 + 5개 크기순 배열 + 틀린그림찾기 (40~55M)","procedure":["도형 카드 명명 게임","5단계 크기 막대 배열","틀린그림찾기 2~3가지"],"materials":["도형 카드(5종+)","크기 막대 세트","틀린그림찾기 워크시트"],"progressCriteria":"4주마다 변별 난이도 +1단계","setting":["clinic","home"],"ageRange":[40,84],"variations":{},"redFlag":""},{"id":"COG-A36","domain":"COG","name":"회전/반전 도형 b/d 변별","cluster":"PER-FSD","purpose":"회전/반전 도형 원본 매칭 + b/d 변별 (76M~)","procedure":["b/d/p/q 변별·회전 도형 분류","고유수용성 입력 선행(손 관절 압박 후 필기)"],"materials":["회전 도형 카드","낱자 방향 단서 카드"],"progressCriteria":"4주마다 변별 정확도 +15%","setting":["clinic","school"],"ageRange":[76,119],"variations":{"LD":"연합하기 전략(b=배불뚝이, d=등짝)"},"redFlag":"90M에도 b/d 변별 불안정 → 읽기 학습장애 평가"},{"id":"COG-A37","domain":"COG","name":"위치 개념 7종 (TOD)","cluster":"PER-SPC","purpose":"안/위/아래/앞/뒤/옆 7종 위치 수행 (24~47M)","procedure":["상자에 블록 넣기","인형 배치 게임","전신 신체 이동으로 공간 개념 체득"],"materials":["상자·컵·바구니","인형","방향 화살표 스티커"],"progressCriteria":"4주마다 개념 +2개","setting":["clinic","home"],"ageRange":[24,59],"variations":{},"redFlag":"52M에도 7종 위치 개념 불안정"},{"id":"COG-A38","domain":"COG","name":"직소 퍼즐+도형 모사+좌우 방향","cluster":"PER-SPC","purpose":"3~5조각 퍼즐 + 도형 모사 + 좌우 방향 안정 (64~84M)","procedure":["직소 퍼즐 3→5조각 단계화","모눈종이에 도형 모사","좌우 방향 미로"],"materials":["직소 퍼즐 3·4·5·6조각","모눈종이","방향 미로","좌우 표시 밴드"],"progressCriteria":"4주마다 퍼즐 +2조각 또는 방향 정확도 +15%","setting":["clinic","home","school"],"ageRange":[64,84],"variations":{},"redFlag":"84M에도 ○□ 모사 불안정 → VMI/K-DTVP-2"},{"id":"COG-A39","domain":"COG","name":"전경-배경+실루엣 대응","cluster":"PER-ADV","purpose":"전경-배경 분리 + 실루엣-원본 대응 (36~84M)","procedure":["겹친 도형에서 원 찾기","그림자 카드 짝짓기(3→5지선다)"],"materials":["겹침 도형 워크시트","숨은그림책","그림자 카드 세트"],"progressCriteria":"4주마다 정확도 +15%","setting":["clinic","home"],"ageRange":[36,119],"variations":{},"redFlag":"80M 전경-배경 불안정 → K-DTVP-2"},{"id":"COG-A40","domain":"COG","name":"불완전 도형+세부 찾기","cluster":"PER-ADV","purpose":"불완전 도형 완성 + 복잡 배경 세부 찾기 (96~113M)","procedure":["빠진 부분 그리기·선 완성 과제","세부 찾기 그림·도표 읽기(가리개 사용)"],"materials":["불완전 도형 워크시트","탐색 그림 워크시트","가리개"],"progressCriteria":"4주마다 정확도 +15%","setting":["clinic","school"],"ageRange":[96,119],"variations":{},"redFlag":""},{"id":"COG-A41","domain":"COG","name":"1속성 분류+범주명 (TOD)","cluster":"THK-CLS","purpose":"색상별 블록 분류 → 1속성 분류 → 범주명 자발 사용 (28~55M)","procedure":["빨강/파랑 블록 분류","그림카드 3범주 분류 박스","'이건 다 뭐야?' 질문"],"materials":["두 가지 색 블록","그림카드(20~30장)","분류 박스"],"progressCriteria":"4주마다 분류 속성 +1 또는 범주명 +2개","setting":["clinic","home"],"ageRange":[28,59],"variations":{},"redFlag":"40M에도 1속성 분류 불안정"},{"id":"COG-A42","domain":"COG","name":"분류 이유 설명+2속성 동시","cluster":"THK-CLS","purpose":"분류 이유 말로 설명 + 2속성 동시 분류 (76~113M)","procedure":["'왜 이쪽에 넣었어?' 사후 설명 요구","2×2 분류 매트릭스","벤 다이어그램"],"materials":["분류 워크시트","2×2 분류 매트릭스","벤 다이어그램 워크시트","GPDC 카드"],"progressCriteria":"4주마다 분류 속성 +1 또는 설명 자발화","setting":["clinic","school"],"ageRange":[76,119],"variations":{},"redFlag":"84M에도 분류 기준 설명 불가 → Stage 2 전환 보류"},{"id":"COG-A43","domain":"COG","name":"인과 기대+카드 짝짓기","cluster":"THK-CAU","purpose":"동작-결과 기대 + 인과 카드 짝짓기 (24~84M)","procedure":["버튼→소리 완구 반복 조작","인과 그림카드 짝짓기","'왜?' 질문에 이유 말하기"],"materials":["인과 완구(버튼·레버·팝업)","인과 그림카드 세트","상황 그림카드"],"progressCriteria":"4주마다 정확 인과 설명 +2개","setting":["clinic","home"],"ageRange":[24,84],"variations":{},"redFlag":"36M에도 인과 기대 행동 없음 → 발달 평가"},{"id":"COG-A44","domain":"COG","name":"유추+수 패턴 인식","cluster":"THK-CAU","purpose":"단순 유추 A:B=C:? + 수 패턴(2씩 증가) 인식 (90~113M)","procedure":["'강아지:멍멍=고양이:?' 유추 카드","수 패턴 표에서 다음 수 쓰기"],"materials":["유추 카드","수 패턴 워크시트"],"progressCriteria":"4주마다 유추 난이도 +1단계","setting":["clinic","school"],"ageRange":[90,119],"variations":{},"redFlag":""},{"id":"COG-A45","domain":"COG","name":"크기순 배열+AB패턴+순서 카드","cluster":"THK-SEQ","purpose":"크기순 3개 배열 + AB패턴 + 2단계 사건 순서 (36~60M)","procedure":["3개 막대 크기순 배열","빨-파 구슬 꿰기·패턴 블록","손씻기→식사 2장 카드 배열"],"materials":["크기 막대 세트","패턴 블록","일상 순서 그림카드"],"progressCriteria":"4주마다 패턴 +1단계 또는 순서 카드 +1장","setting":["clinic","home"],"ageRange":[36,84],"variations":{},"redFlag":"44M에도 3개 크기순 배열 불안정"},{"id":"COG-A46","domain":"COG","name":"장애물 제거+시행착오 (TOD)","cluster":"THK-PSV","purpose":"장애물 치우고 사물 획득 + 시행착오 수정 (24~55M)","procedure":["천 덮인 장난감 꺼내기","퍼즐 방향 바꾸기","상황 그림 보고 해결책 제시"],"materials":["소품, 천, 줄","삽입형 퍼즐","상황 그림카드"],"progressCriteria":"4주마다 해결책 +1개 또는 자발 수정 출현","setting":["clinic","home"],"ageRange":[24,59],"variations":{},"redFlag":"36M에도 시행착오 없이 포기"},{"id":"COG-A47","domain":"COG","name":"해결책 브레인스토밍 (GPDC)","cluster":"THK-PSV","purpose":"2가지+ 해결책 + 시행착오 수정 (90~113M)","procedure":["실생활 시나리오 카드 + 해결책 브레인스토밍","CO-OP GPDC 전체 단계 적용"],"materials":["시나리오 카드","기록 용지","GPDC 카드"],"progressCriteria":"4주마다 자발 해결책 +1개, GPDC 자발 사용 출현","setting":["clinic","school"],"ageRange":[90,119],"variations":{},"redFlag":""},{"id":"COG-A48","domain":"COG","name":"과제 의도 파악+시범 관찰 (TOD)","cluster":"EXF-PLN","purpose":"삽입판 과제 의도 파악 + 시범 1회 보고 수행 (28~55M)","procedure":["퍼즐 보여주고 시범 없이 시작 기다리기","블록 탑 시범 1회 → 아동 수행"],"materials":["삽입판","블록"],"progressCriteria":"4주마다 독립 과제 시작 빈도 +20%","setting":["clinic","home"],"ageRange":[28,59],"variations":{},"redFlag":"36M에도 시범 1회 후 수행 시작 불가"},{"id":"COG-A49","domain":"COG","name":"복합 과제 분석+계획 (GPDC)","cluster":"EXF-PLN","purpose":"복합 과제 '무엇을/어떻게' 파악 + 2단계 계획 (72~119M)","procedure":["2단계 지시 카드 → '무엇을, 어떻게' 말하기","GPDC GOAL/PLAN 단계","불명확 과제에서 질문 생성"],"materials":["과제 분석 워크시트","준비물 체크리스트","GPDC 카드","불완전 과제 카드"],"progressCriteria":"4주마다 계획 단계 +1 또는 자발 질문 출현","setting":["clinic","school"],"ageRange":[72,119],"variations":{"DCD":"CO-OP DPA 병행"},"redFlag":"84M에도 2단계 계획 독립 수행 불가"},{"id":"COG-A50","domain":"COG","name":"차례 놀이+규칙 유지","cluster":"EXF-RUL","purpose":"차례 놀이 규칙 1개 유지 → 2~3개 규칙 10분+ 유지 (32~119M)","procedure":["블록 교대 쌓기·카드 게임","2규칙 보드게임","복합 규칙 과제"],"materials":["차례 표시 카드","규칙 카드","보드게임","Alert Program® 체크차트"],"progressCriteria":"4주마다 규칙 +1개 또는 유지 시간 +5분","setting":["clinic","home","school"],"ageRange":[32,119],"variations":{"ADHD":"감각 식이 선행","ASD":"시각 규칙 카드 상시"},"redFlag":"84M에도 2규칙 10분 유지 불가 → Stage 2 전환 보류"},{"id":"COG-A51","domain":"COG","name":"자기점검+오류 자기수정","cluster":"EXF-MON","purpose":"'다 했는지' 자기 확인 + 체크리스트 + 오류 발견·수정 (96~119M)","procedure":["과제 완료 후 체크리스트 자기 확인","Alert Program® 과제 중·후 각성-수행 연결","의도적 오류 과제 → 스스로 찾기 → 수정"],"materials":["자기점검 체크리스트","Alert Program® 기록지","의도적 오류 과제지","DPA 기록지"],"progressCriteria":"4주마다 자발 자기점검 +20%","setting":["clinic","school"],"ageRange":[96,119],"variations":{"DCD":"CO-OP DPA 적용"},"redFlag":""},{"id":"COG-A52","domain":"COG","name":"시간 예측+타이머 자기관리","cluster":"EXF-TIM","purpose":"5분/10분 시간 예측 + 타이머 사용 자기관리 (84~119M)","procedure":["5분 모래시계 보여주기 → 추정","타이머 맞추고 스스로 과제 시작·종료","예측-실측 비교"],"materials":["모래시계(5분/10분)","시각 타이머(아날로그)","GPDC 카드","예측-실측 기록표"],"progressCriteria":"4주마다 예측-실측 오차 50% 감소","setting":["clinic","school"],"ageRange":[84,119],"variations":{},"redFlag":""},{"id":"COG-A53","domain":"COG","name":"1~2단계 지시+개념어 (TOD)","cluster":"LNG-CMP","purpose":"1단계 지시 수행 + 개념어 5→12개 + 2어절 조합 (24~55M)","procedure":["'공 줘' — 자연스러운 맥락","개념어 지시 따르기","신체 이동으로 개념 체득"],"materials":["일상 사물","개념어 카드","그림책"],"progressCriteria":"4주마다 지시 +1단계 또는 개념어 +3~5개","setting":["clinic","home"],"ageRange":[24,59],"variations":{},"redFlag":"30M에도 1단계 지시 불안정 → SLP 평가"},{"id":"COG-A54","domain":"COG","name":"개념어 20개+인과접속사+수리언어","cluster":"LNG-CMP","purpose":"개념어 20개+ + '왜냐하면' 안정 + 수리언어 어휘 (68~113M)","procedure":["개념어 지시+표현 병행","이유 말하기 게임","수리언어-연산 연결 게임"],"materials":["개념어 카드(30종+)","상황 그림카드","수리언어 카드"],"progressCriteria":"4주마다 개념어 +5개 또는 이해 정답률 +15%","setting":["clinic","school"],"ageRange":[68,119],"variations":{"LD":"CO-OP DSS 적용"},"redFlag":"84M에도 개념어 15개 미달 → SLP 의뢰"},{"id":"COG-A55","domain":"COG","name":"이름 글자+숫자 읽기쓰기+CVC","cluster":"LNG-LIT","purpose":"이름 글자 찾기 + 숫자 1~10 + 받침 글자 읽기 (52~96M)","procedure":["여러 글자 중 이름 글자 O표시","숫자 카드 읽기→쓰기→순서 맞추기","받침 글자 초성-중성-종성 명시적 교수"],"materials":["이름 카드","낱자 카드","숫자 카드(1~10)","낱자 블록","받침 카드"],"progressCriteria":"4주마다 빈출 어휘 +10개","setting":["clinic","home","school"],"ageRange":[52,96],"variations":{},"redFlag":"84M에도 1~10 읽기 불안정 → 학습 준비도 평가"},{"id":"COG-A56","domain":"COG","name":"빈출 어휘+읽기이해+글쓰기","cluster":"LNG-LIT","purpose":"빈출 어휘 50개 자동 읽기 + 읽기이해 + 글쓰기 (90~120M+)","procedure":["빈출 어휘 플래시카드 반복 읽기","짧은 지문 → 사실/추론 질문","서론-본론-결론 구조 쓰기"],"materials":["빈출 어휘 플래시카드","독해 지문(1~5문단)","글쓰기 구조 워크시트","GPDC 카드"],"progressCriteria":"4주마다 빈출 어휘 +10개 또는 이해 정답률 +15%","setting":["clinic","school"],"ageRange":[90,216],"variations":{"LD":"텍스트 단서 찾기 전략 교수"},"redFlag":"108M에도 사실 질문 50% 미답 → 읽기이해 평가"},{"id":"COG-A57","domain":"COG","name":"1:1 대응+수세기 5→10개","cluster":"NUM-COR","purpose":"컵-숟가락 1:1 대응 + 5~10개 대응 수세기 (28~67M)","procedure":["컵 2개에 숟가락 1개씩 넣기(신체 이동 동반)","구슬 5개 짚으며 세기","바둑돌 10개 '5씩 묶어서 세기'"],"materials":["컵·숟가락 5개","구슬/블록 5~10개","바둑돌"],"progressCriteria":"4주마다 범위 +3~5개","setting":["clinic","home"],"ageRange":[28,84],"variations":{},"redFlag":"36M에도 2개 1:1 대응 불안정"},{"id":"COG-A58","domain":"COG","name":"수량 지시+수사+순서수","cluster":"NUM-QTY","purpose":"'2개 줘/3개 줘' 수량 지시 + 수사 자발 사용 + 순서수 (32~84M)","procedure":["과자 2개 달라는 맥락","'몇 개야?' 반복 질문","순서수 카드 게임('세 번째 것 줘')"],"materials":["작은 사물 세트","서수 카드(1st~5th)"],"progressCriteria":"4주마다 수량 범위 +2개 또는 비교 +1단계","setting":["clinic","home"],"ageRange":[32,84],"variations":{},"redFlag":"40M에도 3개 수량 지시 불안정"},{"id":"COG-A59","domain":"COG","name":"수의 양적·크기 비교","cluster":"NUM-QTY","purpose":"수의 양적 비교 + 수 크기 비교 (68~84M)","procedure":["두 줄 바둑돌 비교","숫자 카드 두 장 비교·수직선 활용"],"materials":["바둑돌","수 비교 워크시트","수직선 카드","숫자 카드"],"progressCriteria":"4주마다 비교 +1단계","setting":["clinic","home","school"],"ageRange":[68,84],"variations":{},"redFlag":"84M에도 10 이내 수 크기 비교 불안정 → Stage 2 전환 보류"},{"id":"COG-A60","domain":"COG","name":"10 이내 덧셈+뺄셈 개념","cluster":"NUM-ARI","purpose":"10 이내 덧셈 + 뺄셈 개념 이해 (84~102M)","procedure":["구체물 합치기 → 수식 연결","GPDC PLAN '뺄셈이니까 빼야 해'"],"materials":["바둑돌/블록","수식 카드","수직선 카드","뺄셈 워크시트"],"progressCriteria":"4주마다 연산 정확도 +20% 또는 +1유형 도입","setting":["clinic","home","school"],"ageRange":[84,119],"variations":{},"redFlag":"96M에도 10 이내 덧셈 구체물 없이 불가 → 수 개념·작업기억 평가"},{"id":"COG-A61","domain":"COG","name":"자릿값 이해+측정 기초","cluster":"NUM-ARI","purpose":"자릿값(10묶음과 낱개) + 측정 기초(길이·무게) (96~119M)","procedure":["바둑돌 10개 묶음+낱개로 두 자리 수 표현","자·줄자로 물건 길이 재기","저울로 무게 비교"],"materials":["위치값 표(자릿값 매트)","바둑돌 묶음","자, 줄자","간이 저울","측정 기록 워크시트"],"progressCriteria":"4주마다 자릿값 정확도 +20% 또는 측정 정확도 +15%","setting":["clinic","home","school"],"ageRange":[96,119],"variations":{},"redFlag":""}];
+const DATA_GOAL_TEMPLATES=[{"domain":"OC","cluster":"OC1_ATT","clusterName":"주의력","levels":{"1":{"gas":-2,"description":"과제지속 <2분, 최대촉구 필요, 자리이탈 빈번"},"2":{"gas":-1,"description":"3~5분, 언어촉구로 유지, 구조화 시 개선"},"3":{"gas":0,"description":"5~10분, 시각촉구로 유지, 구조화 개선률 2배+"},"4":{"gas":1,"description":"10~15분, 최소촉구, 일반환경 유지"},"5":{"gas":2,"description":"15분+, 독립 유지, 맥락 전이 가능"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"OC","cluster":"OC2_WM","clusterName":"작업기억","levels":{"1":{"gas":-2,"description":"1단계 지시만 가능, 시각지원 무반응"},"2":{"gas":-1,"description":"2단계 가능, 시각지원 시 +1단계"},"3":{"gas":0,"description":"3단계 가능, 시각+구어시연 효과적"},"4":{"gas":1,"description":"4단계 가능, 자발시연 출현, 청킹 가능"},"5":{"gas":2,"description":"5단계+, 독립시연, 이중과제 가능"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"OC","cluster":"OC6_INH","clusterName":"억제","levels":{"1":{"gas":-2,"description":"정지실패 >40%, 차례불가, 지연0초"},"2":{"gas":-1,"description":"정지실패 30%, 1:1 차례 가능, 지연10초"},"3":{"gas":0,"description":"정지실패 20%, 소집단 차례, 지연30초"},"4":{"gas":1,"description":"정지실패 15%, 대집단 차례, 지연1분"},"5":{"gas":2,"description":"정지실패 <10%, 자기조절, 지연3분+"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"OC","cluster":"OC3_PO","clusterName":"계획·조직화","levels":{"1":{"gas":-2,"description":"과제멈춤, 시각스케줄 무반응, 계획진술 불가"},"2":{"gas":-1,"description":"시각스케줄 시 수행, 촉구시 계획진술"},"3":{"gas":0,"description":"CO-OP GPDC 촉구하에 가능, 체크리스트 사용"},"4":{"gas":1,"description":"자발적 GPDC, 자기분해 출현"},"5":{"gas":2,"description":"독립적 계획+실행, 다과제 전이"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"OC","cluster":"OC4_SEQ","clusterName":"순서화","levels":{"1":{"gas":-2,"description":"2단계 순서오류, 종결누락, 자동화 없음"},"2":{"gas":-1,"description":"시각카드로 3단계, 종결촉구 필요"},"3":{"gas":0,"description":"시각카드 fading 중, 종결자발 70%, 자동화 시작"},"4":{"gas":1,"description":"카드없이 4단계, 종결자발 90%"},"5":{"gas":2,"description":"독립 5단계+, 완전자동화, 맥락전이"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"OC","cluster":"OC5_CF","clusterName":"인지적 유연성","levels":{"1":{"gas":-2,"description":"전환거부(울음/이탈), 대안0개, 보속↑↑"},"2":{"gas":-1,"description":"예고 시 전환 가능, 촉구 시 대안1개"},"3":{"gas":0,"description":"예고 시 자발전환, 대안2개, WCST 보속↓"},"4":{"gas":1,"description":"예고없이 전환 가능, 자발대안, 재구성 출현"},"5":{"gas":2,"description":"유연한 전환, 다전략, 독립재구성"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"OC","cluster":"OC7_SM","clusterName":"자기점검","levels":{"1":{"gas":-2,"description":"오류미인식, 피드백→비난해석, 확인없음"},"2":{"gas":-1,"description":"시각비교 시 오류인식, 긍정피드백만 수용"},"3":{"gas":0,"description":"자기비교 가능, 교정피드백 수용, 확인촉구"},"4":{"gas":1,"description":"자발오류인식, 자기교시 출현, 확인습관"},"5":{"gas":2,"description":"독립자기점검, 자기교시 내재화"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"OC","cluster":"OC8_TM","clusterName":"시간관리","levels":{"1":{"gas":-2,"description":"시간인식 없음, 예측불가, 시간도구 무반응"},"2":{"gas":-1,"description":"Time Timer 시 인식, 예측오차 >100%"},"3":{"gas":0,"description":"Time Timer 자발확인, 예측오차 50%, 속도조절"},"4":{"gas":1,"description":"시간도구 의존↓, 예측오차 30%, 자기배분"},"5":{"gas":2,"description":"내적 시간감각, 독립배분, 압박대처"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"GF","cluster":"GM_Prax","clusterName":"대근육 운동계획","levels":{"1":{"gas":-2,"description":"SP안정 불완전, 코어유지 5초 미만"},"2":{"gas":-1,"description":"SP안정+코어유지 10초, CO-OP 1~2개 과제"},"3":{"gas":0,"description":"장애물코스 3단계 50% 완수, GPDC 촉구하에 가능"},"4":{"gas":1,"description":"장애물코스 5단계 80% 완수, 자발적 계획"},"5":{"gas":2,"description":"MABC-2 ≥-1SD, 새운동 자기학습 가능"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"GF","cluster":"FM_Prax","clusterName":"소근육 운동계획","levels":{"1":{"gas":-2,"description":"SP안정 불완전, 손목안정 불안정"},"2":{"gas":-1,"description":"SP안정+어깨안정, 가위직선 50% 정확"},"3":{"gas":0,"description":"가위곡선 80%, 도구사용 초기 가능"},"4":{"gas":1,"description":"도구사용 일관적(집게, 스포이드)"},"5":{"gas":2,"description":"교실과제 독립, 새도구 자기학습"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"GF","cluster":"PS","clusterName":"자세 안정성","levels":{"1":{"gas":-2,"description":"전정과민↑, prone ext 불가능"},"2":{"gas":-1,"description":"전정과민↓, prone ext 5초 유지"},"3":{"gas":0,"description":"prone ext 15초, 착석 15분, 기능적자세 3가지"},"4":{"gas":1,"description":"착석 30분 안정, 동적균형과제 80%"},"5":{"gas":2,"description":"자세자기점검 내재화, 다양한환경 독립"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"GF","cluster":"FM_Grasp","clusterName":"파지 기능","levels":{"1":{"gas":-2,"description":"SP안정 불완전, 전손잡기 불안정"},"2":{"gas":-1,"description":"SP안정+파지위계 초기, 촉각변별 기초"},"3":{"gas":0,"description":"3지잡기 출현, 손내조작 초기"},"4":{"gas":1,"description":"pincer 잡기 일관, in-hand manipulation 3가지"},"5":{"gas":2,"description":"ADL 독립(식사, 옷입기), 새도구 학습 가능"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"GF","cluster":"GM_Loco","clusterName":"이동·균형","levels":{"1":{"gas":-2,"description":"SP안정 불완전, 정적균형 <5초"},"2":{"gas":-1,"description":"SP안정+항중력자세, 정적균형 10초"},"3":{"gas":0,"description":"한발서기 5초, 기초패턴 50%+ 관찰"},"4":{"gas":1,"description":"점프·공잡기 80%, MABC-2 ≥-1.5SD"},"5":{"gas":2,"description":"또래수준이동, 새운동기술 학습가능"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"GF","cluster":"FM_VMI","clusterName":"시각-운동통합","levels":{"1":{"gas":-2,"description":"SP안정 불완전, 쓰기자세 불안정"},"2":{"gas":-1,"description":"SP안정+쓰기자세, 연필잡기 교정"},"3":{"gas":0,"description":"수직·수평선 모사, 원모사 가능"},"4":{"gas":1,"description":"이름쓰기 일관, Beery VMI ≥-1.5SD"},"5":{"gas":2,"description":"쓰기자율수행, Beery VMI ≥-1SD"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"ATT-SUS","clusterName":"지속주의","levels":{"1":{"gas":-2,"description":"과제유지 <2분, 즉각 이탈, 외적 통제 필요"},"2":{"gas":-1,"description":"3~5분 유지, 감각 식이 후 개선, 언어촉구 필요"},"3":{"gas":0,"description":"10분 유지, 시각타이머 활용, 방해자극 1개 환경 가능"},"4":{"gas":1,"description":"15~20분 유지, 자기점검 출현, 방해자극 환경 안정"},"5":{"gas":2,"description":"30분+ 독립 유지, Alert Program® 자기 관리"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"ATT-SEL","clusterName":"선택주의","levels":{"1":{"gas":-2,"description":"공동주의 불안정, 1개 자극 선택 불가"},"2":{"gas":-1,"description":"2~3개 중 선택 가능, 저입력 환경 필요"},"3":{"gas":0,"description":"5개 중 선택 정확, 전경-배경 초기"},"4":{"gas":1,"description":"전경-배경 안정, 체계적 탐색 출현"},"5":{"gas":2,"description":"복잡 환경 독립 탐색, 전략 자발 사용"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"ATT-ALT","clusterName":"교대주의/억제","levels":{"1":{"gas":-2,"description":"멈춰 지시 50% 미만, 규칙 전환 불가"},"2":{"gas":-1,"description":"멈춰 70%, 1규칙 전환 촉구 하에 가능"},"3":{"gas":0,"description":"멈춰 90%, 2규칙 전환, 오류 즉각 수정"},"4":{"gas":1,"description":"충동 억제 안정, 자기-안내 출현"},"5":{"gas":2,"description":"GPDC 자발 사용, 충동 반응 내재 조절"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"ATT-DIV","clusterName":"분할주의","levels":{"1":{"gas":-2,"description":"이중과제 불가, 한 채널만 가능"},"2":{"gas":-1,"description":"이중과제 시 양쪽 50% 정확도"},"3":{"gas":0,"description":"이중과제 양쪽 70%, 속도조절 가능"},"4":{"gas":1,"description":"이중과제 양쪽 80%, 자기모니터링 출현"},"5":{"gas":2,"description":"3채널 동시 수행, 우선순위 전략 자발 사용"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"MEM-STW","clusterName":"단기·작업기억","levels":{"1":{"gas":-2,"description":"즉시 회상 1개 불가, 숫자순행 2개 미만"},"2":{"gas":-1,"description":"숫자순행 2~3개, 2단계 지시 촉구 하에"},"3":{"gas":0,"description":"숫자순행 3~4개, 역순 도입, 2단계 지시 독립"},"4":{"gas":1,"description":"역순 2~3개, 3단계 지시 독립, 기억전략 선택"},"5":{"gas":2,"description":"역순 3+, 암산 중간결과 유지, GPDC 전략 자발"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"MEM-AUD","clusterName":"청각기억","levels":{"1":{"gas":-2,"description":"2어절 따라 말하기 불안정"},"2":{"gas":-1,"description":"2~3어절 가능, 단어 회상 1개"},"3":{"gas":0,"description":"5어절 문장, 단어 회상 2~3개"},"4":{"gas":1,"description":"7어절+, 리허설 전략 자발 사용"},"5":{"gas":2,"description":"복잡 문장 이해+회상, 상상하기 전략 내재화"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"MEM-VIS","clusterName":"시각기억","levels":{"1":{"gas":-2,"description":"3개 중 숨긴 것 50% 미답"},"2":{"gas":-1,"description":"숨긴 것 찾기 가능, 순서 기억 2개"},"3":{"gas":0,"description":"순서 3~4개, 사진 찍기 전략 사용"},"4":{"gas":1,"description":"복합 도형 재현, 지도 위치 기억 5개"},"5":{"gas":2,"description":"시각 패턴 4x4, 공간 조직화 자발 사용"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"MEM-PRO","clusterName":"절차기억/전략","levels":{"1":{"gas":-2,"description":"2단계 루틴 자발 수행 불가"},"2":{"gas":-1,"description":"2단계 루틴 카드 지원 시 가능"},"3":{"gas":0,"description":"시연 전략 촉구 시 사용, 3단계 루틴"},"4":{"gas":1,"description":"전략 자발 선택, 4단계 루틴"},"5":{"gas":2,"description":"5단계 절차 자동화, GPDC CHECK 자발"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"PER-FSD","clusterName":"형태·크기변별","levels":{"1":{"gas":-2,"description":"크기 2지선다 불안정"},"2":{"gas":-1,"description":"3종 도형 삽입 가능, 5종 명명 초기"},"3":{"gas":0,"description":"5종 도형+크기순, 틀린그림찾기"},"4":{"gas":1,"description":"회전/반전 도형 매칭 안정"},"5":{"gas":2,"description":"b/d 변별 안정, 형태항상성 완성"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"PER-SPC","clusterName":"공간개념","levels":{"1":{"gas":-2,"description":"안/위/아래 3종 불안정"},"2":{"gas":-1,"description":"7종 위치 부분 안정, 3조각 퍼즐"},"3":{"gas":0,"description":"5조각 퍼즐, 도형 모사, 좌우 초기"},"4":{"gas":1,"description":"좌우 안정, 6조각+ 퍼즐 독립"},"5":{"gas":2,"description":"공간 관계 완전 이해, 지도 읽기"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"PER-ADV","clusterName":"시지각고급","levels":{"1":{"gas":-2,"description":"전경-배경 불안정"},"2":{"gas":-1,"description":"전경-배경 초기, 실루엣 3지선다"},"3":{"gas":0,"description":"전경-배경 안정, 실루엣 5지선다"},"4":{"gas":1,"description":"불완전 도형 완성 가능"},"5":{"gas":2,"description":"복잡 배경 세부 찾기, 체계적 탐색 자발"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"THK-CLS","clusterName":"분류·범주화","levels":{"1":{"gas":-2,"description":"1속성 분류 불안정"},"2":{"gas":-1,"description":"1속성 안정, 범주명 촉구 시"},"3":{"gas":0,"description":"범주명 자발, 분류 이유 설명"},"4":{"gas":1,"description":"2속성 동시, 설명 자발화"},"5":{"gas":2,"description":"벤 다이어그램, GPDC 자발"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"THK-CAU","clusterName":"인과추론","levels":{"1":{"gas":-2,"description":"인과 기대 행동 없음"},"2":{"gas":-1,"description":"인과 기대 있음, 카드 2세트"},"3":{"gas":0,"description":"왜냐하면 사용, 인과 4세트"},"4":{"gas":1,"description":"단순 유추, 수 패턴 인식"},"5":{"gas":2,"description":"복합 유추, 패턴 규칙 자발"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"THK-SEQ","clusterName":"순서·패턴","levels":{"1":{"gas":-2,"description":"크기순 3개 불안정"},"2":{"gas":-1,"description":"AB 패턴, 2단계 순서 카드"},"3":{"gas":0,"description":"ABC 패턴, 4~5장 시간순"},"4":{"gas":1,"description":"AABB+ 패턴, 복합 순서"},"5":{"gas":2,"description":"패턴 규칙 자발 발견"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"THK-PSV","clusterName":"문제해결","levels":{"1":{"gas":-2,"description":"시행착오 없이 포기"},"2":{"gas":-1,"description":"시행착오 1회, 촉구 시"},"3":{"gas":0,"description":"해결책 2개, Luria 촉구 하에"},"4":{"gas":1,"description":"자발 수정, GPDC 촉구 시"},"5":{"gas":2,"description":"GPDC 자발, 일반화 가능"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"EXF-PLN","clusterName":"과제이해·계획","levels":{"1":{"gas":-2,"description":"과제 시작 불가"},"2":{"gas":-1,"description":"시범 후 시작, 먼저~다음에 촉구"},"3":{"gas":0,"description":"무엇을/어떻게 파악, 2단계 계획"},"4":{"gas":1,"description":"GPDC PLAN 촉구 시, 자발 질문"},"5":{"gas":2,"description":"독립 계획, 불명확 과제 자발 질문"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"EXF-RUL","clusterName":"규칙유지","levels":{"1":{"gas":-2,"description":"1규칙 유지 불가"},"2":{"gas":-1,"description":"1규칙 유지, 차례 1:1"},"3":{"gas":0,"description":"2규칙 5분, 게임 규칙"},"4":{"gas":1,"description":"2~3규칙 10분+, 자문하기"},"5":{"gas":2,"description":"복합 3~4규칙, 자기 수정 자발"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"EXF-MON","clusterName":"모니터링·자기조절","levels":{"1":{"gas":-2,"description":"외적 점검만"},"2":{"gas":-1,"description":"촉구 시 점검, 오류 인식 초기"},"3":{"gas":0,"description":"체크리스트 40%, Alert 연결"},"4":{"gas":1,"description":"자발 60%, 오류 자기수정"},"5":{"gas":2,"description":"자발 80%+, DPA 자기기록"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"EXF-TIM","clusterName":"시간관리","levels":{"1":{"gas":-2,"description":"시간 예측 불가"},"2":{"gas":-1,"description":"5분 체험, 오차 >100%"},"3":{"gas":0,"description":"타이머 자발, 오차 50%"},"4":{"gas":1,"description":"GPDC 시간계획, 오차 30%"},"5":{"gas":2,"description":"독립 시간배분, 오차 <20%"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"LNG-CMP","clusterName":"언어이해·표현","levels":{"1":{"gas":-2,"description":"1단계 지시 불안정, 개념어 <5"},"2":{"gas":-1,"description":"1단계 안정, 2어절, 개념어 8개"},"3":{"gas":0,"description":"2단계 지시, 개념어 15개"},"4":{"gas":1,"description":"개념어 20+, 인과접속사 안정"},"5":{"gas":2,"description":"수리언어 연결, 복합 문장 자유"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"LNG-LIT","clusterName":"읽기·쓰기","levels":{"1":{"gas":-2,"description":"글자 미인식"},"2":{"gas":-1,"description":"이름 글자, 숫자 1~5"},"3":{"gas":0,"description":"숫자 1~10, CVC, 빈출 20개"},"4":{"gas":1,"description":"빈출 50개, 사실 질문"},"5":{"gas":2,"description":"추론 읽기이해, 3문장+ 글쓰기"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"NUM-COR","clusterName":"대응·수세기","levels":{"1":{"gas":-2,"description":"2개 대응 불안정"},"2":{"gas":-1,"description":"4개 대응, 5개 수세기 초기"},"3":{"gas":0,"description":"5개 대응, 10개 도전"},"4":{"gas":1,"description":"10개 수세기, 5묶음 전략"},"5":{"gas":2,"description":"20개+ 독립, 뛰어세기"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"NUM-QTY","clusterName":"수량·수개념","levels":{"1":{"gas":-2,"description":"2개 수량 불안정"},"2":{"gas":-1,"description":"3개 수량, 수사 초기"},"3":{"gas":0,"description":"5개 수량, 순서수, 양적비교"},"4":{"gas":1,"description":"수 크기 비교 안정"},"5":{"gas":2,"description":"수 비교 자유, 20 이내"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"},{"domain":"COG","cluster":"NUM-ARI","clusterName":"기초연산","levels":{"1":{"gas":-2,"description":"구체물 덧셈 불가"},"2":{"gas":-1,"description":"구체물 10 이내 덧셈"},"3":{"gas":0,"description":"추상 덧셈, 뺄셈 도입"},"4":{"gas":1,"description":"뺄셈 안정, 자릿값 초기"},"5":{"gas":2,"description":"자릿값 이해, 측정 기초"}},"longTermGoalTemplate":"{{cluster}} 영역에서 Level {{targetLevel}} ({{targetDesc}})에 도달","shortTermGoalTemplate":"{{cluster}} 영역에서 4~6주 내 Level {{targetLevel}} ({{targetDesc}})에 도달"}];
+const DATA_SESSION_TEMPLATES=[{"id":"ADHD_40","diagnosis":"ADHD","duration":40,"phases":[{"name":"SP배제/조절","timeRange":"0~5분","minutes":5,"description":"감각식이(heavy work: 벽밀기 10회+점프 20회)","tier":1,"activity":"A1"},{"name":"Tier1 ATT","timeRange":"5~12분","minutes":7,"description":"구조화 환경 주의 과제(시각타이머+칸막이, 비선호 과제)","tier":1,"activity":"A2+A4"},{"name":"Tier2 WM+INH","timeRange":"12~22분","minutes":10,"description":"지시단계 확장(2→3단계, 시각카드)+Go/No-Go 게임","tier":2,"activity":"A5+A9"},{"name":"Tier3 PO 통합","timeRange":"22~30분","minutes":8,"description":"CO-OP 기반 만들기 과제(GPDC)","tier":3,"activity":"A13"},{"name":"Tier4 TM","timeRange":"30~35분","minutes":5,"description":"Time Timer 시간예측(\"몇 분?→수행→비교\")","tier":4,"activity":"A28+A29"},{"name":"정리+자기점검","timeRange":"35~38분","minutes":3,"description":"종결루틴(정리→확인→기록)","tier":4,"activity":"A19+A26"},{"name":"부모 코칭","timeRange":"38~40분","minutes":2,"description":"가정 과제 공유","tier":5,"activity":"coaching"}]},{"id":"ADHD_50","diagnosis":"ADHD","duration":50,"phases":[{"name":"SP배제/조절","timeRange":"0~5분","minutes":5,"description":"감각식이(heavy work)","tier":1,"activity":"A1"},{"name":"Tier1 ATT","timeRange":"5~15분","minutes":10,"description":"구조화 환경 주의 과제","tier":1,"activity":"A2+A4"},{"name":"Tier2 WM+INH","timeRange":"15~25분","minutes":10,"description":"지시단계 확장+Go/No-Go","tier":2,"activity":"A5+A9"},{"name":"Tier3 PO 통합","timeRange":"25~35분","minutes":10,"description":"CO-OP 기반 과제","tier":3,"activity":"A13"},{"name":"Tier4 TM","timeRange":"35~42분","minutes":7,"description":"Time Timer 시간예측","tier":4,"activity":"A28+A29"},{"name":"정리+자기점검","timeRange":"42~45분","minutes":3,"description":"종결루틴","tier":4,"activity":"A19+A26"},{"name":"부모 코칭","timeRange":"45~50분","minutes":5,"description":"가정 과제 공유","tier":5,"activity":"coaching"}]},{"id":"ASD_40","diagnosis":"ASD","duration":40,"phases":[{"name":"SP조절+예측","timeRange":"0~5분","minutes":5,"description":"감각환경 세팅+일과 시각스케줄 확인","tier":1,"activity":"environment+schedule"},{"name":"Tier1 ATT","timeRange":"5~12분","minutes":7,"description":"관심사 활용 주의 과제","tier":1,"activity":"A1-modified"},{"name":"Tier3 CF","timeRange":"12~22분","minutes":10,"description":"규칙변경 게임(색→모양)+전환예고","tier":3,"activity":"A20+A21"},{"name":"Tier3 PO","timeRange":"22~30분","minutes":8,"description":"CO-OP 만들기(관심사 과제+시각Plan)","tier":3,"activity":"A13-modified"},{"name":"Tier4 SM","timeRange":"30~35분","minutes":5,"description":"시각비교 자기점검","tier":4,"activity":"A24+A27"},{"name":"정리+종결","timeRange":"35~38분","minutes":3,"description":"종결루틴+다음 시각스케줄","tier":4,"activity":"A19"},{"name":"부모 코칭","timeRange":"38~40분","minutes":2,"description":"가정 시각스케줄, 전환예고 방법","tier":5,"activity":"coaching"}]},{"id":"ASD_50","diagnosis":"ASD","duration":50,"phases":[{"name":"SP조절+예측","timeRange":"0~5분","minutes":5,"description":"감각환경 세팅+일과 시각스케줄","tier":1,"activity":"environment+schedule"},{"name":"Tier1 ATT","timeRange":"5~15분","minutes":10,"description":"관심사 활용 주의 과제","tier":1,"activity":"A1-modified"},{"name":"Tier3 CF","timeRange":"15~25분","minutes":10,"description":"규칙변경 게임+전환예고","tier":3,"activity":"A20+A21"},{"name":"Tier3 PO","timeRange":"25~35분","minutes":10,"description":"CO-OP 만들기","tier":3,"activity":"A13-modified"},{"name":"Tier4 SM","timeRange":"35~42분","minutes":7,"description":"시각비교 자기점검","tier":4,"activity":"A24+A27"},{"name":"정리+종결","timeRange":"42~45분","minutes":3,"description":"종결루틴","tier":4,"activity":"A19"},{"name":"부모 코칭","timeRange":"45~50분","minutes":5,"description":"가정 프로그램","tier":5,"activity":"coaching"}]},{"id":"ID_40","diagnosis":"ID","duration":40,"phases":[{"name":"SP조절","timeRange":"0~3분","minutes":3,"description":"감각입력(진동방석 착석, 고유수용)","tier":1,"activity":"A1-modified"},{"name":"Tier1 ATT","timeRange":"3~10분","minutes":7,"description":"발달맞춤 과제+촉구위계(최대→점진소거)","tier":1,"activity":"A2+A3"},{"name":"Tier2 WM","timeRange":"10~20분","minutes":10,"description":"시각카드 지시수행(현재용량+점진확장)","tier":2,"activity":"A5+A6"},{"name":"Tier3 SEQ","timeRange":"20~28분","minutes":8,"description":"backward chaining(일상루틴: 손씻기/정리)","tier":3,"activity":"A17+A18"},{"name":"정리+부모","timeRange":"28~40분","minutes":12,"description":"종결루틴+부모 가정과제(루틴카드)","tier":4,"activity":"A19+coaching"}]},{"id":"ID_50","diagnosis":"ID","duration":50,"phases":[{"name":"SP조절","timeRange":"0~3분","minutes":3,"description":"감각입력","tier":1,"activity":"A1-modified"},{"name":"Tier1 ATT","timeRange":"3~12분","minutes":9,"description":"발달맞춤 과제+촉구위계","tier":1,"activity":"A2+A3"},{"name":"Tier2 WM","timeRange":"12~22분","minutes":10,"description":"시각카드 지시수행","tier":2,"activity":"A5+A6"},{"name":"Tier3 SEQ","timeRange":"22~32분","minutes":10,"description":"backward chaining","tier":3,"activity":"A17+A18"},{"name":"기능 연습","timeRange":"32~38분","minutes":6,"description":"일상 기능 연습(ADL)","tier":3,"activity":"ADL-practice"},{"name":"정리+부모","timeRange":"38~50분","minutes":12,"description":"종결루틴+부모 교육","tier":4,"activity":"A19+coaching"}]},{"id":"DCD_40","diagnosis":"DCD","duration":40,"phases":[{"name":"SP활성화","timeRange":"0~5분","minutes":5,"description":"heavy work+관절압축","tier":1,"activity":"A1+A8"},{"name":"PS안정화","timeRange":"5~12분","minutes":7,"description":"prone extension+밸런스","tier":1,"activity":"A3+postural"},{"name":"GM Praxis","timeRange":"12~25분","minutes":13,"description":"CO-OP 장애물코스+운동계획","tier":2,"activity":"GF-A1"},{"name":"FM기능","timeRange":"25~35분","minutes":10,"description":"가위질+도구사용","tier":3,"activity":"GF-A3"},{"name":"자기점검","timeRange":"35~38분","minutes":3,"description":"성공경험 정리","tier":4,"activity":"A24"},{"name":"부모 코칭","timeRange":"38~40분","minutes":2,"description":"가정과제 안내","tier":5,"activity":"coaching"}]},{"id":"DCD_50","diagnosis":"DCD","duration":50,"phases":[{"name":"SP활성화","timeRange":"0~5분","minutes":5,"description":"heavy work+관절압축","tier":1,"activity":"A1+A8"},{"name":"PS안정화","timeRange":"5~12분","minutes":7,"description":"prone extension+밸런스","tier":1,"activity":"A3+postural"},{"name":"GM Praxis","timeRange":"12~28분","minutes":16,"description":"CO-OP 장애물코스","tier":2,"activity":"GF-A1"},{"name":"FM기능","timeRange":"28~38분","minutes":10,"description":"가위질+도구사용","tier":3,"activity":"GF-A3"},{"name":"자기점검","timeRange":"38~42분","minutes":4,"description":"성공경험 정리","tier":4,"activity":"A24+A27"},{"name":"부모 코칭","timeRange":"42~50분","minutes":8,"description":"가정과제 상세 안내","tier":5,"activity":"coaching"}]},{"id":"CP_40","diagnosis":"CP","duration":40,"phases":[{"name":"감각입력","timeRange":"0~5분","minutes":5,"description":"부드러운 전정+관절압축","tier":1,"activity":"GF-A4"},{"name":"자세안정","timeRange":"5~15분","minutes":10,"description":"NDT기반 핸들링+항중력","tier":1,"activity":"GF-A9"},{"name":"기능과제","timeRange":"15~30분","minutes":15,"description":"자세유지+팔뻗기+이동","tier":2,"activity":"GF-A10"},{"name":"ADL참여","timeRange":"30~35분","minutes":5,"description":"식사/옷입기 과제","tier":3,"activity":"ADL-function"},{"name":"진정루틴","timeRange":"35~38분","minutes":3,"description":"관절압축 마무리","tier":4,"activity":"soothing"},{"name":"보호자교육","timeRange":"38~40분","minutes":2,"description":"감각전략 교육","tier":5,"activity":"caregiver-education"}]},{"id":"CP_50","diagnosis":"CP","duration":50,"phases":[{"name":"감각입력","timeRange":"0~5분","minutes":5,"description":"부드러운 전정+관절압축","tier":1,"activity":"GF-A4"},{"name":"자세안정","timeRange":"5~15분","minutes":10,"description":"NDT기반 핸들링","tier":1,"activity":"GF-A9"},{"name":"기능과제","timeRange":"15~32분","minutes":17,"description":"자세유지+팔뻗기+이동","tier":2,"activity":"GF-A10"},{"name":"ADL참여","timeRange":"32~40분","minutes":8,"description":"식사/옷입기 과제","tier":3,"activity":"ADL-function"},{"name":"진정루틴","timeRange":"40~43분","minutes":3,"description":"관절압축 마무리","tier":4,"activity":"soothing"},{"name":"보호자교육","timeRange":"43~50분","minutes":7,"description":"감각전략 상세교육","tier":5,"activity":"caregiver-education"}]},{"id":"GDD_40","diagnosis":"GDD","duration":40,"phases":[{"name":"감각활성화","timeRange":"0~5분","minutes":5,"description":"다감각 인사루틴+관절압축","tier":1,"activity":"multisensory-greeting"},{"name":"발달촉진","timeRange":"5~15분","minutes":10,"description":"이동발달 위계(발달수준 맞춤)","tier":1,"activity":"GF-A11"},{"name":"대근육","timeRange":"15~25분","minutes":10,"description":"균형+협응(발달단계)","tier":2,"activity":"GM-development"},{"name":"소근육","timeRange":"25~33분","minutes":8,"description":"미세운동 기술","tier":3,"activity":"SI-A28"},{"name":"정리+부모","timeRange":"33~40분","minutes":7,"description":"성공경험 정리+부모 안내","tier":4,"activity":"closure+coaching"}]},{"id":"GDD_50","diagnosis":"GDD","duration":50,"phases":[{"name":"감각활성화","timeRange":"0~5분","minutes":5,"description":"다감각 인사루틴","tier":1,"activity":"multisensory-greeting"},{"name":"발달촉진","timeRange":"5~17분","minutes":12,"description":"이동발달 위계","tier":1,"activity":"GF-A11"},{"name":"대근육","timeRange":"17~28분","minutes":11,"description":"균형+협응","tier":2,"activity":"GM-development"},{"name":"소근육","timeRange":"28~38분","minutes":10,"description":"미세운동 기술","tier":3,"activity":"SI-A28"},{"name":"정리+부모","timeRange":"38~50분","minutes":12,"description":"성공경험 정리+상세 부모 안내","tier":4,"activity":"closure+coaching"}]}];
+
+
+// ── TYPES: Shared Constants ──
+const SCORE_MAP = {
+  'm': { code: 'M', label: '숙달', score: 2, en: 'mastered' },
+  'e': { code: 'E', label: '출현', score: 1, en: 'emerging' },
+  'x': { code: 'N', label: '미출현', score: 0, en: 'not_emerged' },
+  null: { code: 'X', label: '미평가', score: null, en: 'not_assessed' }
+};
+
+const DOMAINS = ['SI', 'GF', 'OC', 'COG'];
+
+const DIAGNOSIS_CODES = ['ASD','ADHD','DCD','ID','CP','SLD','DD','GDD','DOWN','OTHER'];
+
+const STAGES = ['S1','S2','S3','S4'];
+
+const PROGRESS_LEVELS = [
+  { level: 1, gas: -2, label: '기초' },
+  { level: 2, gas: -1, label: '초기' },
+  { level: 3, gas: 0,  label: '기대수준' },
+  { level: 4, gas: 1,  label: '양호' },
+  { level: 5, gas: 2,  label: '우수' }
+];
+
+const ACH_LEVELS = [
+  { min: 80, label: '양호', color: '#4CAF50' },
+  { min: 60, label: '주의', color: '#FF9800' },
+  { min: 40, label: '관찰', color: '#F57C00' },
+  { min: 0,  label: '정밀평가', color: '#F44336' }
+];
+
+const OC_CASCADE = {
+  tier1: ['OC1_ATT'],
+  tier2: ['OC2_WM', 'OC6_INH'],
+  tier3: ['OC3_PO', 'OC4_SEQ', 'OC5_CF'],
+  tier4: ['OC7_SM', 'OC8_TM']
+};
+
+const SI_CASCADE = ['SR', 'MC', 'SD'];
+
+const GF_CASCADE = ['SP', 'PS', 'GM', 'FM', 'VP_PC'];
+
+const SESSION_DURATIONS = [40, 50];
+
+function achRateToLevel(achRate) {
+  if (achRate >= 80) return 5;
+  if (achRate >= 70) return 4;
+  if (achRate >= 60) return 3;
+  if (achRate >= 40) return 2;
+  return 1;
+}
+
+// ── ENGINE: Cascade Analysis ──
+/**
+ * cascade.js — 캐스케이드 분석 모듈
+ * 3개 도메인의 계층적 손상 위치를 분석하고 도메인 간 교차영향을 파악
+ */
+
+
+/**
+ * 메인 캐스케이드 분석
+ * @param {object} profile - importerr에서 생성한 ClientProfile
+ * @returns {object} cascadeResult
+ */
+function analyzeCascade(profile) {
+  const domains = profile.domains;
+
+  // 1. 도메인별 캐스케이드 분석
+  const si = domains.SI ? analyzeSI(domains.SI) : null;
+  const gf = domains.GF ? analyzeGF(domains.GF) : null;
+  const oc = domains.OC ? analyzeOC(domains.OC) : null;
+  const cog = domains.COG ? analyzeCOG(domains.COG) : null;
+
+  // 2. SP 전제조건 체크
+  const spPremise = checkSPPremise(si, domains.SI);
+
+  // 3. 도메인 간 교차영향 분석
+  const crossDomain = findCrossDomainEffects(si, gf, oc, cog, domains);
+
+  // 4. 통합 중재 순서 생성
+  const interventionOrder = buildInterventionOrder(si, gf, oc, cog, spPremise, crossDomain);
+
+  // 5. 전체 요약
+  const summary = buildSummary(si, gf, oc, cog, spPremise, crossDomain);
+
+  return {
+    si, gf, oc, cog,
+    spPremise,
+    crossDomain,
+    interventionOrder,
+    summary
+  };
+}
+
+// ── OC 캐스케이드 분석 ──
+// Tier1(ATT) → Tier2(WM+INH) → Tier3(PO+SEQ+CF) → Tier4(SM+TM)
+function analyzeOC(domain) {
+  const areaMap = {};
+  (domain.areas || []).forEach(a => { areaMap[a.code] = a; });
+
+  // Tier별 집계
+  const tiers = [
+    {
+      tier: 1, name: 'Tier1_기저주의',
+      clusters: [{ id: 'OC1_ATT', code: 'OC-T1', label: '주의(ATT)' }]
+    },
+    {
+      tier: 2, name: 'Tier2_핵심EF',
+      clusters: [
+        { id: 'OC2_WM', code: 'OC-T2', label: '작업기억(WM)' },
+        { id: 'OC6_INH', code: 'OC-T2', label: '억제(INH)' }
+      ]
+    },
+    {
+      tier: 3, name: 'Tier3_복합EF',
+      clusters: [
+        { id: 'OC3_PO', code: 'OC-T3', label: '계획(PO)' },
+        { id: 'OC4_SEQ', code: 'OC-T3', label: '순서화(SEQ)' },
+        { id: 'OC5_CF', code: 'OC-T3', label: '전환(CF)' }
+      ]
+    },
+    {
+      tier: 4, name: 'Tier4_메타인지',
+      clusters: [
+        { id: 'OC7_SM', code: 'OC-T4', label: '자기점검(SM)' },
+        { id: 'OC8_TM', code: 'OC-T4', label: '시간관리(TM)' }
+      ]
+    }
+  ];
+
+  // OC는 Tier 단위로 achRate를 받으므로, Tier 코드로 매핑
+  const tierResults = tiers.map(t => {
+    // Tier 코드(OC-T1 등)로 area 찾기
+    const tierCode = t.clusters[0].code;
+    const area = areaMap[tierCode];
+    const achRate = area ? area.achRate : 0;
+    const level = achRateToLevel(achRate);
+    const rfCount = area ? (area.rfCount || 0) : 0;
+
+    return {
+      tier: t.tier,
+      name: t.name,
+      clusters: t.clusters.map(c => c.id),
+      clusterLabels: t.clusters.map(c => c.label),
+      achRate,
+      level,
+      rfCount,
+      isImpaired: level <= 2
+    };
+  });
+
+  // 최하위 손상 Tier 찾기
+  const impairedTiers = tierResults.filter(t => t.isImpaired);
+  const lowestImpaired = impairedTiers.length > 0
+    ? impairedTiers.reduce((a, b) => a.tier < b.tier ? a : b)
+    : null;
+
+  return {
+    domain: 'OC',
+    tiers: tierResults,
+    lowestImpaired,
+    lowestTier: lowestImpaired ? lowestImpaired.tier : null,
+    lowestLevel: lowestImpaired ? lowestImpaired.level : 5,
+    cascadeType: 'tier'
+  };
+}
+
+// ── SI 캐스케이드 분석 ──
+// SR(감각조절) → MC(운동조절) → SD(감각변별)
+function analyzeSI(domain) {
+  const areaMap = {};
+  (domain.areas || []).forEach(a => { areaMap[a.code] = a; });
+
+  const stages = [
+    {
+      order: 1, code: 'SR', name: '감각조절',
+      areas: ['SR-OR', 'SR-UR', 'SR-SK']
+    },
+    {
+      order: 2, code: 'MC', name: '운동조절',
+      areas: ['MC-PS', 'MC-PX', 'MC-BL']
+    },
+    {
+      order: 3, code: 'SD', name: '감각변별',
+      areas: ['SD']
+    }
+  ];
+
+  const stageResults = stages.map(s => {
+    const matchedAreas = s.areas.map(code => areaMap[code]).filter(Boolean);
+    const achRate = matchedAreas.length > 0
+      ? Math.round(matchedAreas.reduce((sum, a) => sum + a.achRate, 0) / matchedAreas.length)
+      : 0;
+    const rfCount = matchedAreas.reduce((sum, a) => sum + (a.rfCount || 0), 0);
+    const level = achRateToLevel(achRate);
+
+    return {
+      order: s.order,
+      code: s.code,
+      name: s.name,
+      achRate,
+      level,
+      rfCount,
+      isImpaired: level <= 2,
+      subAreas: matchedAreas.map(a => ({
+        code: a.code,
+        achRate: a.achRate,
+        level: achRateToLevel(a.achRate),
+        rfCount: a.rfCount || 0
+      }))
+    };
+  });
+
+  const impairedStages = stageResults.filter(s => s.isImpaired);
+  const lowestImpaired = impairedStages.length > 0
+    ? impairedStages.reduce((a, b) => a.order < b.order ? a : b)
+    : null;
+
+  return {
+    domain: 'SI',
+    stages: stageResults,
+    lowestImpaired,
+    lowestTier: lowestImpaired ? lowestImpaired.order : null,
+    lowestLevel: lowestImpaired ? lowestImpaired.level : 5,
+    cascadeType: 'stage'
+  };
+}
+
+// ── G_F 캐스케이드 분석 ──
+// SP → PS → GM → FM → VP/PC
+function analyzeGF(domain) {
+  const areaMap = {};
+  (domain.areas || []).forEach(a => { areaMap[a.code] = a; });
+
+  const stages = [
+    { order: 1, code: 'SP', name: '감각처리', areas: ['SP'] },
+    { order: 2, code: 'PS', name: '자세안정', areas: ['PS'] },
+    { order: 3, code: 'GM', name: '대근육', areas: ['GM'] },
+    { order: 4, code: 'FM', name: '소근육', areas: ['FM'] },
+    { order: 5, code: 'VP_PC', name: '시지각', areas: ['VP_PC', 'VP'] }
+  ];
+
+  // GF는 간략한 2개 area(GM, FM)만 올 수 있음 — 유연하게 처리
+  const stageResults = stages.map(s => {
+    const matchedAreas = s.areas.map(code => areaMap[code]).filter(Boolean);
+    const achRate = matchedAreas.length > 0
+      ? Math.round(matchedAreas.reduce((sum, a) => sum + a.achRate, 0) / matchedAreas.length)
+      : -1; // 데이터 없음
+    const rfCount = matchedAreas.reduce((sum, a) => sum + (a.rfCount || 0), 0);
+    const level = achRate >= 0 ? achRateToLevel(achRate) : -1;
+
+    return {
+      order: s.order,
+      code: s.code,
+      name: s.name,
+      achRate: achRate >= 0 ? achRate : null,
+      level: level >= 0 ? level : null,
+      rfCount,
+      isImpaired: level > 0 && level <= 2,
+      hasData: achRate >= 0
+    };
+  });
+
+  const impairedStages = stageResults.filter(s => s.isImpaired);
+  const lowestImpaired = impairedStages.length > 0
+    ? impairedStages.reduce((a, b) => a.order < b.order ? a : b)
+    : null;
+
+  return {
+    domain: 'GF',
+    stages: stageResults,
+    lowestImpaired,
+    lowestTier: lowestImpaired ? lowestImpaired.order : null,
+    lowestLevel: lowestImpaired ? lowestImpaired.level : 5,
+    cascadeType: 'stage'
+  };
+}
+
+// ── COG 분석 (순수 인지 — 캐스케이드 없이 영역별 수준) ──
+function analyzeCOG(domain) {
+  const areas = (domain.areas || []).map(a => ({
+    code: a.code,
+    achRate: a.achRate || 0,
+    level: achRateToLevel(a.achRate || 0),
+    rfCount: a.rfCount || 0,
+    isImpaired: achRateToLevel(a.achRate || 0) <= 2
+  }));
+
+  const impairedAreas = areas.filter(a => a.isImpaired);
+
+  return {
+    domain: 'COG',
+    areas,
+    lowestImpaired: impairedAreas.length > 0
+      ? impairedAreas.reduce((a, b) => a.level < b.level ? a : b)
+      : null,
+    lowestLevel: impairedAreas.length > 0
+      ? Math.min(...impairedAreas.map(a => a.level))
+      : 5,
+    cascadeType: 'flat'
+  };
+}
+
+// ── SP 전제조건 체크 ──
+function checkSPPremise(siResult, siDomain) {
+  if (!siResult || !siDomain) return null;
+
+  // SR(감각조절) 단계가 Level 2 이하이면 SP 전제조건 활성화
+  const srStage = siResult.stages.find(s => s.code === 'SR');
+  if (srStage && srStage.isImpaired) {
+    // 어떤 하위영역이 가장 문제인지 파악
+    const worstSub = srStage.subAreas.reduce(
+      (worst, a) => (a.level < worst.level ? a : worst),
+      { level: 5 }
+    );
+    return {
+      active: true,
+      reason: 'SR(감각조절) Level ≤ 2 — 모든 도메인에서 SP 배제/조절 먼저 실시',
+      srLevel: srStage.level,
+      worstArea: worstSub.code || 'SR',
+      affects: ['OC.ATT', 'GF.PS', 'COG.ATT'] // 영향받는 영역
+    };
+  }
+
+  return null;
+}
+
+// ── 도메인 간 교차영향 ──
+function findCrossDomainEffects(si, gf, oc, cog, domains) {
+  const effects = [];
+
+  // 1. SI.SR → OC.ATT (감각→주의 캐스케이드)
+  if (si && oc) {
+    const srStage = si.stages.find(s => s.code === 'SR');
+    const ocT1 = oc.tiers.find(t => t.tier === 1);
+    if (srStage && srStage.isImpaired && ocT1 && ocT1.isImpaired) {
+      effects.push({
+        from: 'SI.SR', to: 'OC.ATT',
+        type: 'sp_att_cascade',
+        description: '감각조절 문제 → 주의력 저하: 감각식이로 주의력 기저선 먼저 확인',
+        priority: 1
+      });
+    }
+  }
+
+  // 2. GF.FM → OC.PO (소근육→계획)
+  if (gf && oc) {
+    const fmStage = gf.stages.find(s => s.code === 'FM');
+    const ocT3 = oc.tiers.find(t => t.tier === 3);
+    if (fmStage && fmStage.isImpaired && ocT3 && ocT3.isImpaired) {
+      effects.push({
+        from: 'GF.FM', to: 'OC.PO',
+        type: 'fm_po_cascade',
+        description: '소근육 제한 → 과제 계획/조직화 저하: 도구과제 시 FM 보상 필요',
+        priority: 2
+      });
+    }
+  }
+
+  // 3. OC.EF → GF.GM5 (실행기능→운동계획)
+  if (oc && gf) {
+    const ocT2 = oc.tiers.find(t => t.tier === 2);
+    const gmStage = gf.stages.find(s => s.code === 'GM');
+    if (ocT2 && ocT2.isImpaired && gmStage && gmStage.isImpaired) {
+      effects.push({
+        from: 'OC.EF', to: 'GF.GM5',
+        type: 'ef_praxis_cascade',
+        description: '핵심 EF 저하 → 운동계획(Praxis) 영향: CO-OP 기반 통합 접근',
+        priority: 2
+      });
+    }
+  }
+
+  // 4. SI.SR → GF.PS (감각조절→자세안정)
+  if (si && gf) {
+    const srStage = si.stages.find(s => s.code === 'SR');
+    const psStage = gf.stages.find(s => s.code === 'PS');
+    if (srStage && srStage.isImpaired && psStage && psStage.isImpaired) {
+      effects.push({
+        from: 'SI.SR', to: 'GF.PS',
+        type: 'sr_ps_cascade',
+        description: '감각조절 → 자세안정: 감각기반 자세안정 중재 선행',
+        priority: 1
+      });
+    }
+  }
+
+  // 5. COG.ATT → OC.T1 (기초인지 주의→작업인지 주의)
+  if (cog && oc) {
+    const cogATT = cog.areas.find(a => a.code === 'ATT');
+    const ocT1 = oc.tiers.find(t => t.tier === 1);
+    if (cogATT && cogATT.isImpaired && ocT1 && ocT1.isImpaired) {
+      effects.push({
+        from: 'COG.ATT', to: 'OC.T1',
+        type: 'cog_oc_att_convergence',
+        description: '기초인지+작업인지 주의력 동시 저하: 통합 주의력 중재 필요',
+        priority: 1
+      });
+    }
+  }
+
+  return effects.sort((a, b) => a.priority - b.priority);
+}
+
+// ── 통합 중재 순서 ──
+function buildInterventionOrder(si, gf, oc, cog, spPremise, crossDomain) {
+  const order = [];
+
+  // Phase 0: SP 전제조건
+  if (spPremise && spPremise.active) {
+    order.push({
+      phase: 0,
+      label: 'SP 배제/조절',
+      domain: 'SI',
+      cluster: 'SR',
+      reason: spPremise.reason,
+      priority: 'critical'
+    });
+  }
+
+  // 각 도메인의 손상 영역 수집
+  const impairments = [];
+
+  if (si && si.lowestImpaired) {
+    si.stages.filter(s => s.isImpaired).forEach(s => {
+      impairments.push({
+        domain: 'SI',
+        cluster: s.code,
+        label: `SI.${s.name}`,
+        tier: s.order,
+        level: s.level,
+        rfCount: s.rfCount
+      });
+    });
+  }
+
+  if (gf && gf.lowestImpaired) {
+    gf.stages.filter(s => s.isImpaired).forEach(s => {
+      impairments.push({
+        domain: 'GF',
+        cluster: s.code,
+        label: `GF.${s.name}`,
+        tier: s.order,
+        level: s.level,
+        rfCount: s.rfCount
+      });
+    });
+  }
+
+  if (oc && oc.lowestImpaired) {
+    oc.tiers.filter(t => t.isImpaired).forEach(t => {
+      impairments.push({
+        domain: 'OC',
+        cluster: t.clusters.join('+'),
+        label: t.name,
+        tier: t.tier,
+        level: t.level,
+        rfCount: t.rfCount
+      });
+    });
+  }
+
+  if (cog && cog.lowestImpaired) {
+    cog.areas.filter(a => a.isImpaired).forEach(a => {
+      impairments.push({
+        domain: 'COG',
+        cluster: a.code,
+        label: `COG.${a.code}`,
+        tier: 1, // COG는 flat 구조, 동일 tier
+        level: a.level,
+        rfCount: a.rfCount || 0
+      });
+    });
+  }
+
+  // 정렬: Red Flag 우선 → Tier 낮은 것 우선 → Level 낮은 것 우선
+  impairments.sort((a, b) => {
+    if (b.rfCount !== a.rfCount) return b.rfCount - a.rfCount; // RF 많은 것 먼저
+    if (a.tier !== b.tier) return a.tier - b.tier;             // Tier 낮은 것 먼저
+    return a.level - b.level;                                   // Level 낮은 것 먼저
+  });
+
+  impairments.forEach((imp, idx) => {
+    order.push({
+      phase: idx + 1,
+      label: imp.label,
+      domain: imp.domain,
+      cluster: imp.cluster,
+      tier: imp.tier,
+      level: imp.level,
+      rfCount: imp.rfCount,
+      reason: `Level ${imp.level} (${imp.rfCount > 0 ? 'RF ' + imp.rfCount + '건' : '관찰 필요'})`,
+      priority: imp.rfCount > 0 ? 'high' : 'normal'
+    });
+  });
+
+  return order;
+}
+
+// ── 전체 요약 ──
+function buildSummary(si, gf, oc, cog, spPremise, crossDomain) {
+  const lines = [];
+
+  if (spPremise && spPremise.active) {
+    lines.push(`🔴 SP 전제조건 활성: ${spPremise.reason}`);
+  }
+
+  [si, gf, oc].forEach(result => {
+    if (!result) return;
+    const domain = result.domain;
+    if (result.lowestImpaired) {
+      const imp = result.lowestImpaired;
+      const tierLabel = result.cascadeType === 'tier'
+        ? `Tier${imp.tier}`
+        : imp.name || imp.code;
+      lines.push(`🟡 ${domain}: 최하위 손상 = ${tierLabel} (Level ${imp.level})`);
+    } else {
+      lines.push(`🟢 ${domain}: 전체 양호`);
+    }
+  });
+
+  if (crossDomain.length > 0) {
+    lines.push(`⚡ 도메인 교차: ${crossDomain.map(e => `${e.from}→${e.to}`).join(', ')}`);
+  }
+
+  return lines;
+}
+
+// ── ENGINE: Red Flag Analyzer ──
+/**
+ * redFlagAnalyzer.js — Red Flag 판정 + 긴급도 분류
+ * 평가 결과에서 Red Flag을 식별하고 긴급 조치를 생성
+ */
+
+
+/**
+ * Red Flag 분석
+ * @param {object} profile - ClientProfile
+ * @param {object} cascadeResult - cascade.js 결과
+ * @returns {object} redFlagResult
+ */
+function analyzeRedFlags(profile, cascadeResult) {
+  const flags = [];
+
+  // 1. 도메인별 RF 수집
+  ['SI', 'GF', 'OC', 'COG'].forEach(domainCode => {
+    const domain = profile.domains[domainCode];
+    if (!domain) return;
+
+    // 전체 도메인 RF
+    if (domain.totalRfCount > 0) {
+      (domain.areas || []).forEach(area => {
+        if (area.rfCount > 0) {
+          flags.push({
+            domain: domainCode,
+            areaCode: area.code,
+            areaName: area.name || area.code,
+            rfCount: area.rfCount,
+            achRate: area.achRate,
+            level: achRateToLevel(area.achRate)
+          });
+        }
+      });
+    }
+
+    // achRate 기반 암묵적 RF: 40% 미만이면 '정밀평가' 수준
+    (domain.areas || []).forEach(area => {
+      if (area.achRate < 40 && area.rfCount === 0) {
+        flags.push({
+          domain: domainCode,
+          areaCode: area.code,
+          areaName: area.name || area.code,
+          rfCount: 0,
+          achRate: area.achRate,
+          level: achRateToLevel(area.achRate),
+          implicit: true // 명시적 RF는 아니지만 수준이 매우 낮음
+        });
+      }
+    });
+  });
+
+  // 2. 긴급도 분류
+  const actions = flags.map(flag => classifyUrgency(flag, profile, cascadeResult));
+
+  // 3. 정렬: immediate → priority → monitor
+  const urgencyOrder = { immediate: 0, priority: 1, monitor: 2 };
+  actions.sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
+
+  // 4. 요약
+  const summary = {
+    total: actions.length,
+    immediate: actions.filter(a => a.urgency === 'immediate').length,
+    priority: actions.filter(a => a.urgency === 'priority').length,
+    monitor: actions.filter(a => a.urgency === 'monitor').length
+  };
+
+  return { flags: actions, summary };
+}
+
+/**
+ * 개별 RF의 긴급도 분류
+ */
+function classifyUrgency(flag, profile, cascadeResult) {
+  const diagnosis = profile.patient.diagnosis || '';
+  const ageMonths = profile.patient.ageMonths || 0;
+
+  let urgency = 'monitor';
+  let action = '';
+  let referral = '';
+
+  // 긴급 (immediate): Level 1 + RF 있음 + 어린 연령
+  if (flag.level === 1 && flag.rfCount > 0) {
+    urgency = 'immediate';
+    action = `${flag.areaName} 영역 즉시 정밀평가 필요`;
+    referral = getReferralType(flag.domain, flag.areaCode, diagnosis);
+  }
+  // 우선 (priority): Level 1 or (Level 2 + RF 있음)
+  else if (flag.level === 1 || (flag.level === 2 && flag.rfCount > 0)) {
+    urgency = 'priority';
+    action = `${flag.areaName} 영역 우선 중재 + 4주 후 재평가`;
+    referral = getReferralType(flag.domain, flag.areaCode, diagnosis);
+  }
+  // 관찰 (monitor): Level 2 without RF, or implicit RF
+  else {
+    urgency = 'monitor';
+    action = `${flag.areaName} 영역 관찰 지속, 6주 후 재평가`;
+  }
+
+  // 연령 보정: 36개월 미만이면 긴급도 한 단계 상승
+  if (ageMonths > 0 && ageMonths < 36 && urgency === 'priority') {
+    urgency = 'immediate';
+    action += ' (36개월 미만 조기개입 권장)';
+  }
+
+  // 교차 도메인 영향 보정
+  if (cascadeResult && cascadeResult.crossDomain) {
+    const crossEffect = cascadeResult.crossDomain.find(
+      e => e.from.includes(flag.areaCode) || e.to.includes(flag.areaCode)
+    );
+    if (crossEffect && urgency === 'monitor') {
+      urgency = 'priority';
+      action += ` (도메인 교차 영향: ${crossEffect.from}→${crossEffect.to})`;
+    }
+  }
+
+  return {
+    ...flag,
+    urgency,
+    action,
+    referral,
+    emoji: urgency === 'immediate' ? '🔴' : urgency === 'priority' ? '🟡' : '🔵'
+  };
+}
+
+/**
+ * 영역별 의뢰 유형 결정
+ */
+function getReferralType(domain, areaCode, diagnosis) {
+  const referralMap = {
+    // SI
+    'SR-OR': '감각통합 전문가 정밀평가 (SP-2, SPM-2)',
+    'SR-UR': '감각통합 전문가 정밀평가 + 신경발달 확인',
+    'SR-SK': '감각통합 평가 + ADHD 감별 (SR-SK vs ADHD 구분)',
+    'MC-PS': 'PT 의뢰 (자세안정/근력) + OT 감각통합',
+    'MC-PX': 'DCD 정밀평가 (MABC-2, BOT-2)',
+    'MC-BL': '양측협응 정밀평가 + 신경학적 검진 고려',
+    'SD': '감각변별 정밀평가',
+    // GF
+    'GM': 'PT 의뢰 (대근육 정밀평가: MABC-2, PDMS-2)',
+    'FM': 'OT 정밀평가 (소근육: BOT-2, Beery VMI)',
+    // OC
+    'OC-T1': 'ADHD 감별평가 (K-ARS-5, 연속수행검사)',
+    'OC-T2': '작업기억/억제 정밀평가 (K-BRIEF-2)',
+    'OC-T3': '실행기능 정밀평가 (K-BRIEF-2, WCST)',
+    'OC-T4': '메타인지 평가 (Toglia DIA)',
+    // COG
+    'ATT': 'ADHD 감별평가 + 감각처리 확인',
+    'MEM': '인지발달 정밀평가 (K-Bayley-4, K-WISC-V)',
+    'PER': '시지각 정밀평가 (K-DTVP-3)',
+    'THK': '인지발달 정밀평가',
+    'EXF': '실행기능 정밀평가 (K-BRIEF-2)',
+    'LNG': 'SLP 의뢰 (언어발달 정밀평가)',
+    'NUM': '수 개념·작업기억 정밀평가 (K-WISC-V 산수/숫자)'
+  };
+
+  let referral = referralMap[areaCode] || '해당 영역 전문가 정밀평가';
+
+  // 진단별 추가 의뢰
+  if (diagnosis === 'ASD' && ['SR-OR', 'SR-SK'].includes(areaCode)) {
+    referral += ' + ASD 감각프로파일 분석';
+  }
+  if (diagnosis === 'CP' && ['GM', 'MC-PS'].includes(areaCode)) {
+    referral += ' + 재활의학과 협진';
+  }
+
+  return referral;
+}
+
+/**
+ * RF 기반 목표 우선순위 조정
+ * goalGenerator에서 호출하여 RF가 있는 영역의 목표를 우선 배치
+ */
+function prioritizeByRedFlags(goals, redFlagResult) {
+  if (!redFlagResult || !redFlagResult.flags) return goals;
+
+  return goals.map(goal => {
+    const matchingRF = redFlagResult.flags.find(
+      rf => rf.domain === goal.domain &&
+        (goal.cluster.includes(rf.areaCode) || rf.areaCode.includes(goal.cluster.split('_')[0]))
+    );
+
+    if (matchingRF) {
+      return {
+        ...goal,
+        rfUrgency: matchingRF.urgency,
+        rfAction: matchingRF.action,
+        boostedPriority: matchingRF.urgency === 'immediate' ? 0 : 1
+      };
+    }
+    return { ...goal, boostedPriority: 2 };
+  }).sort((a, b) => a.boostedPriority - b.boostedPriority);
+}
+
+// ── ENGINE: Goal Generator ──
+/**
+ * goalGenerator.js — 장/단기 목표 생성 모듈
+ * 캐스케이드 분석 + RF 결과를 기반으로 GAS 형식 목표 자동 생성
+ */
+
+
+// 목표 템플릿 데이터 (런타임에 로드)
+let goalTemplates = [];
+
+/**
+ * 목표 템플릿 초기화
+ */
+function initGoalTemplates(templates) {
+  goalTemplates = templates;
+}
+
+/**
+ * 장/단기 목표 생성
+ * @param {object} profile - ClientProfile
+ * @param {object} cascadeResult - cascade.js 결과
+ * @param {object} redFlagResult - redFlagAnalyzer.js 결과
+ * @returns {{ longTermGoals: Goal[], shortTermGoals: Goal[] }}
+ */
+function generateGoals(profile, cascadeResult, redFlagResult) {
+  const longTermGoals = [];
+  const shortTermGoals = [];
+  let goalCounter = 0;
+
+  const interventionOrder = cascadeResult.interventionOrder || [];
+  const diagnosis = profile.patient.diagnosis || '';
+
+  // 캐스케이드 순서대로 목표 생성
+  interventionOrder.forEach(item => {
+    if (item.phase === 0) {
+      // SP 전제조건 — 특수 목표
+      const spGoals = generateSPPremiseGoals(++goalCounter, item, diagnosis);
+      longTermGoals.push(spGoals.longTerm);
+      shortTermGoals.push(spGoals.shortTerm);
+      return;
+    }
+
+    const level = item.level || 1;
+    if (level >= 4) return; // 양호 이상은 목표 불필요
+
+    // 도메인별 템플릿 찾기
+    const template = findTemplate(item.domain, item.cluster);
+
+    goalCounter++;
+    const ltGoal = generateLongTermGoal(goalCounter, item, level, template, diagnosis);
+    const stGoal = generateShortTermGoal(goalCounter, item, level, template, diagnosis);
+
+    longTermGoals.push(ltGoal);
+    shortTermGoals.push(stGoal);
+  });
+
+  // RF가 있지만 interventionOrder에 없는 영역도 보충
+  if (redFlagResult && redFlagResult.flags) {
+    redFlagResult.flags.forEach(rf => {
+      if (rf.urgency !== 'immediate') return;
+      const alreadyCovered = interventionOrder.some(
+        item => item.domain === rf.domain && item.cluster.includes(rf.areaCode)
+      );
+      if (!alreadyCovered) {
+        goalCounter++;
+        const rfGoal = generateRFGoal(goalCounter, rf, diagnosis);
+        longTermGoals.push(rfGoal.longTerm);
+        shortTermGoals.push(rfGoal.shortTerm);
+      }
+    });
+  }
+
+  return { longTermGoals, shortTermGoals };
+}
+
+// ── 장기 목표 생성 (6개월) ──
+function generateLongTermGoal(counter, item, currentLevel, template, diagnosis) {
+  const targetLevel = Math.min(currentLevel + 2, 5);
+  const targetDesc = template
+    ? (template.levels[String(targetLevel)] || {}).description || ''
+    : getLevelLabel(targetLevel);
+
+  const currentDesc = template
+    ? (template.levels[String(currentLevel)] || {}).description || ''
+    : getLevelLabel(currentLevel);
+
+  const clusterName = template ? template.clusterName : item.label;
+
+  // GAS 형식 5단계
+  const gasLevels = buildGASLevels(currentLevel, targetLevel, template);
+
+  // 목표 텍스트 생성
+  let text = template && template.longTermGoalTemplate
+    ? template.longTermGoalTemplate
+        .replace('{{cluster}}', clusterName)
+        .replace('{{targetLevel}}', targetLevel)
+        .replace('{{targetDesc}}', targetDesc)
+    : `${clusterName}: 현재 Level ${currentLevel}에서 Level ${targetLevel}(${targetDesc})에 6개월 내 도달`;
+
+  // 진단별 목표 변형
+  text = applyDiagnosisModifier(text, item.domain, item.cluster, diagnosis, 'long');
+
+  return {
+    id: `LG-${counter}`,
+    type: 'long_term',
+    domain: item.domain,
+    cluster: item.cluster,
+    clusterName,
+    currentLevel,
+    targetLevel,
+    currentDesc,
+    targetDesc,
+    text,
+    gasLevels,
+    linkedActivities: [],
+    reviewWeeks: 24,
+    rfRelated: item.rfCount > 0
+  };
+}
+
+// ── 단기 목표 생성 (4~6주) ──
+function generateShortTermGoal(counter, item, currentLevel, template, diagnosis) {
+  const targetLevel = Math.min(currentLevel + 1, 5);
+  const targetDesc = template
+    ? (template.levels[String(targetLevel)] || {}).description || ''
+    : getLevelLabel(targetLevel);
+
+  const currentDesc = template
+    ? (template.levels[String(currentLevel)] || {}).description || ''
+    : getLevelLabel(currentLevel);
+
+  const clusterName = template ? template.clusterName : item.label;
+
+  let text = template && template.shortTermGoalTemplate
+    ? template.shortTermGoalTemplate
+        .replace('{{cluster}}', clusterName)
+        .replace('{{targetLevel}}', targetLevel)
+        .replace('{{targetDesc}}', targetDesc)
+    : `${clusterName}: 4~6주 내 Level ${targetLevel}(${targetDesc})에 도달`;
+
+  text = applyDiagnosisModifier(text, item.domain, item.cluster, diagnosis, 'short');
+
+  return {
+    id: `SG-${counter}`,
+    type: 'short_term',
+    domain: item.domain,
+    cluster: item.cluster,
+    clusterName,
+    currentLevel,
+    targetLevel,
+    currentDesc,
+    targetDesc,
+    text,
+    linkedGoalId: `LG-${counter}`,
+    linkedActivities: [],
+    reviewWeeks: 4,
+    rfRelated: item.rfCount > 0
+  };
+}
+
+// ── SP 전제조건 목표 ──
+function generateSPPremiseGoals(counter, item, diagnosis) {
+  return {
+    longTerm: {
+      id: `LG-${counter}`,
+      type: 'long_term',
+      domain: 'SI',
+      cluster: 'SR',
+      clusterName: 'SP 전제조건 조정',
+      currentLevel: 1,
+      targetLevel: 3,
+      text: '감각조절 전략 독립 사용으로 각성 상태 최적화 → 상위 인지/운동 중재 기반 확보',
+      gasLevels: {
+        1: '감각식이 무반응, 각성 불안정, 과제 참여 불가',
+        2: '감각식이 후 일시적 안정, 과제 시작 가능',
+        3: '감각 전략 1~2개 독립 사용, 과제 지속 가능',
+        4: '환경 전환 시에도 자기 조절, 전략 일반화',
+        5: '감각 다이어트 자율 관리, 행동 에피소드 80%↓'
+      },
+      linkedActivities: [],
+      reviewWeeks: 6,
+      rfRelated: true,
+      isSPPremise: true
+    },
+    shortTerm: {
+      id: `SG-${counter}`,
+      type: 'short_term',
+      domain: 'SI',
+      cluster: 'SR',
+      clusterName: 'SP 전제조건 조정',
+      currentLevel: 1,
+      targetLevel: 2,
+      text: '감각식이 프로그램 도입, 각성 안정화 반응 확인 (4~6주)',
+      linkedGoalId: `LG-${counter}`,
+      linkedActivities: [],
+      reviewWeeks: 4,
+      rfRelated: true,
+      isSPPremise: true
+    }
+  };
+}
+
+// ── RF 기반 추가 목표 ──
+function generateRFGoal(counter, rf, diagnosis) {
+  return {
+    longTerm: {
+      id: `LG-${counter}`,
+      type: 'long_term',
+      domain: rf.domain,
+      cluster: rf.areaCode,
+      clusterName: `${rf.areaName} (RF 긴급)`,
+      currentLevel: rf.level,
+      targetLevel: 3,
+      text: `${rf.areaName} Red Flag 해소 + Level 3(기대수준) 도달. ${rf.action}`,
+      gasLevels: null,
+      linkedActivities: [],
+      reviewWeeks: 12,
+      rfRelated: true,
+      rfUrgency: rf.urgency,
+      referral: rf.referral
+    },
+    shortTerm: {
+      id: `SG-${counter}`,
+      type: 'short_term',
+      domain: rf.domain,
+      cluster: rf.areaCode,
+      clusterName: `${rf.areaName} (RF 긴급)`,
+      currentLevel: rf.level,
+      targetLevel: Math.min(rf.level + 1, 3),
+      text: `${rf.areaName} RF 원인 감별 완료 + Level ${Math.min(rf.level + 1, 3)} 도달 (4~6주)`,
+      linkedGoalId: `LG-${counter}`,
+      linkedActivities: [],
+      reviewWeeks: 4,
+      rfRelated: true
+    }
+  };
+}
+
+// ── GAS 5단계 빌더 ──
+function buildGASLevels(currentLevel, targetLevel, template) {
+  if (!template || !template.levels) {
+    return {
+      1: getLevelLabel(1),
+      2: getLevelLabel(2),
+      3: getLevelLabel(3),
+      4: getLevelLabel(4),
+      5: getLevelLabel(5)
+    };
+  }
+
+  const levels = {};
+  for (let i = 1; i <= 5; i++) {
+    levels[i] = template.levels[String(i)]
+      ? template.levels[String(i)].description
+      : getLevelLabel(i);
+  }
+  return levels;
+}
+
+// ── 진단별 목표 변형 ──
+function applyDiagnosisModifier(text, domain, cluster, diagnosis, goalType) {
+  const modifiers = {
+    ASD: {
+      SI: ' (감각프로파일 기반 개별화, 시각적 지원 상시)',
+      OC: ' (시각적 구조화 + 관심사 활용, 점진적 변화 원칙)',
+      GF: ' (감각기반 운동접근, 예측가능한 환경)'
+    },
+    ADHD: {
+      SI: ' (감각추구 적응적 충족, Alert Program)',
+      OC: ' (MPH 투약 시간 고려, 시각촉구 우선, 짧은 과제→점진 확장)',
+      GF: ' (감각전략→각성조절→운동과제 순서)'
+    },
+    DCD: {
+      GF: ' (CO-OP GPDC 기반, Praxis 3단계 촉진)',
+      OC: ' (운동계획과 연계, 과제분해 우선)'
+    },
+    ID: {
+      OC: ' (발달연령 기준, 최대촉구→점진소거, errorless learning)',
+      GF: ' (backward chaining, 사진>그림>글자 시각위계)'
+    },
+    CP: {
+      GF: ' (PT 협업 필수, NDT+감각통합 병행, 보조도구 고려)',
+      SI: ' (SOR 고려 동의기반 접근, 포지셔닝 교육)'
+    }
+  };
+
+  const modifier = modifiers[diagnosis]?.[domain];
+  if (modifier && goalType === 'long') {
+    return text + modifier;
+  }
+  return text;
+}
+
+// ── 유틸리티 ──
+function findTemplate(domain, cluster) {
+  // cluster에서 도메인 접두사 제거하여 매칭
+  return goalTemplates.find(t =>
+    t.domain === domain && (
+      t.cluster === cluster ||
+      cluster.includes(t.cluster) ||
+      t.cluster.includes(cluster.split('+')[0])
+    )
+  ) || null;
+}
+
+function getLevelLabel(level) {
+  const found = PROGRESS_LEVELS.find(p => p.level === level);
+  return found ? `Level ${level} (${found.label})` : `Level ${level}`;
+}
+
+/**
+ * 목표를 편집 가능한 형태로 내보내기
+ */
+function goalsToEditable(goals) {
+  return goals.map(g => ({
+    ...g,
+    isEdited: false,
+    originalText: g.text
+  }));
+}
+
+/**
+ * 편집된 목표 적용
+ */
+function applyGoalEdit(goal, newText) {
+  return {
+    ...goal,
+    text: newText,
+    isEdited: true
+  };
+}
+
+// ── ENGINE: Activity Matcher ──
+/**
+ * activityMatcher.js — 활동 매칭 모듈
+ * 생성된 목표에 대해 활동 DB에서 최적 활동을 스코어링하여 추천
+ */
+
+
+// 활동 DB (런타임에 로드)
+let activitiesOC = [];
+let activitiesSI = [];
+let activitiesGF = [];
+let activitiesCOG = [];
+
+/**
+ * 활동 DB 초기화
+ */
+function initActivities(oc, si, gf, cog) {
+  activitiesOC = oc || [];
+  activitiesSI = si || [];
+  activitiesGF = gf || [];
+  activitiesCOG = cog || [];
+}
+
+/**
+ * 목표 목록에 대한 활동 매칭
+ * @param {Goal[]} goals - 단기 목표 목록
+ * @param {object} profile - ClientProfile
+ * @returns {MatchResult[]}
+ */
+function matchActivities(goals, profile) {
+  const allActivities = [...activitiesOC, ...activitiesSI, ...activitiesGF, ...activitiesCOG];
+  const results = [];
+
+  goals.forEach(goal => {
+    // 도메인 필터
+    const domainActivities = allActivities.filter(a => a.domain === goal.domain);
+
+    // 스코어링
+    const scored = domainActivities.map(activity => ({
+      activity,
+      score: calcMatchScore(activity, goal, profile),
+      goalId: goal.id,
+      goalCluster: goal.cluster
+    }))
+    .filter(m => m.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5); // 목표당 최대 5개
+
+    results.push({
+      goalId: goal.id,
+      goalText: goal.text,
+      domain: goal.domain,
+      cluster: goal.cluster,
+      matches: scored
+    });
+  });
+
+  return results;
+}
+
+/**
+ * 매칭 스코어 계산 (100점 만점)
+ */
+function calcMatchScore(activity, goal, profile) {
+  let score = 0;
+
+  // 1. 군집 매칭 (40점)
+  score += calcClusterScore(activity, goal) * 40;
+
+  // 2. 연령 매칭 (25점)
+  score += calcAgeScore(activity, profile) * 25;
+
+  // 3. 진단 매칭 (20점)
+  score += calcDiagnosisScore(activity, profile) * 20;
+
+  // 4. 환경 적합성 (15점)
+  score += calcSettingScore(activity) * 15;
+
+  return Math.round(score);
+}
+
+// ── 군집 매칭 (0~1.0) ──
+function calcClusterScore(activity, goal) {
+  const goalCluster = goal.cluster || '';
+  const activityCluster = activity.cluster || '';
+
+  // 정확 일치
+  if (activityCluster === goalCluster) return 1.0;
+
+  // 도메인별 세부 매칭
+  if (activity.domain === 'OC') {
+    return calcOCClusterScore(activityCluster, goalCluster);
+  }
+  if (activity.domain === 'SI') {
+    return calcSIClusterScore(activity, goalCluster);
+  }
+  if (activity.domain === 'GF') {
+    return calcGFClusterScore(activity, goalCluster);
+  }
+  if (activity.domain === 'COG') {
+    return calcCOGClusterScore(activity.cluster, goalCluster);
+  }
+
+  return 0;
+}
+
+// ── COG 군집 매칭 ──
+function calcCOGClusterScore(actCluster, goalCluster) {
+  // 정확 일치
+  if (actCluster === goalCluster) return 1.0;
+  // 같은 영역 (ATT-SUS vs ATT-SEL 등)
+  const actArea = actCluster.split('-')[0];
+  const goalArea = goalCluster.split('-')[0];
+  // 목표가 영역코드만일 때(예:'ATT') 같은 영역 활동은 정확매칭 취급
+  if (!goalCluster.includes('-') && actArea === goalArea) return 1.0;
+  if (actArea === goalArea) return 0.7;
+  // COG 영역 간 관련성 (인접 영역)
+  const cogAdjacent = {
+    'ATT': ['MEM', 'EXF'],
+    'MEM': ['ATT', 'LNG'],
+    'PER': ['THK', 'MEM'],
+    'THK': ['PER', 'EXF', 'NUM'],
+    'EXF': ['ATT', 'THK'],
+    'LNG': ['MEM', 'THK'],
+    'NUM': ['THK', 'MEM']
+  };
+  if (cogAdjacent[actArea] && cogAdjacent[actArea].includes(goalArea)) return 0.3;
+  return 0.1;
+}
+
+function calcOCClusterScore(actCluster, goalCluster) {
+  // 같은 Tier인지 확인
+  for (const [tierKey, clusters] of Object.entries(OC_CASCADE)) {
+    const goalInTier = clusters.some(c => goalCluster.includes(c) || c.includes(goalCluster));
+    const actInTier = clusters.some(c => actCluster.includes(c) || c.includes(actCluster));
+    if (goalInTier && actInTier) return 0.7; // 같은 Tier
+  }
+
+  // 인접 Tier
+  const tierOrder = ['tier1', 'tier2', 'tier3', 'tier4'];
+  let goalTierIdx = -1, actTierIdx = -1;
+  tierOrder.forEach((tk, idx) => {
+    if (OC_CASCADE[tk].some(c => goalCluster.includes(c))) goalTierIdx = idx;
+    if (OC_CASCADE[tk].some(c => actCluster.includes(c))) actTierIdx = idx;
+  });
+  if (goalTierIdx >= 0 && actTierIdx >= 0 && Math.abs(goalTierIdx - actTierIdx) === 1) {
+    return 0.4; // 인접 Tier
+  }
+
+  return 0.1;
+}
+
+function calcSIClusterScore(activity, goalCluster) {
+  const actCluster = activity.cluster || '';
+  // SR 계열 매칭
+  if (goalCluster.startsWith('SR') && actCluster.startsWith('SR')) return 0.7;
+  if (goalCluster.startsWith('MC') && actCluster.startsWith('MC')) return 0.7;
+  if (goalCluster === 'SD' && actCluster === 'SD') return 1.0;
+  // 교차 셀 매칭
+  if (activity.crossCell && activity.crossCell.includes(goalCluster)) return 0.5;
+  return 0.1;
+}
+
+function calcGFClusterScore(activity, goalCluster) {
+  const actCluster = activity.cluster || '';
+  // 직접 매칭
+  if (actCluster === goalCluster) return 1.0;
+  // GM 계열
+  if (goalCluster.startsWith('GM') && actCluster.startsWith('GM')) return 0.7;
+  if (goalCluster.startsWith('FM') && actCluster.startsWith('FM')) return 0.7;
+  // 관련 운동군집
+  if (activity.relatedMotorClusters &&
+      activity.relatedMotorClusters.some(c => goalCluster.includes(c))) return 0.6;
+  // 캐스케이드 인접
+  const cascadeOrder = ['SP', 'PS', 'GM', 'FM', 'VP'];
+  const goalIdx = cascadeOrder.findIndex(c => goalCluster.includes(c));
+  const actIdx = cascadeOrder.findIndex(c => actCluster.includes(c));
+  if (goalIdx >= 0 && actIdx >= 0 && Math.abs(goalIdx - actIdx) === 1) return 0.4;
+  return 0.1;
+}
+
+// ── 연령 매칭 (0~1.0) ──
+function calcAgeScore(activity, profile) {
+  const age = profile.patient.ageMonths || 0;
+  if (!age) return 0.5; // 연령 정보 없으면 중간값
+
+  const range = activity.ageRange || [24, 216];
+  if (age >= range[0] && age <= range[1]) return 1.0;
+
+  const distMin = Math.abs(age - range[0]);
+  const distMax = Math.abs(age - range[1]);
+  const dist = Math.min(distMin, distMax);
+
+  if (dist <= 6) return 0.7;
+  if (dist <= 12) return 0.4;
+  return 0.1;
+}
+
+// ── 진단 매칭 (0~1.0) ──
+function calcDiagnosisScore(activity, profile) {
+  const diagnosis = profile.patient.diagnosis || '';
+  if (!diagnosis) return 0.5;
+
+  // variations에 해당 진단이 있으면 최고점
+  if (activity.variations && activity.variations[diagnosis]) return 1.0;
+
+  // crossCell에 진단이 포함되면
+  if (activity.crossCell && activity.crossCell.includes(diagnosis)) return 0.9;
+
+  // 관련 진단 그룹
+  const relatedGroups = {
+    ASD: ['ASD', 'PDD'],
+    ADHD: ['ADHD', 'ADD'],
+    DCD: ['DCD', 'DLD'],
+    ID: ['ID', 'GDD', 'DOWN'],
+    CP: ['CP'],
+    GDD: ['GDD', 'ID', 'DOWN']
+  };
+
+  const related = relatedGroups[diagnosis] || [diagnosis];
+  if (activity.variations) {
+    const hasRelated = related.some(d => activity.variations[d]);
+    if (hasRelated) return 0.7;
+  }
+  if (activity.crossCell) {
+    const hasRelated = related.some(d => activity.crossCell.includes(d));
+    if (hasRelated) return 0.6;
+  }
+
+  return 0.3; // 일반 활동
+}
+
+// ── 환경 적합성 (0~1.0) ──
+function calcSettingScore(activity) {
+  const settings = activity.setting || ['clinic'];
+  // 다양한 환경에서 가능할수록 높은 점수
+  if (settings.length >= 3) return 1.0;
+  if (settings.length >= 2) return 0.8;
+  if (settings.includes('clinic')) return 0.6;
+  return 0.4;
+}
+
+/**
+ * 매칭 결과를 세션 계획용으로 정리
+ * 캐스케이드 순서에 맞게 활동을 배치
+ */
+function organizeForSession(matchResults, cascadeResult) {
+  const organized = [];
+
+  (cascadeResult.interventionOrder || []).forEach(orderItem => {
+    const goalMatch = matchResults.find(
+      m => m.domain === orderItem.domain && m.cluster === orderItem.cluster
+    );
+    if (!goalMatch) return;
+
+    organized.push({
+      phase: orderItem.phase,
+      label: orderItem.label,
+      domain: orderItem.domain,
+      cluster: orderItem.cluster,
+      tier: orderItem.tier,
+      activities: goalMatch.matches.slice(0, 3), // 상위 3개
+      reason: orderItem.reason
+    });
+  });
+
+  return organized;
+}
+
+/**
+ * 가정/학교용 활동 필터
+ */
+function filterBySettings(matchResults, setting) {
+  return matchResults.map(goalMatch => ({
+    ...goalMatch,
+    matches: goalMatch.matches.filter(m =>
+      m.activity.setting && m.activity.setting.includes(setting)
+    )
+  })).filter(gm => gm.matches.length > 0);
+}
+
+/**
+ * 특정 활동의 상세 정보 조회
+ */
+function getActivityDetail(activityId) {
+  const all = [...activitiesOC, ...activitiesSI, ...activitiesGF, ...activitiesCOG];
+  return all.find(a => a.id === activityId) || null;
+}
+
+// ── ENGINE: Session Planner ──
+/**
+ * sessionPlanner.js — 세션 계획 + 가정/학교 프로그램 생성
+ * 진단별 템플릿 × 40/50분 × 매칭 활동 → 완성된 세션 계획
+ */
+
+
+// 세션 템플릿 (런타임에 로드)
+let sessionTemplates = [];
+
+/**
+ * 세션 템플릿 초기화
+ */
+function initSessionTemplates(templates) {
+  sessionTemplates = templates;
+}
+
+/**
+ * 세션 계획 생성
+ * @param {object} profile - ClientProfile
+ * @param {object} cascadeResult - cascade.js 결과
+ * @param {object[]} organizedActivities - activityMatcher.organizeForSession 결과
+ * @param {number} duration - 세션 시간 (40 or 50)
+ * @returns {SessionPlan}
+ */
+function generateSessionPlan(profile, cascadeResult, organizedActivities, duration = 50) {
+  const diagnosis = profile.patient.diagnosis || 'ADHD'; // 기본 ADHD
+  const templateId = `${diagnosis}_${duration}`;
+
+  // 템플릿 찾기
+  let template = sessionTemplates.find(t => t.id === templateId);
+  if (!template) {
+    // fallback: 같은 진단의 다른 시간
+    template = sessionTemplates.find(t => t.diagnosis === diagnosis);
+  }
+  if (!template) {
+    // 최종 fallback: ADHD
+    template = sessionTemplates.find(t => t.id === `ADHD_${duration}`);
+  }
+  if (!template) {
+    template = sessionTemplates[0]; // 아무거나라도
+  }
+
+  // 템플릿의 phase에 실제 활동 매칭
+  const phases = (template.phases || []).map(phase => {
+    const matchedActivities = findActivitiesForPhase(
+      phase, organizedActivities, cascadeResult
+    );
+
+    return {
+      name: phase.name,
+      timeRange: phase.timeRange,
+      minutes: phase.minutes,
+      description: phase.description,
+      tier: phase.tier,
+      activities: matchedActivities,
+      isCustomized: matchedActivities.length > 0
+    };
+  });
+
+  return {
+    id: templateId,
+    diagnosis,
+    duration,
+    templateName: template.id,
+    phases,
+    totalActivities: phases.reduce((sum, p) => sum + p.activities.length, 0),
+    spPremise: cascadeResult.spPremise,
+    notes: generateSessionNotes(profile, cascadeResult, diagnosis)
+  };
+}
+
+/**
+ * Phase에 맞는 활동 찾기
+ */
+function findActivitiesForPhase(phase, organizedActivities, cascadeResult) {
+  const result = [];
+  const phaseName = (phase.name || '').toLowerCase();
+  const phaseTier = phase.tier || 0;
+
+  // SP 배제 phase
+  if (phaseName.includes('sp') || phaseName.includes('감각') || phaseName.includes('도입')) {
+    if (cascadeResult.spPremise && cascadeResult.spPremise.active) {
+      // SP 관련 활동 찾기
+      const spActivities = organizedActivities.find(
+        o => o.domain === 'SI' && o.cluster === 'SR'
+      );
+      if (spActivities) {
+        result.push(...spActivities.activities.slice(0, 2));
+      }
+    }
+    return result;
+  }
+
+  // Tier 매칭
+  organizedActivities.forEach(org => {
+    if (org.tier === phaseTier || phaseName.includes(`tier${org.tier}`)) {
+      result.push(...org.activities.slice(0, 2));
+    }
+  });
+
+  // 마무리/부모 phase
+  if (phaseName.includes('마무리') || phaseName.includes('정리') || phaseName.includes('부모')) {
+    // 자기점검(SM) 활동 추가
+    const smActivities = organizedActivities.find(
+      o => o.cluster.includes('SM') || o.cluster.includes('OC7')
+    );
+    if (smActivities) {
+      result.push(...smActivities.activities.slice(0, 1));
+    }
+  }
+
+  return result;
+}
+
+/**
+ * 세션 노트 생성
+ */
+function generateSessionNotes(profile, cascadeResult, diagnosis) {
+  const notes = [];
+
+  // 진단별 주의사항
+  const diagNotes = {
+    ASD: [
+      '모든 전환에 시각 예고 (5분 전→1분 전)',
+      '관심사 활용으로 과제 참여 동기 유지',
+      '점진적 변화 원칙: 90% 유지 + 10% 변경'
+    ],
+    ADHD: [
+      'MPH 투약 시간 고려 (투약 후 30~60분 최적)',
+      '비선호 과제 시간 점진 확장',
+      '감각 break 15분 간격 삽입'
+    ],
+    DCD: [
+      'CO-OP GPDC(Goal-Plan-Do-Check) 기반',
+      '새 과제마다 운동계획 기회 제공',
+      'JRC(적정도전) 원칙: 성공률 70~80% 유지'
+    ],
+    ID: [
+      '발달연령 기준 과제 난이도 설정',
+      '최대촉구→점진소거 (4주마다 1단계)',
+      'errorless learning: 오류 기회 최소화'
+    ],
+    CP: [
+      'PT 협업 필수: 포지셔닝 → 기능과제 순서',
+      'SOR 고려: 동의 기반 접근, 강제 노출 금지',
+      '보조도구 적극 활용 (적응된 도구)'
+    ],
+    GDD: [
+      '발달 촉진 놀이 중심',
+      '감각+운동 통합 접근',
+      'backward chaining으로 성공 경험 축적'
+    ]
+  };
+
+  if (diagNotes[diagnosis]) {
+    notes.push({ category: '진단별 주의사항', items: diagNotes[diagnosis] });
+  }
+
+  // SP 전제조건 노트
+  if (cascadeResult.spPremise && cascadeResult.spPremise.active) {
+    notes.push({
+      category: 'SP 전제조건',
+      items: [
+        '세션 시작 시 감각식이 5~10분 실시',
+        '감각식이 전후 과제수행 비교로 SP 기여도 확인',
+        cascadeResult.spPremise.reason
+      ]
+    });
+  }
+
+  // 교차 도메인 노트
+  if (cascadeResult.crossDomain && cascadeResult.crossDomain.length > 0) {
+    notes.push({
+      category: '도메인 교차',
+      items: cascadeResult.crossDomain.map(e => e.description)
+    });
+  }
+
+  return notes;
+}
+
+/**
+ * 가정 프로그램 생성
+ */
+function generateHomeProgram(profile, goals, matchResults) {
+  const diagnosis = profile.patient.diagnosis || '';
+  const programs = [];
+
+  // 기본 7영역 가정 프로그램
+  const homeAreas = [
+    {
+      area: '아침 루틴',
+      defaultActivity: '시각순서카드(세수→양치→옷입기→가방) 자기점검',
+      defaultTools: ['사진순서카드', '체크리스트'],
+      frequency: '매일',
+      parentRole: '카드 참조 촉구→점진 소거',
+      linkedClusters: ['SEQ', 'PO', 'SM', 'OC4_SEQ', 'OC3_PO']
+    },
+    {
+      area: '준비물 챙기기',
+      defaultActivity: '체크리스트 "학교+집+특별" 3범주 자기점검',
+      defaultTools: ['체크리스트', '색상코딩'],
+      frequency: '매일',
+      parentRole: '체크 후 확인만, 대신해주지 않기',
+      linkedClusters: ['PO', 'WM', 'OC3_PO', 'OC2_WM']
+    },
+    {
+      area: '숙제 시간',
+      defaultActivity: 'Time Timer+구조화 환경+시간예측',
+      defaultTools: ['Time Timer', '칸막이', '시간예측기록지'],
+      frequency: '매일',
+      parentRole: '"몇 분 걸릴까?" 예측 유도',
+      linkedClusters: ['ATT', 'TM', 'PO', 'OC1_ATT', 'OC8_TM']
+    },
+    {
+      area: '감각 break',
+      defaultActivity: 'heavy work(벽밀기, 점프, 무거운 물건 나르기)',
+      defaultTools: ['운동기구', '감각메뉴카드'],
+      frequency: '숙제전 + 15분마다',
+      parentRole: '감각메뉴에서 선택하게 하기',
+      linkedClusters: ['SR', 'ATT', 'SR_OR']
+    },
+    {
+      area: '전환 연습',
+      defaultActivity: '5분 전 예고 + 시각 카운트다운',
+      defaultTools: ['타이머', '전환카드'],
+      frequency: '매 전환',
+      parentRole: '예고 일관성 유지, 갑작스러운 전환 금지',
+      linkedClusters: ['CF', 'OC5_CF']
+    },
+    {
+      area: '자기점검',
+      defaultActivity: '취침 전 "오늘 3가지"(잘한 것/아쉬운 것/내일 할 것)',
+      defaultTools: ['자기점검 일기장'],
+      frequency: '매일 취침 전',
+      parentRole: '긍정 먼저, 비난 금지',
+      linkedClusters: ['SM', 'OC7_SM']
+    },
+    {
+      area: '운동/놀이',
+      defaultActivity: '감각 풍부한 활동(수영, 태권도, 놀이터)',
+      defaultTools: ['운동 장비'],
+      frequency: '주 3회 이상',
+      parentRole: '새 활동 시도 격려',
+      linkedClusters: ['GM', 'PS', 'MC']
+    }
+  ];
+
+  // 목표와 매칭되는 가정 프로그램 선택 + 개별화
+  homeAreas.forEach(area => {
+    const isRelevant = goals.some(g =>
+      area.linkedClusters.some(c =>
+        g.cluster.includes(c) || c.includes(g.cluster)
+      )
+    );
+
+    if (isRelevant) {
+      // 진단별 변형 적용
+      const modified = applyHomeDiagnosisModifier(area, diagnosis);
+      programs.push(modified);
+    }
+  });
+
+  // 관련 목표가 적어도 기본 4개는 포함
+  if (programs.length < 4) {
+    homeAreas.slice(0, 4).forEach(area => {
+      if (!programs.find(p => p.area === area.area)) {
+        programs.push(area);
+      }
+    });
+  }
+
+  return programs;
+}
+
+function applyHomeDiagnosisModifier(area, diagnosis) {
+  const modified = { ...area };
+
+  if (diagnosis === 'ASD') {
+    if (area.area === '전환 연습') {
+      modified.defaultActivity = '모든 전환에 시각 예고 + 사회적 이야기("바뀌어도 괜찮아")';
+      modified.parentRole = '예고 일관성 + 점진 변화 비율 확대';
+    }
+    if (area.area === '감각 break') {
+      modified.defaultTools = [...area.defaultTools, '이어폰(소음차단)', '씹기도구'];
+    }
+  }
+
+  if (diagnosis === 'ADHD') {
+    if (area.area === '숙제 시간') {
+      modified.parentRole = 'MPH 투약 시간 맞춤, 과도개입↓, Timer 상시';
+    }
+  }
+
+  if (diagnosis === 'ID') {
+    if (area.area === '아침 루틴') {
+      modified.defaultActivity = '사진순서카드(실물사진 우선) + backward chaining';
+      modified.parentRole = '마지막 단계부터 독립 → 전체 확장';
+    }
+  }
+
+  return modified;
+}
+
+/**
+ * 학교 프로그램 생성
+ */
+function generateSchoolProgram(profile, goals, matchResults) {
+  const diagnosis = profile.patient.diagnosis || '';
+  const programs = [];
+
+  const schoolAreas = [
+    {
+      area: '시각 구조화',
+      activity: '수업 일정 시각카드 + 개인과제 카드',
+      tools: ['시각일정표', '과제카드'],
+      teacherRole: '매 수업 일정 카드 업데이트',
+      linkedClusters: ['PO', 'SEQ', 'OC3_PO', 'OC4_SEQ']
+    },
+    {
+      area: '주의 지원',
+      activity: '앞좌석 배치 + 칸막이 + Time Timer',
+      tools: ['칸막이', 'Time Timer'],
+      teacherRole: '구조화 환경 유지, 칸막이 필요시 제공',
+      linkedClusters: ['ATT', 'OC1_ATT']
+    },
+    {
+      area: '감각 전략',
+      activity: '교실 내 감각도구 허용 (에어쿠션, 피젯)',
+      tools: ['에어쿠션', '저항밴드(의자다리)', '피젯도구'],
+      teacherRole: '감각도구 사용 허용, "학습준비도 전략"으로 프레이밍',
+      linkedClusters: ['SR', 'SR_OR', 'SR_SK']
+    },
+    {
+      area: 'WM 보상',
+      activity: '시각 지시카드, 2단계 지시 분절',
+      tools: ['시각지시카드', '체크리스트'],
+      teacherRole: '복수 지시 시 시각카드 제공',
+      linkedClusters: ['WM', 'OC2_WM']
+    },
+    {
+      area: '전환 예고',
+      activity: '수업 전환 5분 전 타이머 알림',
+      tools: ['타이머', '전환 시각카드'],
+      teacherRole: '전환 전 예고, 일관된 루틴',
+      linkedClusters: ['CF', 'OC5_CF']
+    },
+    {
+      area: '차례 연습',
+      activity: '소집단 활동 차례카드',
+      tools: ['차례카드', '토큰보드'],
+      teacherRole: '차례 시각화, 성공시 강화',
+      linkedClusters: ['INH', 'OC6_INH']
+    },
+    {
+      area: '자기점검',
+      activity: '과제 완료 시 체크리스트 확인',
+      tools: ['과제 체크리스트'],
+      teacherRole: '체크리스트 참조 촉구',
+      linkedClusters: ['SM', 'OC7_SM']
+    }
+  ];
+
+  schoolAreas.forEach(area => {
+    const isRelevant = goals.some(g =>
+      area.linkedClusters.some(c =>
+        g.cluster.includes(c) || c.includes(g.cluster)
+      )
+    );
+    if (isRelevant) {
+      programs.push(area);
+    }
+  });
+
+  if (programs.length < 3) {
+    schoolAreas.slice(0, 3).forEach(area => {
+      if (!programs.find(p => p.area === area.area)) {
+        programs.push(area);
+      }
+    });
+  }
+
+  return programs;
+}
+
+/**
+ * 전체 추천 결과 조합
+ */
+function buildFullRecommendation(profile, cascadeResult, redFlagResult, goals, matchResults) {
+  const sessionPlan40 = generateSessionPlan(profile, cascadeResult,
+    matchResults.organized || [], 40);
+  const sessionPlan50 = generateSessionPlan(profile, cascadeResult,
+    matchResults.organized || [], 50);
+
+  const homeProgram = generateHomeProgram(profile, goals.shortTermGoals, matchResults.raw || []);
+  const schoolProgram = generateSchoolProgram(profile, goals.shortTermGoals, matchResults.raw || []);
+
+  return {
+    clientId: profile.patient.name || 'unknown',
+    generatedAt: new Date().toISOString(),
+    patient: profile.patient,
+    cascadeAnalysis: {
+      summary: cascadeResult.summary,
+      interventionOrder: cascadeResult.interventionOrder,
+      spPremise: cascadeResult.spPremise,
+      crossDomain: cascadeResult.crossDomain
+    },
+    redFlags: redFlagResult,
+    goals: goals,
+    activities: matchResults,
+    sessionPlans: { '40': sessionPlan40, '50': sessionPlan50 },
+    homeProgram,
+    schoolProgram
+  };
+}
+
+// ── ENGINE: JSON Importer ──
+/**
+ * importer.js — JSON 가져오기 모듈
+ * 3개 앱(profile-report, cognitive, si-motor) JSON → 통합 ClientProfile 변환
+ */
+
+
+// ── profile-report (cprg_v1) 가져오기 ──
+// 가장 완전한 소스: 4개 도메인(SI/GF/OC/COG) 통합 데이터
+function importCPRG(json) {
+  if (json.version !== 'cprg_v1') {
+    throw new Error('지원하지 않는 프로필 보고서 버전입니다: ' + json.version);
+  }
+
+  const p = json.patient || {};
+  const d = json.domains || {};
+  const ageMonths = calcMonthAge(p.birth, p.evalDate);
+
+  return {
+    source: 'cprg_v1',
+    patient: {
+      name: p.name || '',
+      birth: p.birth || '',
+      evalDate: p.evalDate || '',
+      evaluator: p.evaluator || '',
+      diagnosis: p.diagnosis || '',
+      gender: p.gender || '',
+      ageMonths,
+      ageLabel: formatAge(ageMonths)
+    },
+    domains: {
+      SI: parseCPRGDomain(d.SI, 'SI'),
+      GF: parseCPRGDomain(d.GF, 'GF'),
+      OC: parseCPRGDomain(d.OC, 'OC'),
+      COG: parseCPRGDomain(d.COG, 'COG')
+    }
+  };
+}
+
+function parseCPRGDomain(domainData, code) {
+  if (!domainData) return null;
+  const areas = (domainData.areas || []).map(a => ({
+    code: a.code,
+    name: a.name || a.code,
+    achRate: a.achRate || 0,
+    rfCount: a.rfCount || 0,
+    level: achRateToLevel(a.achRate || 0)
+  }));
+
+  return {
+    code,
+    totalAchRate: domainData.totalAchRate || 0,
+    totalRfCount: domainData.totalRfCount || 0,
+    totalLevel: achRateToLevel(domainData.totalAchRate || 0),
+    areas
+  };
+}
+
+// ── cognitive (v5) 가져오기 ──
+// COG + OC(T1/T2) 도메인 생성. sectionScores 우선, 없으면 항목별 키워드 계산.
+function importCognitive(json) {
+  if (!json.version || !json.version.startsWith('v')) {
+    throw new Error('지원하지 않는 인지 체크리스트 버전입니다.');
+  }
+
+  const p = json.patient || {};
+  const checks = json.checks || {};
+  const ageMonths = calcMonthAge(p.dob, p.edate);
+
+  // 인지 6개 영역의 키워드 매핑 (탭 내 섹션 식별용)
+  const cogAreas = [
+    { code: 'ATT', keywords: ['주의', 'att', '집중'] },
+    { code: 'MEM', keywords: ['기억', 'mem', 'wm', '작업기억'] },
+    { code: 'PER', keywords: ['지각', 'per', '변별', '시지각'] },
+    { code: 'THK', keywords: ['사고', 'thk', '추론', '패턴'] },
+    { code: 'EXF', keywords: ['실행', 'exf', 'ef', '억제', '계획', '전환'] },
+    { code: 'LNG', keywords: ['언어', 'lng', 'lan', '수용', '표현'] },
+    { code: 'NUM', keywords: ['수', 'num', '수세기', '수량', '연산', '덧셈', '뺄셈', '수개념'] }
+  ];
+
+  // 각 탭의 모든 항목을 순회하여 영역별 점수 집계
+  const areaTotals = {};
+  cogAreas.forEach(a => {
+    areaTotals[a.code] = { total: 0, max: 0, rf: 0 };
+  });
+
+  Object.keys(checks).forEach(tabKey => {
+    const tabChecks = checks[tabKey];
+    if (!tabChecks || typeof tabChecks !== 'object') return;
+
+    Object.keys(tabChecks).forEach(itemKey => {
+      const val = tabChecks[itemKey];
+      const mapped = SCORE_MAP[val];
+      if (!mapped || mapped.score === null) return; // 미평가 제외
+
+      // 항목 키에서 영역 추정 (키워드 매칭)
+      const lowerKey = itemKey.toLowerCase();
+      let matchedArea = null;
+      for (const area of cogAreas) {
+        if (area.keywords.some(kw => lowerKey.includes(kw))) {
+          matchedArea = area.code;
+          break;
+        }
+      }
+      // 매칭 안 되면 일반적으로 모든 영역에 분산 (보수적)
+      if (!matchedArea) matchedArea = 'ATT'; // 기본값
+
+      areaTotals[matchedArea].total += mapped.score;
+      areaTotals[matchedArea].max += 2; // 최대 2점
+    });
+  });
+
+  // sectionScores 우선 사용 (OBS2 export에 포함된 경우 키워드 매칭보다 정확)
+  const ss = json.sectionScores || {};
+  const secKeyMap = {
+    'ATT': '주의력', 'MEM': '기억력', 'PER': '지각/변별',
+    'THK': '사고/추론', 'EXF': '실행기능', 'LNG': '언어인지'
+  };
+
+  // 달성률 계산 — sectionScores 있으면 우선, 없으면 키워드 매칭 결과 사용
+  const areas = cogAreas.map(a => {
+    const secKey = secKeyMap[a.code];
+    if (secKey && ss[secKey]) {
+      const achRate = ss[secKey].achRate;
+      const rfCount = ss[secKey].rfCount || 0;
+      return { code: a.code, name: a.code, achRate, rfCount, level: achRateToLevel(achRate) };
+    }
+    const t = areaTotals[a.code];
+    const achRate = t.max > 0 ? Math.round((t.total / t.max) * 100) : 0;
+    return {
+      code: a.code,
+      name: a.code,
+      achRate,
+      rfCount: t.rf,
+      level: achRateToLevel(achRate)
+    };
+  });
+
+  const totalAchRate = areas.length > 0
+    ? Math.round(areas.reduce((s, a) => s + a.achRate, 0) / areas.length)
+    : 0;
+
+  // OC-T1(주의력), OC-T2(실행기능): sectionScores 우선, 없으면 areas에서 추출
+  function ocArea(code, secKey, areaCode) {
+    const fromSec = ss[secKey];
+    const fromArea = areas.find(a => a.code === areaCode);
+    const achRate = fromSec ? fromSec.achRate : (fromArea ? fromArea.achRate : 0);
+    const rfCount = fromSec ? fromSec.rfCount  : (fromArea ? fromArea.rfCount  : 0);
+    return { code, name: code, achRate, rfCount, level: achRateToLevel(achRate) };
+  }
+  const ocAreas = [
+    ocArea('OC-T1', '주의력',  'ATT'),
+    ocArea('OC-T2', '실행기능', 'EXF')
+  ];
+  const ocTotalAchRate = Math.round(ocAreas.reduce((s, a) => s + a.achRate, 0) / ocAreas.length);
+
+  return {
+    source: 'cognitive_v5',
+    patient: {
+      name: p.name || '',
+      birth: p.dob || '',
+      evalDate: p.edate || '',
+      evaluator: p.evaluator || '',
+      diagnosis: '',
+      gender: '',
+      ageMonths,
+      ageLabel: formatAge(ageMonths),
+      stage: p.stage || ''
+    },
+    domains: {
+      SI: null,
+      GF: null,
+      OC: {
+        code: 'OC',
+        totalAchRate: ocTotalAchRate,
+        totalRfCount: ocAreas.reduce((s, a) => s + a.rfCount, 0),
+        totalLevel: achRateToLevel(ocTotalAchRate),
+        areas: ocAreas
+      },
+      COG: {
+        code: 'COG',
+        totalAchRate,
+        totalRfCount: areas.reduce((s, a) => s + a.rfCount, 0),
+        totalLevel: achRateToLevel(totalAchRate),
+        areas
+      }
+    }
+  };
+}
+
+// ── si-motor (v3) 가져오기 ──
+// SI + GF 부분 도메인 생성.
+function importSIMotor(json) {
+  if (json.version !== 'si_motor_v3' && json.version !== 'si_motor_v3_sr') {
+    throw new Error('지원하지 않는 SI-Motor 버전입니다: ' + json.version);
+  }
+
+  const p = json.patient || {};
+  const scores = json.scores || {};
+  const ageMonths = json.currentAge || calcMonthAge(p.birth, p.evalDate);
+
+  // si-motor 영역 매핑
+  const siAreas = [
+    { code: 'SR-OR', keywords: ['sr-or', 'sor', '과반응', '촉각방어'] },
+    { code: 'SR-UR', keywords: ['sr-ur', 'sur', '저반응', '둔감'] },
+    { code: 'SR-SK', keywords: ['sr-sk', 'ss', '추구', '감각추구'] },
+    { code: 'MC-PS', keywords: ['mc-ps', 'postural', '자세', '항중력'] },
+    { code: 'MC-PX', keywords: ['mc-px', 'praxis', '운동계획', '모방'] },
+    { code: 'MC-BL', keywords: ['mc-bl', 'bilateral', '양측', '정중선'] },
+    { code: 'SD', keywords: ['sd', 'discrimin', '변별', '체성'] }
+  ];
+
+  const gfAreas = [
+    { code: 'GM', keywords: ['gm', 'gross', '대근육', '이동', '점프', '균형'] },
+    { code: 'FM', keywords: ['fm', 'fine', '소근육', '파지', '서사', '가위'] }
+  ];
+
+  function calcAreaScores(areaDefs) {
+    return areaDefs.map(area => {
+      let total = 0, max = 0;
+      Object.keys(scores).forEach(key => {
+        const lk = key.toLowerCase();
+        if (area.keywords.some(kw => lk.includes(kw))) {
+          const mapped = SCORE_MAP[scores[key]];
+          if (mapped && mapped.score !== null) {
+            total += mapped.score;
+            max += 2;
+          }
+        }
+      });
+      const achRate = max > 0 ? Math.round((total / max) * 100) : 0;
+      return {
+        code: area.code,
+        name: area.code,
+        achRate,
+        rfCount: 0, // RF는 별도 분석 필요
+        level: achRateToLevel(achRate)
+      };
+    });
+  }
+
+  const siAreaResults = calcAreaScores(siAreas);
+  const gfAreaResults = calcAreaScores(gfAreas);
+
+  function domainSummary(areas, code) {
+    if (areas.every(a => a.achRate === 0)) return null;
+    const totalAchRate = Math.round(areas.reduce((s, a) => s + a.achRate, 0) / areas.length);
+    return {
+      code,
+      totalAchRate,
+      totalRfCount: areas.reduce((s, a) => s + a.rfCount, 0),
+      totalLevel: achRateToLevel(totalAchRate),
+      areas
+    };
+  }
+
+  return {
+    source: 'si_motor_v3',
+    patient: {
+      name: p.name || '',
+      birth: p.birth || '',
+      evalDate: p.evalDate || '',
+      evaluator: p.evaluator || '',
+      diagnosis: p.diagnosis || '',
+      gender: '',
+      ageMonths,
+      ageLabel: formatAge(ageMonths)
+    },
+    domains: {
+      SI: domainSummary(siAreaResults, 'SI'),
+      GF: domainSummary(gfAreaResults, 'GF'),
+      OC: null,
+      COG: null
+    }
+  };
+}
+
+// ── 자동 감지 + 가져오기 ──
+function autoImport(json) {
+  if (json.version === 'cprg_v1') return importCPRG(json);
+  if (json.version === 'si_motor_v3' || json.version === 'si_motor_v3_sr') return importSIMotor(json);
+  if (json.version && json.version.startsWith('v') && json.checks) return importCognitive(json);
+  throw new Error('인식할 수 없는 JSON 형식입니다.');
+}
+
+// ── 다중 소스 병합 ──
+// 여러 JSON에서 가져온 결과를 하나의 ClientProfile로 병합
+function mergeProfiles(...profiles) {
+  const merged = {
+    source: 'merged',
+    patient: {},
+    domains: { SI: null, GF: null, OC: null, COG: null }
+  };
+
+  profiles.forEach(p => {
+    if (!p) return;
+    // patient: 비어있지 않은 필드 우선
+    Object.keys(p.patient || {}).forEach(k => {
+      if (p.patient[k] && !merged.patient[k]) {
+        merged.patient[k] = p.patient[k];
+      }
+    });
+    // domains: null이 아닌 것 우선, 이미 있으면 achRate 높은 쪽 (더 최근 평가)
+    ['SI', 'GF', 'OC', 'COG'].forEach(d => {
+      if (p.domains[d]) {
+        if (!merged.domains[d]) {
+          merged.domains[d] = p.domains[d];
+        }
+        // 이미 있으면 유지 (첫 번째 우선)
+      }
+    });
+  });
+
+  return merged;
+}
+
+// ── 수동 입력 → ClientProfile 변환 ──
+function fromManualInput(patientData, domainInputs) {
+  const ageMonths = calcMonthAge(patientData.birth, patientData.evalDate);
+
+  function buildDomain(code, areaInputs) {
+    if (!areaInputs || areaInputs.length === 0) return null;
+    const areas = areaInputs.map(a => ({
+      code: a.code,
+      name: a.code,
+      achRate: a.achRate || 0,
+      rfCount: a.rfCount || 0,
+      level: achRateToLevel(a.achRate || 0)
+    }));
+    const totalAchRate = Math.round(areas.reduce((s, a) => s + a.achRate, 0) / areas.length);
+    return {
+      code,
+      totalAchRate,
+      totalRfCount: areas.reduce((s, a) => s + a.rfCount, 0),
+      totalLevel: achRateToLevel(totalAchRate),
+      areas
+    };
+  }
+
+  return {
+    source: 'manual',
+    patient: {
+      ...patientData,
+      ageMonths,
+      ageLabel: formatAge(ageMonths)
+    },
+    domains: {
+      SI: buildDomain('SI', domainInputs.SI),
+      GF: buildDomain('GF', domainInputs.GF),
+      OC: buildDomain('OC', domainInputs.OC),
+      COG: buildDomain('COG', domainInputs.COG)
+    }
+  };
+}
+
+// ── 유틸리티 ──
+function calcMonthAge(birth, evalDate) {
+  if (!birth || !evalDate) return 0;
+  const b = new Date(birth);
+  const e = new Date(evalDate);
+  return (e.getFullYear() - b.getFullYear()) * 12 + (e.getMonth() - b.getMonth());
+}
+
+function formatAge(months) {
+  if (!months) return '';
+  const y = Math.floor(months / 12);
+  const m = months % 12;
+  return `${y}세 ${m}개월 (${months}M)`;
+}
+
+// ── UI: Domain Configuration ──
+const DOMAIN_CONFIG = {
+  SI: { label: '감각통합', color: '#E55D62', subareas: [
+    { code: 'SR-OR', name: '촉각과반응' }, { code: 'SR-UR', name: '촉각저반응' },
+    { code: 'SR-SK', name: '감각추구' }, { code: 'MC-PS', name: '자세안정' },
+    { code: 'MC-PX', name: '운동계획' }, { code: 'MC-BL', name: '양측협응' },
+    { code: 'SD', name: '감각변별' }
+  ]},
+  GF: { label: '총체적 운동', color: '#43A047', subareas: [
+    { code: 'GM', name: '대근육' }, { code: 'FM', name: '소근육' }
+  ]},
+  OC: { label: '인지 (실행기능)', color: '#1565C0', subareas: [
+    { code: 'OC-T1', name: 'Tier1: 주의' }, { code: 'OC-T2', name: 'Tier2: 작업기억/억제' },
+    { code: 'OC-T3', name: 'Tier3: 계획/순서/전환' }, { code: 'OC-T4', name: 'Tier4: 자기점검/시간' }
+  ]},
+  COG: { label: '인지', color: '#F9A825', subareas: [
+    { code: 'ATT', name: '주의' }, { code: 'MEM', name: '기억' },
+    { code: 'PER', name: '지각' }, { code: 'THK', name: '사고' },
+    { code: 'EXF', name: '실행기능' }, { code: 'LNG', name: '언어' }
+  ]}
+};
+
+// ── INIT: Initialize engine data ──
+initActivities(DATA_ACTIVITIES_OC, DATA_ACTIVITIES_SI, DATA_ACTIVITIES_GF, DATA_ACTIVITIES_COG);
+initGoalTemplates(DATA_GOAL_TEMPLATES);
+initSessionTemplates(DATA_SESSION_TEMPLATES);
+
+// ── STORAGE: IndexedDB (si-cog-cda 공유 DB) ──
+const _ACE_DB = 'si-cog-cda', _ACE_DB_VER = 1;
+const _ACE_ALL_STORES = ['children','obs1','obs2','std1','std2','rpt','ace'];
+let db = null;
+let currentAceChildId = null; // 현재 선택된 아동의 numeric ID
+
+async function initStorage() {
+  return new Promise((resolve, reject) => {
+    const r = indexedDB.open(_ACE_DB, _ACE_DB_VER);
+    r.onerror = () => reject(r.error);
+    r.onsuccess = e => { db = e.target.result; resolve(db); };
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      _ACE_ALL_STORES.forEach(s => {
+        if (!d.objectStoreNames.contains(s))
+          d.createObjectStore(s, s === 'children'
+            ? { keyPath: 'id', autoIncrement: true }
+            : { keyPath: 'childId' });
+      });
+    };
+  });
+}
+
+// profile._childId : 기존 아동 ID (numeric). 없으면 신규 등록.
+// 반환값: 저장된 childId (number)
+async function saveChild(profile) {
+  if (!db) throw new Error('DB not init');
+  const now = new Date().toISOString();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(['children', 'ace'], 'readwrite');
+    tx.onerror = () => reject(tx.error);
+    const cSt = tx.objectStore('children');
+    const aSt = tx.objectStore('ace');
+    const saveAce = id => {
+      const rec = {
+        childId: id,
+        patient:  profile.patient  || {},
+        domains:  profile.domains  || {},
+        results:  profile.results  || null,
+        createdAt: profile.createdAt || now,
+        updatedAt: now
+      };
+      const r2 = aSt.put(rec);
+      r2.onerror = () => reject(r2.error);
+      r2.onsuccess = () => resolve(id);
+    };
+    const childId = profile._childId;
+    if (childId) {
+      const r1 = cSt.get(childId);
+      r1.onerror = () => reject(r1.error);
+      r1.onsuccess = () => {
+        const row = r1.result || { id: childId, createdAt: now };
+        row.name = profile.patient.name || row.name;
+        row.updatedAt = now;
+        cSt.put(row);
+        saveAce(childId);
+      };
+    } else {
+      const r1 = cSt.add({ name: profile.patient.name || '', createdAt: now, updatedAt: now });
+      r1.onerror = () => reject(r1.error);
+      r1.onsuccess = () => saveAce(r1.result);
+    }
+  });
+}
+
+async function loadChildren() {
+  if (!db) throw new Error('DB not init');
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(['children', 'ace'], 'readonly');
+    const cSt = tx.objectStore('children');
+    const aSt = tx.objectStore('ace');
+    const r1 = cSt.getAll();
+    r1.onerror = () => reject(r1.error);
+    r1.onsuccess = () => {
+      const rows = r1.result || [];
+      const out = [];
+      let pending = rows.length;
+      if (pending === 0) { resolve([]); return; }
+      rows.forEach(child => {
+        const r2 = aSt.get(child.id);
+        r2.onsuccess = () => {
+          if (r2.result) out.push({ ...r2.result, _childId: child.id });
+          if (--pending === 0) {
+            out.sort((a, b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
+            resolve(out);
+          }
+        };
+        r2.onerror = () => { if (--pending === 0) { out.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0)); resolve(out); } };
+      });
+    };
+  });
+}
+
+async function loadChild(id) {
+  if (!db) throw new Error('DB not init');
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(['ace'], 'readonly');
+    const st = tx.objectStore('ace');
+    const r = st.get(id);
+    r.onerror = () => reject(r.error);
+    r.onsuccess = () => resolve(r.result ? { ...r.result, _childId: id } : null);
+  });
+}
+
+async function deleteChild(id) {
+  if (!db) throw new Error('DB not init');
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(['children', 'ace'], 'readwrite');
+    tx.onerror = () => reject(tx.error);
+    tx.objectStore('children').delete(id);
+    tx.objectStore('ace').delete(id);
+    tx.oncomplete = () => resolve();
+  });
+}
+
+// ace_db → si-cog-cda 레거시 마이그레이션
+async function migrateLegacyAceDB() {
+  return new Promise(resolve => {
+    const r = indexedDB.open('ace_db', 1);
+    r.onerror = () => resolve(0);
+    r.onsuccess = async e => {
+      const legacyDb = e.target.result;
+      try {
+        if (!legacyDb.objectStoreNames.contains('children')) { legacyDb.close(); resolve(0); return; }
+        const tx = legacyDb.transaction(['children'], 'readonly');
+        const req = tx.objectStore('children').getAll();
+        req.onerror = () => { legacyDb.close(); resolve(0); };
+        req.onsuccess = async () => {
+          const items = req.result || [];
+          legacyDb.close();
+          if (!items.length) { resolve(0); return; }
+          if (!confirm(`이전 데이터(ace_db)에 ${items.length}명의 아동이 있습니다.\n공유 DB(si-cog-cda)로 이전하시겠습니까?`)) { resolve(0); return; }
+          let count = 0;
+          for (const item of items) {
+            try { await saveChild({ ...item, _childId: null }); count++; } catch(e) {}
+          }
+          resolve(count);
+        };
+      } catch(e) { legacyDb.close(); resolve(0); }
+    };
+  });
+}
+
+// ── UI: Utilities ──
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  const btn = document.querySelector(`[data-tab="${name}"]`);
+  if (btn) btn.classList.add('active');
+}
+
+// calcMonthAge and formatAge are defined in importer section above
+function formatAgeUI(m) {
+  return formatAge(m) || `${Math.floor(m/12)}세 ${m%12}개월`;
+}
+
+// ── UI: Render Domain Inputs ──
+function renderDomainInputs() {
+  const c = document.getElementById('domainInputs');
+  c.innerHTML = '';
+  Object.entries(DOMAIN_CONFIG).forEach(([code, cfg]) => {
+    const s = document.createElement('div');
+    s.className = 'card';
+    s.innerHTML = `<h3 style="color:${cfg.color}">${cfg.label}</h3>
+      <div>${cfg.subareas.map(a => `
+        <div class="domain-input-item">
+          <label>${a.name} <span style="font-size:.85rem;color:#999">(${a.code})</span></label>
+          <label>달성률 %<input type="number" class="achRate" data-domain="${code}" data-code="${a.code}" min="0" max="100" value="50"></label>
+          <label>RF수<input type="number" class="rfCount" data-domain="${code}" data-code="${a.code}" min="0" value="0"></label>
+        </div>`).join('')}</div>`;
+    c.appendChild(s);
+  });
+}
+
+// ── UI: Build Profile from Form ──
+function buildProfileFromUI() {
+  const p = {
+    patient: {
+      name: document.getElementById('childName').value || '(미입력)',
+      birth: document.getElementById('childBirth').value || '',
+      evalDate: document.getElementById('evalDate').value || new Date().toISOString().split('T')[0],
+      diagnosis: document.getElementById('childDiagnosis').value || '',
+      evaluator: document.getElementById('evaluator').value || '',
+      ageMonths: 0
+    },
+    domains: {}
+  };
+  p.patient.ageMonths = calcMonthAge(p.patient.birth, p.patient.evalDate);
+  
+  DOMAINS.forEach(code => {
+    const areas = [];
+    document.querySelectorAll(`input.achRate[data-domain="${code}"]`).forEach(inp => {
+      const c = inp.dataset.code;
+      const achR = parseInt(inp.value) || 0;
+      const rfC = parseInt(document.querySelector(`input.rfCount[data-domain="${code}"][data-code="${c}"]`).value) || 0;
+      areas.push({ code: c, name: c, achRate: achR, rfCount: rfC, level: achRateToLevel(achR) });
+    });
+    if (areas.length > 0) {
+      const tachRate = Math.round(areas.reduce((s, a) => s + a.achRate, 0) / areas.length);
+      p.domains[code] = {
+        code, areas, totalAchRate: tachRate,
+        totalRfCount: areas.reduce((s, a) => s + a.rfCount, 0),
+        totalLevel: achRateToLevel(tachRate)
+      };
+    } else {
+      p.domains[code] = null;
+    }
+  });
+  return p;
+}
+
+// ── UI: Render Cascade Tab ──
+function renderCascadeTab(cr) {
+  const c = document.getElementById('cascadeContent');
+  let html = '<div style="display:grid;gap:calc(var(--spacing)*2)">';
+  
+  // SP Premise alert
+  if (cr.spPremise && cr.spPremise.active) {
+    html += `<div class="card" style="border-left:4px solid var(--danger);background-color:rgba(244,67,54,.05)">
+      <h3 style="color:var(--danger)">🔴 SP 전제조건 활성</h3>
+      <p>${cr.spPremise.reason}</p>
+      <p class="text-muted mt-2">영향 영역: ${cr.spPremise.affects.join(', ')}</p>
+    </div>`;
+  }
+  
+  // OC Tiers
+  if (cr.oc) {
+    html += `<div class="card"><h3 style="color:var(--color-oc)">OC (인지/실행기능) — 4-Tier 캐스케이드</h3>`;
+    cr.oc.tiers.forEach(t => {
+      const lc = t.level >= 4 ? '#4CAF50' : t.level >= 3 ? '#FF9800' : '#F44336';
+      html += `<div style="margin-bottom:var(--spacing);padding:var(--spacing);background-color:#f5f5f5;border-radius:var(--radius)">
+        <div style="font-weight:500;color:${lc}">Tier ${t.tier}: ${t.clusterLabels ? t.clusterLabels.join(', ') : t.name} ${t.rfCount > 0 ? '🔴RF' + t.rfCount : ''}</div>
+        <div>달성률: <strong>${t.achRate}%</strong> | Level: <strong style="color:${lc}">${t.level}</strong></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(t.achRate, 100)}%;background:${lc}">${t.achRate}%</div></div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  
+  // SI Stages
+  if (cr.si) {
+    html += `<div class="card"><h3 style="color:var(--color-si)">SI (감각통합) — SR→MC→SD 캐스케이드</h3>`;
+    cr.si.stages.forEach(s => {
+      const lc = s.level >= 4 ? '#4CAF50' : s.level >= 3 ? '#FF9800' : '#F44336';
+      html += `<div style="margin-bottom:var(--spacing);padding:var(--spacing);background-color:#f5f5f5;border-radius:var(--radius)">
+        <div style="font-weight:500;color:${lc}">Stage ${s.order}: ${s.name} (${s.code}) ${s.rfCount > 0 ? '🔴RF' + s.rfCount : ''}</div>
+        <div>달성률: <strong>${s.achRate}%</strong> | Level: <strong style="color:${lc}">${s.level}</strong></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(s.achRate, 100)}%;background:${lc}">${s.achRate}%</div></div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  
+  // GF Stages
+  if (cr.gf) {
+    html += `<div class="card"><h3 style="color:var(--color-gf)">GF (총체적 운동) — SP→PS→GM→FM→VP 캐스케이드</h3>`;
+    cr.gf.stages.forEach(s => {
+      if (s.achRate === null) return;
+      const lc = s.level >= 4 ? '#4CAF50' : s.level >= 3 ? '#FF9800' : '#F44336';
+      html += `<div style="margin-bottom:var(--spacing);padding:var(--spacing);background-color:#f5f5f5;border-radius:var(--radius)">
+        <div style="font-weight:500;color:${lc}">Stage ${s.order}: ${s.name} (${s.code}) ${s.rfCount > 0 ? '🔴RF' + s.rfCount : ''}</div>
+        <div>달성률: <strong>${s.achRate}%</strong> | Level: <strong style="color:${lc}">${s.level}</strong></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(s.achRate, 100)}%;background:${lc}">${s.achRate}%</div></div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  
+  // COG Areas
+  const COG_AREA_NAMES = {ATT:'주의력',MEM:'기억력',PER:'지각',THK:'사고',EXF:'실행기능',LNG:'언어',NUM:'수개념'};
+  if (cr.cog) {
+    html += `<div class="card"><h3 style="color:var(--color-cog)">COG (기초인지) — Flat 구조</h3>`;
+    cr.cog.areas.forEach(a => {
+      const lc = a.level >= 4 ? '#4CAF50' : a.level >= 3 ? '#FF9800' : '#F44336';
+      const areaName = COG_AREA_NAMES[a.code] || a.code;
+      html += `<div style="margin-bottom:var(--spacing);padding:var(--spacing);background-color:#f5f5f5;border-radius:var(--radius)">
+        <div style="font-weight:500;color:${lc}">${a.code} (${areaName}) ${(a.rfCount||0) > 0 ? '🔴RF' + a.rfCount : ''}</div>
+        <div>달성률: <strong>${a.achRate}%</strong> | Level: <strong style="color:${lc}">${a.level}</strong></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(a.achRate, 100)}%;background:${lc}">${a.achRate}%</div></div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  
+  // Cross-Domain Effects
+  if (cr.crossDomain && cr.crossDomain.length > 0) {
+    html += `<div class="card"><h3>⚡ 도메인 교차 영향</h3>`;
+    cr.crossDomain.forEach(e => {
+      html += `<div style="padding:var(--spacing);margin-bottom:var(--spacing);background:#fff3e0;border-radius:var(--radius);border-left:3px solid #FF9800">
+        <strong>${e.from} → ${e.to}</strong>
+        <div class="text-muted">${e.description}</div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  
+  // Intervention Order
+  if (cr.interventionOrder && cr.interventionOrder.length > 0) {
+    html += `<div class="card"><h3>📋 중재 순서</h3><ol>`;
+    cr.interventionOrder.forEach(item => {
+      const badge = item.phase === 0 ? '🔴' : item.rfCount > 0 ? '🟡' : '🔵';
+      html += `<li style="margin-bottom:var(--spacing)">
+        ${badge} <strong>${item.label}</strong> (${item.domain}.${item.cluster})
+        <span class="text-muted"> — ${item.reason}</span>
+      </li>`;
+    });
+    html += '</ol></div>';
+  }
+  
+  // Summary
+  if (cr.summary && cr.summary.length > 0) {
+    html += `<div class="card"><h3>요약</h3>`;
+    cr.summary.forEach(line => {
+      html += `<p>${line}</p>`;
+    });
+    html += '</div>';
+  }
+  
+  html += '</div>';
+  c.innerHTML = html;
+  c.classList.remove('placeholder');
+}
+
+// ── UI: Render Red Flags Tab ──
+function renderRedFlagsTab(rfResult) {
+  const c = document.getElementById('redflagsContent');
+  if (!rfResult || rfResult.flags.length === 0) {
+    c.innerHTML = '<div class="card"><h3>Red Flag 분석</h3><p class="text-muted">Red Flag이 발견되지 않았습니다.</p></div>';
+    c.classList.remove('placeholder');
+    return;
+  }
+  
+  let html = `<div class="card"><h3>Red Flag 분석</h3>
+    <div style="display:flex;gap:calc(var(--spacing)*2);margin-bottom:calc(var(--spacing)*2)">
+      <span class="urgency-badge urgency-immediate">🔴 즉시 ${rfResult.summary.immediate}건</span>
+      <span class="urgency-badge urgency-priority">🟡 우선 ${rfResult.summary.priority}건</span>
+      <span class="urgency-badge urgency-monitor">🔵 관찰 ${rfResult.summary.monitor}건</span>
+    </div>
+    <table class="rf-table">
+      <thead><tr><th>긴급도</th><th>도메인</th><th>영역</th><th>달성률</th><th>Level</th><th>RF</th><th>조치</th><th>의뢰</th></tr></thead>
+      <tbody>`;
+  
+  rfResult.flags.forEach(f => {
+    const urgClass = f.urgency === 'immediate' ? 'urgency-immediate' : f.urgency === 'priority' ? 'urgency-priority' : 'urgency-monitor';
+    html += `<tr>
+      <td><span class="urgency-badge ${urgClass}">${f.emoji} ${f.urgency}</span></td>
+      <td><span class="badge badge-${f.domain.toLowerCase()}">${f.domain}</span></td>
+      <td>${f.areaName}</td>
+      <td>${f.achRate}%</td>
+      <td>${f.level}</td>
+      <td>${f.rfCount}${f.implicit ? ' (암묵)' : ''}</td>
+      <td>${f.action}</td>
+      <td style="font-size:.85rem">${f.referral || '-'}</td>
+    </tr>`;
+  });
+  
+  html += '</tbody></table></div>';
+  c.innerHTML = html;
+  c.classList.remove('placeholder');
+}
+
+// ── UI: Render Goals Tab ──
+function renderGoalsTab(goals) {
+  const c = document.getElementById('goalsContent');
+  const { longTermGoals: ltg, shortTermGoals: stg } = goals;
+  
+  let html = '<div>';
+  html += '<h2>장기 목표 (6개월)</h2>';
+  ltg.forEach(g => {
+    const dc = DOMAIN_CONFIG[g.domain]?.color || '#999';
+    html += `<div class="goal-card" style="border-left-color:${dc}">
+      <div><span class="badge badge-${g.domain.toLowerCase()}">${g.domain}</span>
+      ${g.rfRelated ? '<span class="urgency-badge urgency-immediate" style="margin-left:4px">RF</span>' : ''}
+      ${g.isSPPremise ? '<span class="urgency-badge urgency-priority" style="margin-left:4px">SP전제</span>' : ''}</div>
+      <div style="font-weight:500;margin-top:var(--spacing)">${g.text}</div>
+      <div class="text-muted mt-2">현재 Level ${g.currentLevel} → 목표 Level ${g.targetLevel} | 리뷰: ${g.reviewWeeks}주</div>`;
+    
+    // GAS levels
+    if (g.gasLevels) {
+      html += '<div style="margin-top:var(--spacing);font-size:.85rem">';
+      Object.entries(g.gasLevels).forEach(([lv, desc]) => {
+        const isTarget = parseInt(lv) === g.targetLevel;
+        const isCurrent = parseInt(lv) === g.currentLevel;
+        html += `<div style="padding:2px 0;${isTarget ? 'font-weight:600;color:var(--success)' : isCurrent ? 'color:var(--danger)' : 'color:#999'}">
+          Level ${lv}: ${desc} ${isTarget ? '← 목표' : ''} ${isCurrent ? '← 현재' : ''}
+        </div>`;
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+  
+  html += '<h2 class="mt-4">단기 목표 (4~6주)</h2>';
+  stg.forEach(g => {
+    const dc = DOMAIN_CONFIG[g.domain]?.color || '#999';
+    html += `<div class="goal-card" style="border-left-color:${dc}">
+      <div><span class="badge badge-${g.domain.toLowerCase()}">${g.domain}</span></div>
+      <div style="font-weight:500;margin-top:var(--spacing)">${g.text}</div>
+      <div class="text-muted mt-2">Level ${g.currentLevel} → Level ${g.targetLevel} | ${g.reviewWeeks}주 후 재평가</div>
+    </div>`;
+  });
+  
+  html += '</div>';
+  c.innerHTML = html;
+  c.classList.remove('placeholder');
+}
+
+// ── UI: Render Activities & Session Tab ──
+function renderActivitiesTab(matchRes, sessionPlan40, sessionPlan50, homeProgram, schoolProgram) {
+  const c = document.getElementById('activitiesContent');
+  let html = '<div>';
+  
+  // Matched Activities
+  html += '<h2>매칭된 활동</h2>';
+  matchRes.forEach(r => {
+    const dc = DOMAIN_CONFIG[r.domain]?.color || '#999';
+    html += `<h3 style="color:${dc};margin-top:calc(var(--spacing)*2)">목표: ${r.goalText}</h3>`;
+    if (r.matches.length === 0) {
+      html += '<p class="text-muted">매칭된 활동이 없습니다.</p>';
+      return;
+    }
+    r.matches.forEach(m => {
+      const act = m.activity || m;
+      html += `<div class="activity-card" style="border-left:4px solid ${dc}">
+        <div class="activity-header" onclick="this.nextElementSibling.classList.toggle('show')">
+          <div><strong>${act.name || '활동'}</strong>
+            <span class="text-muted" style="margin-left:8px">${act.cluster || ''} | 점수: ${m.score || '-'}</span>
+          </div><div>▼</div>
+        </div>
+        <div class="activity-content">
+          ${act.evidence ? `<p><strong>근거:</strong> ${act.evidence}</p>` : ''}
+          ${act.materials ? `<p><strong>준비물:</strong> ${Array.isArray(act.materials) ? act.materials.join(', ') : act.materials}</p>` : ''}
+          ${act.procedure ? `<p><strong>절차:</strong> ${Array.isArray(act.procedure) ? act.procedure.join(' → ') : act.procedure}</p>` : ''}
+          ${act.progressCriteria ? `<p><strong>진전기준:</strong> ${act.progressCriteria}</p>` : ''}
+          ${act.setting ? `<p><strong>환경:</strong> ${Array.isArray(act.setting) ? act.setting.join(', ') : act.setting}</p>` : ''}
+        </div>
+      </div>`;
+    });
+  });
+  
+  // Session Plans (40min + 50min)
+  [sessionPlan40, sessionPlan50].forEach(sp => {
+    if (!sp) return;
+    html += `<h2 class="mt-4">${sp.diagnosis || ''} — ${sp.duration}분 세션 계획</h2>
+      <div class="session-timeline">`;
+    (sp.phases || []).forEach(p => {
+      html += `<div class="timeline-item">
+        <div class="time">${p.timeRange}</div>
+        <div class="phase"><strong>${p.name}</strong></div>
+        <div class="text-muted">${p.description || p.minutes + '분'}</div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  
+  // Session Notes
+  if (sessionPlan50 && sessionPlan50.notes && sessionPlan50.notes.length > 0) {
+    html += '<h2 class="mt-4">세션 노트</h2>';
+    sessionPlan50.notes.forEach(note => {
+      html += `<div class="card"><h4>${note.category}</h4><ul>`;
+      note.items.forEach(item => { html += `<li>${item}</li>`; });
+      html += '</ul></div>';
+    });
+  }
+  
+  // Home Program
+  if (homeProgram && homeProgram.length > 0) {
+    html += '<h2 class="mt-4">🏠 가정 프로그램</h2>';
+    homeProgram.forEach(p => {
+      html += `<div class="program-card">
+        <h4>${p.area}</h4>
+        <p>${p.defaultActivity}</p>
+        <div class="tools">📦 도구: ${(p.defaultTools || []).join(', ')}</div>
+        <div class="tools">📅 빈도: ${p.frequency || ''}</div>
+        <div class="role">👨‍👩‍👧 부모 역할: ${p.parentRole || ''}</div>
+      </div>`;
+    });
+  }
+  
+  // School Program
+  if (schoolProgram && schoolProgram.length > 0) {
+    html += '<h2 class="mt-4">🏫 학교 프로그램</h2>';
+    schoolProgram.forEach(p => {
+      html += `<div class="program-card">
+        <h4>${p.area}</h4>
+        <p>${p.activity}</p>
+        <div class="tools">📦 도구: ${(p.tools || []).join(', ')}</div>
+        <div class="role">👩‍🏫 교사 역할: ${p.teacherRole || ''}</div>
+      </div>`;
+    });
+  }
+  
+  html += '</div>';
+  c.innerHTML = html;
+  c.classList.remove('placeholder');
+}
+
+// ── CORE: Generate Recommendation ──
+async function handleGenerateRecommendation() {
+  const profile = buildProfileFromUI();
+  if (!profile.patient.name || profile.patient.name === '(미입력)') {
+    showToast('아동 이름을 입력하세요.', 'warning'); return;
+  }
+  if (!profile.patient.birth || !profile.patient.evalDate) {
+    showToast('생년월일과 평가일을 입력하세요.', 'warning'); return;
+  }
+  document.getElementById('ageMonths').value = profile.patient.ageMonths;
+  
+  try {
+    // 1. Cascade Analysis
+    const cascadeResult = analyzeCascade(profile);
+    
+    // 2. Red Flag Analysis
+    const redFlagResult = analyzeRedFlags(profile, cascadeResult);
+    
+    // 3. Goal Generation
+    const goals = generateGoals(profile, cascadeResult, redFlagResult);
+    
+    // 4. Activity Matching
+    const matchResults = matchActivities(goals.shortTermGoals, profile);
+    const organized = organizeForSession(matchResults, cascadeResult);
+    
+    // 5. Session Planning
+    const sessionPlan40 = generateSessionPlan(profile, cascadeResult, organized, 40);
+    const sessionPlan50 = generateSessionPlan(profile, cascadeResult, organized, 50);
+    
+    // 6. Home & School Programs
+    const homeProgram = generateHomeProgram(profile, goals.shortTermGoals, matchResults);
+    const schoolProgram = generateSchoolProgram(profile, goals.shortTermGoals, matchResults);
+    
+    // Render all tabs
+    renderCascadeTab(cascadeResult);
+    renderRedFlagsTab(redFlagResult);
+    renderGoalsTab(goals);
+    renderActivitiesTab(matchResults, sessionPlan40, sessionPlan50, homeProgram, schoolProgram);
+    
+    // Store for export
+    window.currentProfile = profile;
+    window.currentResults = {
+      cascade: cascadeResult,
+      redFlags: redFlagResult,
+      goals,
+      matchResults,
+      sessionPlans: { '40': sessionPlan40, '50': sessionPlan50 },
+      homeProgram,
+      schoolProgram
+    };
+    
+    switchTab('cascade');
+    showToast('추천 생성 완료!', 'success');
+  } catch (err) {
+    console.error('Recommendation error:', err);
+    showToast('추천 생성 실패: ' + err.message, 'error');
+  }
+}
+
+// ── HANDLERS: Save / Load / Delete / Export ──
+async function handleSaveChild() {
+  const profile = buildProfileFromUI();
+  if (!profile.patient.name || profile.patient.name === '(미입력)') {
+    showToast('아동 이름을 입력하세요.', 'warning'); return;
+  }
+  try {
+    if (window.currentResults) profile.results = window.currentResults;
+    profile._childId = currentAceChildId;
+    const savedId = await saveChild(profile);
+    currentAceChildId = savedId;
+    showToast(`${profile.patient.name} 저장 완료!`, 'success');
+    await refreshChildrenList();
+  } catch (err) {
+    showToast('저장 실패: ' + err.message, 'error');
+  }
+}
+
+async function refreshChildrenList() {
+  try {
+    const children = await loadChildren();
+    const select = document.getElementById('childSelect');
+    select.innerHTML = '<option value="">+ 신규 아동</option>';
+    children.forEach(child => {
+      const option = document.createElement('option');
+      option.value = child._childId;
+      option.textContent = `${child.patient.name} (${formatAgeUI(child.patient.ageMonths) || ''})`;
+      if (child._childId === currentAceChildId) option.selected = true;
+      select.appendChild(option);
+    });
+    const childrenList = document.getElementById('childrenList');
+    if (children.length === 0) {
+      childrenList.innerHTML = '<p class="text-muted">저장된 아동이 없습니다.</p>';
+    } else {
+      childrenList.innerHTML = children.map(child => `
+        <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+          <div><strong>${child.patient.name}</strong><br>
+            <span class="text-muted">${formatAgeUI(child.patient.ageMonths)} | ${child.patient.diagnosis} | ${child.patient.birth}</span>
+          </div>
+          <div style="display:flex;gap:var(--spacing)">
+            <button class="btn btn-sm btn-outline" onclick="loadChildData(${child._childId})">불러오기</button>
+            <button class="btn btn-sm btn-danger" onclick="delChild(${child._childId})">삭제</button>
+          </div>
+        </div>`).join('');
+    }
+  } catch (err) {
+    console.error('Failed to load children:', err);
+  }
+}
+
+async function loadChildData(childId) {
+  try {
+    const child = await loadChild(Number(childId));
+    if (child) {
+      currentAceChildId = child._childId;
+      document.getElementById('childName').value = child.patient.name || '';
+      document.getElementById('childBirth').value = child.patient.birth || '';
+      document.getElementById('evalDate').value = child.patient.evalDate || '';
+      document.getElementById('childDiagnosis').value = child.patient.diagnosis || '';
+      document.getElementById('evaluator').value = child.patient.evaluator || '';
+      document.getElementById('ageMonths').value = child.patient.ageMonths || '';
+      DOMAINS.forEach(code => {
+        const domain = child.domains ? child.domains[code] : null;
+        if (domain && domain.areas) {
+          domain.areas.forEach(area => {
+            const achInput = document.querySelector(`input.achRate[data-domain="${code}"][data-code="${area.code}"]`);
+            const rfInput = document.querySelector(`input.rfCount[data-domain="${code}"][data-code="${area.code}"]`);
+            if (achInput) achInput.value = area.achRate || 0;
+            if (rfInput) rfInput.value = area.rfCount || 0;
+          });
+        }
+      });
+      switchTab('profile');
+      showToast(`${child.patient.name} 불러오기 완료!`, 'success');
+    }
+  } catch (err) {
+    showToast('불러오기 실패: ' + err.message, 'error');
+  }
+}
+
+async function delChild(childId) {
+  if (confirm('정말 삭제하시겠습니까?')) {
+    try {
+      await deleteChild(childId);
+      showToast('삭제 완료!', 'success');
+      await refreshChildrenList();
+    } catch (err) {
+      showToast('삭제 실패: ' + err.message, 'error');
+    }
+  }
+}
+
+function handleExportJSON() {
+  if (!window.currentProfile) {
+    showToast('먼저 추천을 생성하세요.', 'warning'); return;
+  }
+  const exportData = {
+    ...window.currentProfile,
+    results: window.currentResults,
+    exportedAt: new Date().toISOString()
+  };
+  const json = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ace_${window.currentProfile.patient.name || 'export'}_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  showToast('JSON 내보내기 완료!', 'success');
+}
+
+function fillFormFromProfile(profile) {
+  document.getElementById('childName').value = profile.patient.name || '';
+  document.getElementById('childBirth').value = profile.patient.birth || '';
+  document.getElementById('evalDate').value = profile.patient.evalDate || '';
+  document.getElementById('childDiagnosis').value = profile.patient.diagnosis || '';
+  document.getElementById('evaluator').value = profile.patient.evaluator || '';
+  document.getElementById('ageMonths').value = profile.patient.ageMonths || '';
+
+  DOMAINS.forEach(code => {
+    const domain = profile.domains[code];
+    if (domain && domain.areas) {
+      domain.areas.forEach(area => {
+        const achInput = document.querySelector(`input.achRate[data-domain="${code}"][data-code="${area.code}"]`);
+        const rfInput  = document.querySelector(`input.rfCount[data-domain="${code}"][data-code="${area.code}"]`);
+        if (achInput) achInput.value = area.achRate || 0;
+        if (rfInput)  rfInput.value  = area.rfCount || 0;
+      });
+    }
+  });
+}
+
+function handleImportJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const json = JSON.parse(await file.text());
+      const profile = autoImport(json);
+      fillFormFromProfile(profile);
+      showToast(`${profile.source} 형식 가져오기 완료!`, 'success');
+    } catch (err) {
+      showToast('JSON 가져오기 실패: ' + err.message, 'error');
+    }
+  };
+  input.click();
+}
+
+function handleMergeImportJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.multiple = true;
+  input.onchange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    try {
+      const profiles = await Promise.all(
+        files.map(async (f) => {
+          const json = JSON.parse(await f.text());
+          return autoImport(json);
+        })
+      );
+      const merged = mergeProfiles(...profiles);
+      fillFormFromProfile(merged);
+
+      const sources = profiles.map(p => {
+        if (p.source === 'si_motor_v3')   return '① SI운동';
+        if (p.source === 'cognitive_v5')  return '③ 인지';
+        if (p.source === 'cprg_v1')       return '⑦ 프로파일';
+        return p.source;
+      }).join(' + ');
+      showToast(`${sources} 병합 완료!`, 'success');
+    } catch (err) {
+      showToast('병합 가져오기 실패: ' + err.message, 'error');
+    }
+  };
+  input.click();
+}
+
+// ── INIT: App Startup ──
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    await initStorage();
+    const migrated = await migrateLegacyAceDB();
+    if (migrated > 0) showToast(`이전 데이터 ${migrated}명 이전 완료!`, 'success');
+    await refreshChildrenList();
+  } catch (err) {
+    console.error('Storage init failed:', err);
+  }
+
+  // childSelect 드롭다운으로 아동 전환
+  document.getElementById('childSelect').addEventListener('change', async e => {
+    const val = e.target.value;
+    if (val) {
+      await loadChildData(Number(val));
+    } else {
+      currentAceChildId = null;
+    }
+  });
+
+  renderDomainInputs();
+
+  // ── IndexedDB 자동저장 (30초마다, 기존 저장 아동만) ──────
+  setInterval(async () => {
+    if (!currentAceChildId) return;
+    const name = document.getElementById('childName')?.value?.trim();
+    if (name) {
+      try {
+        const profile = buildProfileFromUI();
+        if (window.currentResults) profile.results = window.currentResults;
+        profile._childId = currentAceChildId;
+        await saveChild(profile);
+      } catch(e) {}
+    }
+  }, 30000);
+
+  // Event listeners
+  document.getElementById('saveBtnTop').addEventListener('click', handleSaveChild);
+  document.getElementById('generateBtnTop').addEventListener('click', handleGenerateRecommendation);
+  document.getElementById('importJSONBtn').addEventListener('click', handleImportJSON);
+  document.getElementById('mergeImportBtn').addEventListener('click', handleMergeImportJSON);
+  document.getElementById('exportJSON').addEventListener('click', handleExportJSON);
+  document.getElementById('exportPrint').addEventListener('click', () => window.print());
+  document.getElementById('exportParent').addEventListener('click', () => {
+    // Generate parent-friendly print view
+    switchTab('activities');
+    setTimeout(() => window.print(), 300);
+  });
+  
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+});
+
+// Expose to global for inline onclick
+window.delChild = delChild;
+window.loadChildData = loadChildData;
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+  <a href="../" id="pwa-back-btn" title="메인으로 돌아가기" style="
+    position:fixed;
+    bottom:calc(20px + env(safe-area-inset-bottom, 0px));
+    right:calc(20px + env(safe-area-inset-right, 0px));
+    z-index:2147483647;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#1a1a1a;
+    color:#fff;
+    border:2px solid #fff;
+    border-radius:30px;
+    padding:12px 20px 12px 16px;
+    font-size:14px;
+    font-weight:700;
+    text-decoration:none;
+    font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);
+    -webkit-tap-highlight-color:transparent;
+    cursor:pointer;
+    pointer-events:auto;
+    -webkit-transform:translateZ(0);
+    transform:translateZ(0);
+  ">
+    <span style="font-size:18px;line-height:1;">←</span>
+    <span>메인으로</span>
+  </a>
+</body>
+</html>

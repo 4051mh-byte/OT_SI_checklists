@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SI-Cog CDA — 임상 의사결정 시스템</title>
+<meta name="description" content="SI-Cog CDA (Clinical Decision Architecture) — 감각통합·인지 임상 의사결정 통합 시스템">
+<meta name="theme-color" content="#2E7D32">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SI-Cog CDA">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif; background:#f5f5f5; color:#333; padding:10px 14px; min-height:100vh; }
+.wrap { max-width:1020px; margin:0 auto; }
+.sys-header { text-align:center; margin:6px 0 10px; }
+.sys-header h1 { font-size:17px; color:#222; margin-bottom:2px; }
+.sys-header .sys-sub { font-size:11px; color:#888; letter-spacing:0.3px; }
+
+/* ── MODULE GRID ── */
+.module-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
+.phase-sep { grid-column:1/-1; font-size:10px; font-weight:700; color:#fff; background:#546e7a; border-radius:4px; padding:2px 10px; margin:8px 0 5px; display:block; width:fit-content; }
+.phase-de { display:flex; flex-direction:column; }
+.phase-de .phase-sep { grid-column:unset; }
+.phase-de .card { flex:1; }
+
+/* ── CARD ── */
+.card { display:block; background:#fff; border-radius:8px; padding:10px 14px; margin-bottom:6px; text-decoration:none; color:inherit; box-shadow:0 2px 6px rgba(0,0,0,0.07); border-left:4px solid #ccc; transition:.15s; }
+.card:hover, .card:active { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.12); }
+.card.obs1  { border-left-color:#E55D62; }
+.card.obs2  { border-left-color:#FAAB23; }
+.card.flag1 { border-left-color:#DB7E6A; }
+.card.flag2 { border-left-color:#87B27C; }
+.card.std1  { border-left-color:#7DB0C7; }
+.card.std2  { border-left-color:#9b7dc7; }
+.card.rpt   { border-left-color:#1B4F72; }
+.card.ace   { border-left-color:#1565C0; }
+.card.msc   { border-left-color:#37474F; }
+.card-top { display:flex; align-items:baseline; gap:7px; margin-bottom:3px; }
+.card-code { font-size:10px; font-weight:700; color:#888; white-space:nowrap; background:#f0f0f0; border-radius:3px; padding:1px 6px; }
+.card h2 { font-size:14px; }
+.card p { font-size:11px; color:#666; line-height:1.4; }
+.platform { display:inline-block; background:#fff; border-radius:4px; padding:1px 8px; font-weight:700; margin-right:4px; }
+.platform.android { color:#0b8043; border:1px solid #0b8043; }
+.platform.ios { color:#1976d2; border:1px solid #1976d2; }
+
+/* ── ACCORDION ── */
+.acc { margin-top:7px; border-radius:8px; overflow:hidden; border:1px solid #e0e0e0; }
+.acc-btn { width:100%; background:#fff; border:none; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-family:inherit; font-size:12px; font-weight:700; color:#333; text-align:left; transition:.15s; }
+.acc-btn:hover { background:#f5f5f5; }
+.acc-btn .acc-icon { font-size:14px; transition:transform .25s; }
+.acc-btn[aria-expanded="true"] .acc-icon { transform:rotate(180deg); }
+.acc-body { display:none; padding:12px 14px; background:#fafafa; border-top:1px solid #eee; font-size:12px; color:#555; line-height:1.8; }
+.acc-body.open { display:block; }
+
+/* phase table in accordion */
+.phase-tbl { width:100%; border-collapse:collapse; margin-top:8px; }
+.phase-tbl th { background:#ECEFF1; font-size:11px; font-weight:700; padding:7px 10px; text-align:left; border-bottom:2px solid #CFD8DC; }
+.phase-tbl td { font-size:11px; padding:7px 10px; border-bottom:1px solid #f0f0f0; vertical-align:top; }
+.phase-tbl tr:last-child td { border-bottom:none; }
+.phase-tbl .ph-badge { display:inline-block; font-size:10px; font-weight:700; color:#fff; border-radius:3px; padding:1px 7px; white-space:nowrap; }
+
+/* install tip inside accordion */
+.tip-section { margin-top:10px; padding-top:10px; border-top:1px dashed #ddd; font-size:12px; color:#555; line-height:1.7; }
+.tip-section:first-of-type { margin-top:4px; padding-top:0; border-top:none; }
+/* child management */
+.child-row { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid #f0f0f0; flex-wrap:wrap; }
+.child-row:last-child { border-bottom:none; }
+.child-name { font-weight:700; font-size:14px; min-width:70px; }
+.mod-badge { font-size:10px; font-weight:700; border-radius:3px; padding:2px 6px; color:#fff; white-space:nowrap; }
+.mod-badge.has { opacity:1; }
+.mod-badge.no  { opacity:0.25; }
+.child-actions { margin-left:auto; display:flex; gap:6px; }
+.ch-btn { font-size:11px; border:none; border-radius:4px; padding:4px 10px; cursor:pointer; font-weight:700; }
+.ch-snap { background:#0288D1; color:#fff; }
+.ch-del  { background:#e53935; color:#fff; }
+.snap-row { font-size:11px; color:#555; padding:4px 0 4px 16px; border-bottom:1px solid #f8f8f8; display:flex; align-items:center; gap:8px; }
+.snap-row:last-child { border-bottom:none; }
+.snap-label { flex:1; }
+.snap-restore { font-size:10px; background:#546e7a; color:#fff; border:none; border-radius:3px; padding:2px 7px; cursor:pointer; }
+.snap-del { font-size:10px; background:#e53935; color:#fff; border:none; border-radius:3px; padding:2px 7px; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="sys-header">
+    <h1>SI-Cog CDA</h1>
+    <div class="sys-sub">Clinical Decision Architecture — 감각통합·인지 임상 의사결정 통합 시스템</div>
+  </div>
+
+  <!-- ── MODULE GRID (2-column) ── -->
+  <div class="module-grid">
+
+    <!-- Phase A -->
+    <div class="phase-sep">Phase A · 임상 관찰</div>
+
+    <a class="card obs1" href="./Phase A - cda-obs1/">
+      <div class="card-top"><span class="card-code">CDA-OBS1</span><h2>SI 운동능력 임상관찰 체크리스트 (MC+SR)</h2></div>
+      <p>감각통합 기반 대·소근육(MC) + 감각반응(SR) 발달 단계별 관찰</p>
+    </a>
+
+    <a class="card obs2" href="./Phase A - cda-obs2/">
+      <div class="card-top"><span class="card-code">CDA-OBS2</span><h2>기초인지 임상관찰 체크리스트</h2></div>
+      <p>2~18세 8개 인지 영역 관찰</p>
+    </a>
+
+    <!-- Phase B -->
+    <div class="phase-sep">Phase B · Red Flag 판별</div>
+
+    <a class="card flag1" href="./Phase B - cda-flag1/">
+      <div class="card-top"><span class="card-code">CDA-FLAG1</span><h2>SI 운동능력 다학제 Red Flag &amp; 의뢰 가이드</h2></div>
+      <p>OBS1 기반 OT·SI·SLP·PT 통합 위험신호 &amp; 의뢰 기준</p>
+    </a>
+
+    <a class="card flag2" href="./Phase B - cda-flag2/">
+      <div class="card-top"><span class="card-code">CDA-FLAG2</span><h2>기초인지 Red Flag 요약</h2></div>
+      <p>OBS2 기반 다학제 팀 공유용 인지 위험신호 요약</p>
+    </a>
+
+    <!-- Phase C -->
+    <div class="phase-sep">Phase C · 표준화 평가 채점</div>
+
+    <a class="card std1" href="./Phase C - cda-std1/">
+      <div class="card-top"><span class="card-code">CDA-STD1</span><h2>K-CSP2 자동 채점기</h2></div>
+      <p>원점수 입력 → 감각 처리 프로파일 자동 산출</p>
+    </a>
+
+    <a class="card std2" href="./Phase C - cda-std2/">
+      <div class="card-top"><span class="card-code">CDA-STD2</span><h2>K-DTVP-2 자동 채점기</h2></div>
+      <p>원점수 입력 → 시지각 결과 자동 산출</p>
+    </a>
+
+    <!-- Phase D + E (side by side) -->
+    <div class="phase-de">
+      <div class="phase-sep">Phase D · 종합 분석</div>
+      <a class="card rpt" href="./Phase D - cda-rpt/">
+        <div class="card-top"><span class="card-code">CDA-RPT</span><h2>SI-Cog 종합 프로파일 리포트</h2></div>
+        <p>OBS1 + OBS2 + STD 교차분석 → 전문가용/보호자용 보고서 자동 생성</p>
+      </a>
+    </div>
+
+    <div class="phase-de">
+      <div class="phase-sep">Phase E · 중재 계획</div>
+      <a class="card ace" href="./Phase E - cda-ace/">
+        <div class="card-top"><span class="card-code">CDA-ACE</span><h2>중재 목표 &amp; 활동 추천 엔진 (ACE)</h2></div>
+        <p>평가 데이터 기반 개인화 목표 수립 · 활동 추천 · 세션 플래너</p>
+      </a>
+    </div>
+
+    <!-- Phase F (full width) -->
+    <div class="phase-sep" style="grid-column:1/-1">Phase F · 다회기 비교</div>
+
+    <a class="card msc" href="./Phase F - cda-msc/" style="grid-column:1/-1">
+      <div class="card-top"><span class="card-code">CDA-MSC</span><h2>다회기 비교 분석</h2></div>
+      <p>OBS1 · OBS2 · K-CSP2 · K-DTVP-2 회기별 변화 비교 · Excel 내보내기</p>
+    </a>
+
+  </div><!-- /module-grid -->
+
+  <!-- ── 아동 관리 (accordion) ── -->
+  <div class="acc" style="margin-top:8px;">
+    <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+      <span>👶 아동 관리 &amp; 데이터 백업</span>
+      <span class="acc-icon">▾</span>
+    </button>
+    <div class="acc-body">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+        <button id="addChildHubBtn" style="background:#43a047;color:#fff;border:none;border-radius:5px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:700;">+ 새 아동</button>
+        <button id="exportAllBtn" style="background:#6A1B9A;color:#fff;border:none;border-radius:5px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:700;">💾 전체 백업</button>
+        <button id="importAllBtn" style="background:#E65100;color:#fff;border:none;border-radius:5px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:700;">📂 복원</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none;">
+      </div>
+      <div id="childListPanel" style="font-size:13px;color:#555;min-height:48px;">
+        <span style="color:#aaa;">데이터베이스 로딩 중...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accordion 1: Phase 설명 -->
+  <div class="acc">
+    <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+      <span>📋 Phase A~F 모듈 설명 &amp; 사용 순서</span>
+      <span class="acc-icon">▾</span>
+    </button>
+    <div class="acc-body">
+      <table class="phase-tbl">
+        <thead>
+          <tr><th>Phase</th><th>모듈</th><th>설명 &amp; 사용법</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>A</b></td>
+            <td>
+              <span class="ph-badge" style="background:#E55D62">OBS1</span><br>
+              <span class="ph-badge" style="background:#FAAB23;margin-top:3px">OBS2</span>
+            </td>
+            <td>
+              <b>임상 관찰 체크리스트</b> — 평가의 첫 단계.<br>
+              OBS1: 감각통합 기반 대·소근육(MC) + 감각반응(SR) 발달 단계별 관찰 항목 체크.<br>
+              OBS2: 2~18세 주의력·기억·언어 등 8개 인지 영역 관찰.<br>
+              ✏️ 항목 체크 → 자동 달성률 산출 → <b>JSON 내보내기</b>로 저장.
+            </td>
+          </tr>
+          <tr>
+            <td><b>B</b></td>
+            <td>
+              <span class="ph-badge" style="background:#DB7E6A">FLAG1</span><br>
+              <span class="ph-badge" style="background:#87B27C;margin-top:3px">FLAG2</span>
+            </td>
+            <td>
+              <b>Red Flag 판별</b> — Phase A 결과를 토대로 위험 신호 확인.<br>
+              FLAG1: OBS1 기반 OT·SI·SLP·PT 통합 위험신호 &amp; 의뢰 기준 요약.<br>
+              FLAG2: OBS2 기반 인지 위험신호 요약 — 다학제 팀 공유용.<br>
+              📋 연령별 위험신호 요약 &amp; 다학제 의뢰 기준 참조.
+            </td>
+          </tr>
+          <tr>
+            <td><b>C</b></td>
+            <td>
+              <span class="ph-badge" style="background:#7DB0C7">STD1</span><br>
+              <span class="ph-badge" style="background:#9b7dc7;margin-top:3px">STD2</span>
+            </td>
+            <td>
+              <b>표준화 평가 자동 채점</b> — 임상관찰 이후 표준화 검사가 필요한 경우 사용.<br>
+              STD1: K-CSP2 원점수 입력 → 감각 처리 프로파일 자동 산출.<br>
+              STD2: K-DTVP-2 원점수 입력 → 시지각 지수·백분위 자동 산출.<br>
+              📤 결과를 <b>JSON 내보내기</b>로 저장해 Phase D에서 활용.
+            </td>
+          </tr>
+          <tr>
+            <td><b>D</b></td>
+            <td><span class="ph-badge" style="background:#1B4F72">RPT</span></td>
+            <td>
+              <b>종합 프로파일 리포트</b> — Phase A~C 데이터를 통합해 보고서 자동 생성.<br>
+              📥 OBS1·OBS2 JSON 불러오기 + STD1·STD2 JSON 선택 통합.<br>
+              전문가용 상세 보고서 / 보호자용 요약 보고서 두 가지 출력.
+            </td>
+          </tr>
+          <tr>
+            <td><b>E</b></td>
+            <td><span class="ph-badge" style="background:#1565C0">ACE</span></td>
+            <td>
+              <b>중재 목표 &amp; 활동 추천</b> — 평가 결과 기반 개별화 목표 수립.<br>
+              📥 Phase A JSON 불러오기 → 영역별 약점 자동 감지.<br>
+              중재 목표 자동 제안·세션 플래너·센터 교구 연계 활동 추천.
+            </td>
+          </tr>
+          <tr>
+            <td><b>F</b></td>
+            <td><span class="ph-badge" style="background:#37474F">MSC</span></td>
+            <td>
+              <b>다회기 비교 분석</b> — 동일 아동의 여러 회기 데이터를 비교.<br>
+              📥 Phase A~C에서 내보낸 JSON 파일들을 한 번에 업로드.<br>
+              회기별 변화 추이 차트·표 자동 생성 + <b>Excel 내보내기</b>.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px;font-size:11px;color:#999">💡 권장 사용 흐름: Phase A → B → (C) → D → E → F</p>
+    </div>
+  </div>
+
+  <!-- Accordion 2: 홈 화면 추가 -->
+  <div class="acc">
+    <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+      <span>📲 홈 화면에 추가하는 방법 (PWA 설치)</span>
+      <span class="acc-icon">▾</span>
+    </button>
+    <div class="acc-body">
+      <div class="tip-section">
+        <span class="platform android">🤖 Android</span> <b>Chrome</b>으로 접속<br>
+        1. 위에서 원하는 모듈 선택<br>
+        2. 페이지 로드 후 5~10초 대기<br>
+        3. 우측 상단 점 세 개 (⋮) → <b>"앱 설치"</b> 또는 <b>"홈 화면에 추가"</b>
+      </div>
+      <div class="tip-section">
+        <span class="platform ios">🍎 iPad / iPhone</span> 반드시 <b>Safari</b>로 접속 (Chrome 앱 ❌)<br>
+        1. 위에서 원하는 모듈 선택<br>
+        2. 화면 하단(또는 상단)의 <b>공유 버튼</b> 📤 탭<br>
+        3. 메뉴 스크롤 → <b>"홈 화면에 추가"</b> → 추가
+      </div>
+      <div class="tip-section">
+        ✅ 9개 모듈은 각각 <b>독립된 앱</b>으로 설치되며, 오프라인에서도 사용 가능합니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Accordion 3: 명칭 약어 풀네임 -->
+  <div class="acc">
+    <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+      <span>🔤 시스템 명칭 &amp; 모듈 코드 풀네임 사전</span>
+      <span class="acc-icon">▾</span>
+    </button>
+    <div class="acc-body">
+
+      <p style="font-size:12px;color:#555;margin-bottom:12px;">SI-Cog CDA를 구성하는 시스템 명칭과 9개 모듈 코드의 영문 풀네임 및 의미를 정리한 참조 사전입니다.</p>
+
+      <!-- 1. 시스템 전체 명칭 -->
+      <div style="font-size:12px;font-weight:700;color:#1B4F72;margin-bottom:6px;">1. 시스템 전체 명칭</div>
+      <table class="phase-tbl" style="margin-bottom:16px;">
+        <thead>
+          <tr><th style="width:18%;">약어</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>SI-Cog CDA</b></td>
+            <td style="font-size:11px;color:#555;">Sensory Integration – Cognition<br>Clinical Decision Architecture</td>
+            <td style="font-size:11px;">감각통합(SI)과 인지(Cog) 영역을 포괄하는 임상 의사결정 아키텍처. 관찰→판별→표준화평가→종합→중재까지의 전체 워크플로우를 구조화한 시스템</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 2. Phase A -->
+      <div style="font-size:12px;font-weight:700;color:#E55D62;margin-bottom:6px;">2. Phase A · 임상 관찰 (Clinical Observation)</div>
+      <table class="phase-tbl" style="margin-bottom:16px;">
+        <thead>
+          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ph-badge" style="background:#E55D62">CDA-OBS1</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>Obs</u>ervation 1<br>(SI Motor &amp; Sensory Response)</td>
+            <td style="font-size:11px;">SI 기반 대·소근육(MC) + 감각반응(SR) 발달 단계별 임상관찰 체크리스트. 직접 관찰을 통해 운동능력과 감각처리 반응을 기록하는 첫 번째 관찰 모듈</td>
+          </tr>
+          <tr>
+            <td><span class="ph-badge" style="background:#FAAB23">CDA-OBS2</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>Obs</u>ervation 2<br>(Foundational Cognition)</td>
+            <td style="font-size:11px;">기초인지 임상관찰 체크리스트. 2~18세 아동의 6개 인지 영역을 관찰·기록하는 두 번째 관찰 모듈</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 3. Phase B -->
+      <div style="font-size:12px;font-weight:700;color:#DB7E6A;margin-bottom:6px;">3. Phase B · Red Flag 판별 (Clinical Flagging)</div>
+      <table class="phase-tbl" style="margin-bottom:16px;">
+        <thead>
+          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ph-badge" style="background:#DB7E6A">CDA-FLAG1</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>Flag</u> 1<br>(SI Multidisciplinary Red Flag &amp; Referral Guide)</td>
+            <td style="font-size:11px;">OBS1 결과 기반 다학제 Red Flag 판별 및 의뢰 가이드. OT·SI·SLP·PT 관점에서 위험신호를 식별하고 타 직군 의뢰 기준을 제공</td>
+          </tr>
+          <tr>
+            <td><span class="ph-badge" style="background:#87B27C">CDA-FLAG2</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>Flag</u> 2<br>(Cognition Red Flag Summary)</td>
+            <td style="font-size:11px;">OBS2 결과 기반 인지 영역 Red Flag 요약. 다학제 팀 공유용으로 인지 위험신호를 요약·정리</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 4. Phase C -->
+      <div style="font-size:12px;font-weight:700;color:#7DB0C7;margin-bottom:6px;">4. Phase C · 표준화 평가 채점 (Standardized Scoring)</div>
+      <table class="phase-tbl" style="margin-bottom:16px;">
+        <thead>
+          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ph-badge" style="background:#7DB0C7">CDA-STD1</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>St</u>andar<u>d</u>ized 1<br>(K-CSP2 Auto Scorer)</td>
+            <td style="font-size:11px;">K-CSP2 자동 채점기. 보호자 설문 원점수를 입력하면 감각 처리 프로파일(감각 반응 패턴)을 자동 산출</td>
+          </tr>
+          <tr>
+            <td><span class="ph-badge" style="background:#9b7dc7">CDA-STD2</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>St</u>andar<u>d</u>ized 2<br>(K-DTVP-2 Auto Scorer)</td>
+            <td style="font-size:11px;">K-DTVP-2 자동 채점기. 시지각 검사 원점수를 입력하면 시지각 결함 유무·정도 및 시각-운동 통합 능력 결과를 자동 산출</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 5. Phase D -->
+      <div style="font-size:12px;font-weight:700;color:#1B4F72;margin-bottom:6px;">5. Phase D · 종합 분석 (Integration)</div>
+      <table class="phase-tbl" style="margin-bottom:16px;">
+        <thead>
+          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ph-badge" style="background:#1B4F72">CDA-RPT</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>R</u>e<u>p</u>or<u>t</u><br>(SI-Cog Integrated Profile Report)</td>
+            <td style="font-size:11px;">SI-Cog 종합 프로파일 리포트. OBS1 + OBS2 (+ STD 결과)를 교차분석하여 전문가용/보호자용 종합 보고서를 자동 생성</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 6. Phase E -->
+      <div style="font-size:12px;font-weight:700;color:#1565C0;margin-bottom:6px;">6. Phase E · 중재 계획 (Intervention Planning)</div>
+      <table class="phase-tbl" style="margin-bottom:16px;">
+        <thead>
+          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ph-badge" style="background:#1565C0">CDA-ACE</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>A</u>ctivity &amp; goal re<u>C</u>ommendation <u>E</u>ngine</td>
+            <td style="font-size:11px;">중재 목표 &amp; 활동 추천 엔진. 평가 데이터 기반으로 개인화된 중재 목표 수립, 활동 추천, 세션 플래너 기능 제공</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 7. Phase F -->
+      <div style="font-size:12px;font-weight:700;color:#37474F;margin-bottom:6px;">7. Phase F · 다회기 비교 분석 (Multi-Session Comparative Analysis)</div>
+      <table class="phase-tbl">
+        <thead>
+          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ph-badge" style="background:#37474F">CDA-MSC</span></td>
+            <td style="font-size:11px;color:#555;">CDA – <u>M</u>ulti-<u>S</u>ession <u>C</u>omparison<br>(Multi-Session Comparative Analysis)</td>
+            <td style="font-size:11px;">다회기 비교분석 모듈. 동일 아동의 여러 회기(시점) 평가 데이터를 비교하여 변화 추이·진전도를 분석</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.update());
+  });
+  navigator.serviceWorker.register('./sw.js');
+}
+
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const open = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !open);
+  body.classList.toggle('open', !open);
+}
+
+// ── 공유 DB 헬퍼 ──────────────────────────────────────────────
+const DB_NAME = 'si-cog-cda', DB_VER = 1;
+const MOD_STORES = ['obs1','obs2','std1','std2','rpt','ace'];
+const ALL_STORES = ['children', ...MOD_STORES];
+const SNAP_DB_NAME = 'si-cog-snapshots', SNAP_DB_VER = 1;
+
+let _db = null, _snapDb = null;
+
+function openMainDB() {
+  if (_db) return Promise.resolve(_db);
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onerror = () => rej(r.error);
+    r.onsuccess = e => { _db = e.target.result; res(_db); };
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      ALL_STORES.forEach(s => {
+        if (!d.objectStoreNames.contains(s))
+          d.createObjectStore(s, s === 'children'
+            ? { keyPath: 'id', autoIncrement: true }
+            : { keyPath: 'childId' });
+      });
+    };
+  });
+}
+
+function openSnapDB() {
+  if (_snapDb) return Promise.resolve(_snapDb);
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(SNAP_DB_NAME, SNAP_DB_VER);
+    r.onerror = () => rej(r.error);
+    r.onsuccess = e => { _snapDb = e.target.result; res(_snapDb); };
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('snapshots'))
+        d.createObjectStore('snapshots', { keyPath: 'id', autoIncrement: true });
+    };
+  });
+}
+
+function dbGetAll(db, store) {
+  return new Promise((res, rej) => {
+    const r = db.transaction([store], 'readonly').objectStore(store).getAll();
+    r.onerror = () => rej(r.error);
+    r.onsuccess = () => res(r.result || []);
+  });
+}
+
+function dbGet(db, store, key) {
+  return new Promise((res, rej) => {
+    const r = db.transaction([store], 'readonly').objectStore(store).get(key);
+    r.onerror = () => rej(r.error);
+    r.onsuccess = () => res(r.result || null);
+  });
+}
+
+function dbPut(db, store, val) {
+  return new Promise((res, rej) => {
+    const r = db.transaction([store], 'readwrite').objectStore(store).put(val);
+    r.onerror = () => rej(r.error);
+    r.onsuccess = () => res(r.result);
+  });
+}
+
+function dbDelete(db, store, key) {
+  return new Promise((res, rej) => {
+    const r = db.transaction([store], 'readwrite').objectStore(store).delete(key);
+    r.onerror = () => rej(r.error);
+    r.onsuccess = () => res();
+  });
+}
+
+// ── 아동 목록 렌더 ────────────────────────────────────────────
+const MOD_META = {
+  obs1:  { label:'OBS1', bg:'#E55D62' },
+  obs2:  { label:'OBS2', bg:'#FAAB23' },
+  std1:  { label:'STD1', bg:'#7DB0C7' },
+  std2:  { label:'STD2', bg:'#9b7dc7' },
+  rpt:   { label:'RPT',  bg:'#1B4F72' },
+  ace:   { label:'ACE',  bg:'#1565C0' }
+};
+
+const MOD_PATHS = {
+  obs1:  './Phase A - cda-obs1/',
+  obs2:  './Phase A - cda-obs2/',
+  flag1: './Phase B - cda-flag1/',
+  flag2: './Phase B - cda-flag2/',
+  std1:  './Phase C - cda-std1/',
+  std2:  './Phase C - cda-std2/',
+  rpt:   './Phase D - cda-rpt/',
+  ace:   './Phase E - cda-ace/',
+  msc:   './Phase F - cda-msc/'
+};
+
+async function renderChildList() {
+  const panel = document.getElementById('childListPanel');
+  try {
+    const db = await openMainDB();
+    const snapDb = await openSnapDB();
+    const children = await dbGetAll(db, 'children');
+    const snaps = await dbGetAll(snapDb, 'snapshots');
+
+    if (children.length === 0) {
+      panel.innerHTML = '<p style="color:#aaa;font-size:13px;padding:4px 0;">저장된 아동이 없습니다.</p>';
+      return;
+    }
+
+    // 각 아동별 모듈 데이터 유무 확인
+    const modDataMap = {};
+    await Promise.all(MOD_STORES.map(async s => {
+      const rows = await dbGetAll(db, s);
+      rows.forEach(r => {
+        if (!modDataMap[r.childId]) modDataMap[r.childId] = {};
+        modDataMap[r.childId][s] = true;
+      });
+    }));
+
+    children.sort((a, b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
+
+    let html = '';
+    for (const child of children) {
+      const mods = modDataMap[child.id] || {};
+      const childSnaps = snaps.filter(s => s.childId === child.id)
+        .sort((a,b) => new Date(b.snapDate) - new Date(a.snapDate));
+
+      const badges = MOD_STORES.map(s => {
+        const m = MOD_META[s];
+        const cls = mods[s] ? 'has' : 'no';
+        const href = mods[s] ? ` style="cursor:pointer;" onclick="goToModule('${MOD_PATHS[s]}')"` : '';
+        return `<span class="mod-badge ${cls}" style="background:${m.bg}"${href}>${m.label}</span>`;
+      }).join('');
+
+      const snapListHtml = childSnaps.length > 0
+        ? childSnaps.map(sn => `
+            <div class="snap-row">
+              <span class="snap-label">📌 ${sn.label} <span style="color:#aaa;font-size:10px;">(${new Date(sn.snapDate).toLocaleDateString('ko-KR')})</span></span>
+              <button class="snap-restore" onclick="restoreSnapshot(${sn.id})">복원</button>
+              <button class="snap-del" onclick="deleteSnapshot(${sn.id})">삭제</button>
+            </div>`).join('')
+        : '';
+
+      html += `
+        <div class="child-row">
+          <span class="child-name">${child.name}</span>
+          <span style="font-size:11px;color:#aaa;">${child.createdAt ? new Date(child.createdAt).toLocaleDateString('ko-KR') : ''}</span>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">${badges}</div>
+          <div class="child-actions">
+            <button class="ch-btn ch-snap" onclick="createSnapshot(${child.id}, '${child.name.replace(/'/g,"\\'")}')">📷 스냅샷</button>
+            <button class="ch-btn ch-del"  onclick="deleteChild(${child.id})">🗑 삭제</button>
+          </div>
+        </div>
+        ${snapListHtml}`;
+    }
+    panel.innerHTML = html;
+  } catch(e) {
+    panel.innerHTML = `<span style="color:red;">오류: ${e.message}</span>`;
+  }
+}
+
+// ── 아동 추가 ────────────────────────────────────────────────
+async function addChildHub() {
+  const name = prompt('아동 이름을 입력하세요:');
+  if (!name || !name.trim()) return;
+  const db = await openMainDB();
+  const now = new Date().toISOString();
+  await dbPut(db, 'children', { name: name.trim(), createdAt: now, updatedAt: now });
+  await renderChildList();
+}
+
+// ── 아동 삭제 ────────────────────────────────────────────────
+async function deleteChild(childId) {
+  if (!confirm('이 아동의 모든 데이터를 삭제합니다. 계속하시겠습니까?')) return;
+  const db = await openMainDB();
+  await Promise.all([
+    dbDelete(db, 'children', childId),
+    ...MOD_STORES.map(s => dbDelete(db, s, childId))
+  ]);
+  await renderChildList();
+}
+
+// ── 모듈 이동 (sessionStorage로 아동 ID 전달은 미구현, 단순 이동) ─
+function goToModule(path) { window.open(path, '_blank'); }
+
+// ── 스냅샷 생성 ──────────────────────────────────────────────
+async function createSnapshot(childId, childName) {
+  const label = prompt(`"${childName}" 스냅샷 레이블 입력:\n(예: 1차 평가, 6주 후 재평가)`, '스냅샷 ' + new Date().toLocaleDateString('ko-KR'));
+  if (!label) return;
+  const db = await openMainDB();
+  const snapDb = await openSnapDB();
+  const data = {};
+  await Promise.all(MOD_STORES.map(async s => {
+    const d = await dbGet(db, s, childId);
+    if (d) data[s] = d;
+  }));
+  if (Object.keys(data).length === 0) { alert('저장된 데이터가 없습니다.'); return; }
+  await dbPut(snapDb, 'snapshots', { childId, childName, label, snapDate: new Date().toISOString(), data });
+  await renderChildList();
+  alert(`"${label}" 스냅샷이 저장되었습니다.`);
+}
+
+// ── 스냅샷 복원 ──────────────────────────────────────────────
+async function restoreSnapshot(snapId) {
+  if (!confirm('현재 데이터를 스냅샷으로 덮어씁니다. 계속하시겠습니까?')) return;
+  const db = await openMainDB();
+  const snapDb = await openSnapDB();
+  const snap = await dbGet(snapDb, 'snapshots', snapId);
+  if (!snap) { alert('스냅샷을 찾을 수 없습니다.'); return; }
+  await Promise.all(Object.keys(snap.data).map(s => dbPut(db, s, snap.data[s])));
+  alert(`"${snap.label}" 복원 완료!`);
+}
+
+// ── 스냅샷 삭제 ──────────────────────────────────────────────
+async function deleteSnapshot(snapId) {
+  if (!confirm('이 스냅샷을 삭제합니다.')) return;
+  const snapDb = await openSnapDB();
+  await dbDelete(snapDb, 'snapshots', snapId);
+  await renderChildList();
+}
+
+// ── 전체 백업 (export) ───────────────────────────────────────
+async function exportAllData() {
+  try {
+    const db = await openMainDB();
+    const snapDb = await openSnapDB();
+    const backup = { version: 'si-cog-cda-backup-v1', exportedAt: new Date().toISOString(), data: {}, snapshots: [] };
+    await Promise.all(ALL_STORES.map(async s => {
+      backup.data[s] = await dbGetAll(db, s);
+    }));
+    backup.snapshots = await dbGetAll(snapDb, 'snapshots');
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `si-cog-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) { alert('백업 실패: ' + e.message); }
+}
+
+// ── 전체 복원 (import) ───────────────────────────────────────
+async function importAllData(file) {
+  try {
+    const json = JSON.parse(await file.text());
+    if (!json.version || !json.version.startsWith('si-cog-cda-backup')) {
+      alert('올바른 백업 파일이 아닙니다.'); return;
+    }
+    if (!confirm(`${new Date(json.exportedAt).toLocaleString('ko-KR')} 백업을 복원합니다.\n현재 데이터가 덮어쓰기됩니다. 계속하시겠습니까?`)) return;
+    const db = await openMainDB();
+    const snapDb = await openSnapDB();
+    // Restore main data
+    for (const store of ALL_STORES) {
+      const rows = json.data[store] || [];
+      const tx = db.transaction([store], 'readwrite');
+      tx.objectStore(store).clear();
+      await new Promise(r => { tx.oncomplete = r; });
+      await Promise.all(rows.map(row => dbPut(db, store, row)));
+    }
+    // Restore snapshots
+    if (json.snapshots && json.snapshots.length) {
+      const tx2 = snapDb.transaction(['snapshots'], 'readwrite');
+      tx2.objectStore('snapshots').clear();
+      await new Promise(r => { tx2.oncomplete = r; });
+      await Promise.all(json.snapshots.map(s => dbPut(snapDb, 'snapshots', s)));
+    }
+    _db = null; // force reopen
+    await renderChildList();
+    alert('복원 완료!');
+  } catch(e) { alert('복원 실패: ' + e.message); }
+}
+
+// ── 이벤트 바인딩 ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderChildList();
+  document.getElementById('addChildHubBtn').addEventListener('click', addChildHub);
+  document.getElementById('exportAllBtn').addEventListener('click', exportAllData);
+  document.getElementById('importAllBtn').addEventListener('click', () => document.getElementById('importFileInput').click());
+  document.getElementById('importFileInput').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (f) { importAllData(f); e.target.value = ''; }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "중재 목표 & 활동 추천 엔진",
+  "short_name": "ACE",
+  "description": "아동 발달 평가 시스템 - 중재 목표 & 활동 추천 엔진 (Activity & Goal Recommendation Engine)",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#1565C0",
+  "orientation": "portrait-primary",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "education"],
+  "shortcuts": [
+    {
+      "name": "추천 생성",
+      "short_name": "추천",
+      "description": "아동 프로필 입력 후 중재 추천을 생성합니다",
+      "url": "./index.html"
+    }
+  ]
+}

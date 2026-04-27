@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDA-FLAG1 · SI 운동능력 Red Flag 의뢰 가이드</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#c62828">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CDA-FLAG1">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;background:#f5f5f5;color:#333;font-size:14px;line-height:1.6}
+.top-bar{background:linear-gradient(135deg,#c62828,#e53935);color:#fff;padding:14px 20px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.top-bar h1{font-size:18px;letter-spacing:.5px}
+.top-bar .sub{font-size:12px;opacity:.85;margin-top:2px}
+.nav{background:#fff;border-bottom:1px solid #ddd;padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px;position:sticky;top:52px;z-index:99;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.nav-btn{padding:6px 14px;border:1px solid #ccc;border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;background:#fff;transition:.2s;white-space:nowrap}
+.nav-btn:hover{background:#ffebee;border-color:#e53935}
+.nav-btn.active{background:#e53935;color:#fff;border-color:#c62828}
+.section{display:none;padding:16px}
+.section.active{display:block}
+.container{max-width:1400px;margin:0 auto}
+
+/* === PRINT === */
+.print-bar{background:#fff;padding:8px 16px;border-bottom:1px solid #ddd;display:flex;gap:8px;flex-wrap:wrap}
+.pb{padding:7px 14px;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;color:#fff;background:#78909c}
+.pb:hover{opacity:.85}
+.pb-pdf{background:#1976d2}
+
+/* === TABLE STYLES === */
+.rf-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;table-layout:fixed}
+.rf-table th{background:#424242;color:#fff;padding:10px 8px;text-align:center;font-size:12px;font-weight:700;border:1px solid #333;position:sticky;top:100px;z-index:10}
+.rf-table td{padding:8px;border:1px solid #ddd;vertical-align:top;word-wrap:break-word;overflow-wrap:break-word}
+.rf-table tr:nth-child(even){background:#fafafa}
+.rf-table tr:hover{background:#fff3e0}
+
+/* Column widths for 5-column table */
+.col-age{width:80px;text-align:center;font-weight:700}
+.col-flag{width:35%}
+.col-lead{width:80px;text-align:center}
+.col-referral{width:25%}
+.col-urgent{width:20%}
+
+/* Age group colors */
+.age-infant{background:#fff3e0 !important;color:#e65100;font-weight:700}
+.age-toddler{background:#f3e5f5 !important;color:#7b1fa2;font-weight:700}
+.age-preschool{background:#e8f5e9 !important;color:#2e7d32;font-weight:700}
+.age-school{background:#e3f2fd !important;color:#1565c0;font-weight:700}
+
+/* Lead discipline badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge-ot{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.badge-pt{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+.badge-slp{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a}
+.badge-team{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
+.badge-neuro{background:#f3e5f5;color:#7b1fa2;border:1px solid #ce93d8}
+
+/* Severity indicators */
+.sev-critical{color:#c62828;font-weight:700}
+.sev-high{color:#e65100;font-weight:600}
+.sev-moderate{color:#f57f17;font-weight:600}
+
+/* === CROSSOVER SECTION === */
+.cross-card{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin:16px 0;overflow:hidden}
+.cross-header{padding:14px 20px;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+.cross-header-slp{background:linear-gradient(135deg,#ad1457,#e91e63)}
+.cross-header-pt{background:linear-gradient(135deg,#0d47a1,#1976d2)}
+.cross-header-urgent{background:linear-gradient(135deg,#b71c1c,#d32f2f)}
+.cross-body{padding:20px}
+.cross-domain{margin:16px 0;border-left:4px solid #e0e0e0;padding-left:16px}
+.cross-domain h4{font-size:14px;color:#333;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cross-domain h4 .icon{font-size:16px}
+.q-list{list-style:none;padding:0}
+.q-list li{padding:6px 0;border-bottom:1px dotted #eee;font-size:13px;display:flex;gap:8px}
+.q-list li:last-child{border-bottom:none}
+.q-label{min-width:60px;font-weight:700;font-size:11px;padding:2px 6px;border-radius:4px;text-align:center;height:fit-content;margin-top:2px}
+.q-label-ask{background:#e3f2fd;color:#1565c0}
+.q-label-share{background:#fce4ec;color:#c62828}
+.q-label-collab{background:#e8f5e9;color:#2e7d32}
+.q-label-flag{background:#fff3e0;color:#e65100}
+.q-label-ans{background:#e8eaf6;color:#283593}
+.q-answer{background:#f5f5f5;border-left:3px solid #5c6bc0;padding:8px 12px;margin:4px 0 10px 68px;border-radius:0 4px 4px 0;font-size:12.5px;color:#444;line-height:1.7}
+
+/* === URGENT SECTION === */
+.urgent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin:16px 0}
+.urgent-card{background:#fff;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.1);overflow:hidden;border-top:4px solid #d32f2f}
+.urgent-card h4{background:#ffebee;padding:10px 16px;font-size:14px;color:#c62828;border-bottom:1px solid #ffcdd2}
+.urgent-card ul{padding:12px 16px 12px 32px;font-size:13px}
+.urgent-card li{margin:4px 0}
+
+/* === INFO BOXES === */
+.info-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:14px 18px;margin:12px 0;font-size:13px}
+.info-box.warning{background:#fff3e0;border-color:#ffcc80}
+.info-box.critical{background:#ffebee;border-color:#ef9a9a}
+.info-box h4{margin-bottom:6px;font-size:14px}
+.info-box ul{padding-left:20px;margin-top:4px}
+.info-box li{margin:3px 0}
+
+/* === FLOW CHART === */
+.flow-wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0;align-items:center}
+.flow-step{background:#fff;border:2px solid #e0e0e0;border-radius:8px;padding:12px 18px;text-align:center;min-width:160px;font-size:13px;font-weight:600;transition:.2s}
+.flow-step:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.flow-arrow{font-size:20px;color:#999;font-weight:700}
+.flow-red{border-color:#e53935;background:#ffebee;color:#c62828}
+.flow-orange{border-color:#ff9800;background:#fff3e0;color:#e65100}
+.flow-green{border-color:#4caf50;background:#e8f5e9;color:#2e7d32}
+.flow-blue{border-color:#2196f3;background:#e3f2fd;color:#1565c0}
+
+/* === RESPONSIVE === */
+@media(max-width:900px){
+  .rf-table{font-size:12px;table-layout:auto}
+  .rf-table th,.rf-table td{padding:6px 4px}
+  .col-age{width:60px}
+  .nav{gap:4px}
+  .nav-btn{padding:5px 10px;font-size:11px}
+}
+@media print{
+  .top-bar,.nav,.print-bar{position:static}
+  .section{display:block !important;page-break-before:always}
+  .section:first-of-type{page-break-before:avoid}
+  .nav-btn,.pb{display:none}
+  body{font-size:11px;background:#fff}
+  .rf-table th{position:static}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>다학제 팀(OT/SI/SLP/PT) Red Flag & 의뢰 가이드</h1>
+  <div class="sub">SI 운동능력 임상 관찰 체크리스트 연계 | Ayres SI + CDC(2025) + Case-Smith 9th Ed.</div>
+</div>
+
+<div class="nav" id="navBar">
+  <button class="nav-btn active" onclick="showSec('sec1',this)">1. 연령별 Red Flag 표</button>
+  <button class="nav-btn" onclick="showSec('sec2',this)">2. SLP 교차점</button>
+  <button class="nav-btn" onclick="showSec('sec3',this)">3. PT 교차점</button>
+  <button class="nav-btn" onclick="showSec('sec4',this)">4. 즉시 팀 공유</button>
+</div>
+
+<div class="print-bar">
+  <button class="pb" onclick="window.print()">인쇄</button>
+  <button class="pb pb-pdf" onclick="window.print()">PDF 저장</button>
+</div>
+
+<!-- ===================== SECTION 1: 연령별 Red Flag 표 ===================== -->
+<div class="section active container" id="sec1">
+<h2 style="font-size:18px;margin:12px 0 4px;color:#c62828">1. 연령대별 핵심 Red Flag 표</h2>
+<p style="font-size:13px;color:#666;margin-bottom:8px">SI 운동능력 체크리스트의 7개 영역(자세조절, 양측협응, 운동기획, 시각-운동통합, 미세운동, 대근육, 구강-운동)에서 추출한 핵심 Red Flag 항목입니다.</p>
+
+<div class="info-box warning">
+<h4>의뢰 판단 기준</h4>
+<ul>
+<li><b>즉시 의뢰</b>: 해당 월령까지 해당 이정표가 전혀 없는 경우 (예: 18개월 독립보행 불가)</li>
+<li><b>평가 의뢰</b>: 해당 이정표가 출현했으나 질적으로 심각하게 미숙한 경우</li>
+<li><b>모니터링</b>: 경계선 수행으로 1-2개월 후 재평가 권장</li>
+</ul>
+</div>
+
+<!-- === 0-12개월 === -->
+<h3 style="font-size:15px;margin:16px 0 6px;padding:6px 12px;background:#fff3e0;border-radius:4px;color:#e65100">영아기 (0-12개월)</h3>
+<table class="rf-table">
+<thead><tr>
+<th class="col-age">연령</th>
+<th class="col-flag">Red Flag 항목</th>
+<th class="col-lead">주 담당</th>
+<th class="col-referral">의뢰 · 협력 판단</th>
+<th class="col-urgent">즉시 공유 상황</th>
+</tr></thead>
+<tbody>
+<tr><td class="age-infant" rowspan="6">0-3개월</td>
+<td>복와위(prone)에서 머리 전혀 못 듦</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 즉시 의뢰 → 근긴장도·신경학적 평가</td><td class="sev-critical">비대칭 자세, 지속적 후궁반장(opisthotonus)</td></tr>
+<tr><td>사람/물체 시각 고정(fixation) 전무</td><td><span class="badge badge-team">팀</span></td>
+<td>안과 + OT 감각평가 의뢰</td><td class="sev-critical">시각 반응 완전 부재</td></tr>
+<tr><td>빨기-삼키기-호흡 협응 실패</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 즉시 의뢰 → 연하(swallowing) 평가</td><td class="sev-critical">수유 중 청색증, 흡인(aspiration) 징후</td></tr>
+<tr><td>양육자 얼굴 움직임 모방 시도 전무</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 감각처리 평가 + SLP 협력</td><td>사회적 미소 완전 부재</td></tr>
+<tr><td>의도적 손바닥 잡기(palmar grasp) 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 평가</td><td>양손 모두 지속적 주먹 쥠(fisting)</td></tr>
+<tr><td>원시반사(ATNR, STNR 등) 해당 월령 이후 지속</td><td><span class="badge badge-neuro">신경</span></td>
+<td>신경과 + PT 의뢰</td><td class="sev-critical">다수 원시반사 잔존 + 근긴장 이상</td></tr>
+
+<tr><td class="age-infant" rowspan="5">4-6개월</td>
+<td>머리 처짐(head lag) 지속</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 평가 → 저긴장(hypotonia) 감별</td><td class="sev-critical">전신 저긴장 + 수유 곤란 동반</td></tr>
+<tr><td>정중선(midline) 양손 모으기 없음</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 양측협응 평가</td><td>한쪽 상지 완전 비사용</td></tr>
+<tr><td>물건에 목적 있는 뻗기(reaching) 부재</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 운동기획 평가 + 시각 확인</td><td>양측 상지 뻗기 완전 부재</td></tr>
+<tr><td>시각 추적(visual tracking) 180° 불가</td><td><span class="badge badge-team">팀</span></td>
+<td>안과 의뢰 → OT 시각-운동통합 평가</td><td>안구 비대칭 운동, 안진(nystagmus)</td></tr>
+<tr><td>구강 탐색(oral exploration) 회피</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP + OT 감각 평가 협력</td><td>모든 질감(texture) 거부 + 체중 미증가</td></tr>
+
+<tr><td class="age-infant" rowspan="5">7-12개월</td>
+<td>9개월 독립 앉기 불가</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 즉시 의뢰 → 자세조절 평가</td><td class="sev-critical">좌위 보호반응 완전 미출현</td></tr>
+<tr><td>양방향 뒤집기 전혀 없음 (7개월)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 대근육 평가</td><td>한 방향만 구르기 (비대칭)</td></tr>
+<tr><td>손 간 전달(transfer) 불가 (9개월)</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 양측협응 + 미세운동 평가</td><td>12개월 이전 강한 편측 손 우세</td></tr>
+<tr><td>집게잡기(pincer grasp) 전무 (10개월)</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 정밀평가</td><td>12개월 이후에도 전체 손바닥 잡기만 사용</td></tr>
+<tr><td>잡고 일어서기(pull-to-stand) 불가 (12개월)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 즉시 의뢰 → 하지근력 + 균형 평가</td><td class="sev-critical">이동 의도(locomotion) 전무</td></tr>
+</tbody>
+</table>
+
+<!-- === 13-23개월 === -->
+<h3 style="font-size:15px;margin:16px 0 6px;padding:6px 12px;background:#f3e5f5;border-radius:4px;color:#7b1fa2">영아후기~걸음마기 (13-23개월)</h3>
+<table class="rf-table">
+<thead><tr>
+<th class="col-age">연령</th>
+<th class="col-flag">Red Flag 항목</th>
+<th class="col-lead">주 담당</th>
+<th class="col-referral">의뢰 · 협력 판단</th>
+<th class="col-urgent">즉시 공유 상황</th>
+</tr></thead>
+<tbody>
+<tr><td class="age-toddler" rowspan="6">13-18개월</td>
+<td class="sev-critical">18개월까지 독립 보행 불가 → 최우선 의뢰</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 즉시 의뢰 + 신경과 협진</td><td class="sev-critical">보행 시도 자체가 전무</td></tr>
+<tr><td>질감(texture) 거부 지속</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 섭식(feeding) 평가 + OT 감각 평가</td><td>체중 미증가 동반</td></tr>
+<tr><td>담기 놀이(container play) 전무</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 시각-운동통합 평가</td><td>물건 조작 전반 부재</td></tr>
+<tr><td>숟가락 자가섭취 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 + SLP 구강운동 협력</td><td>자가섭취 시도 자체 없음</td></tr>
+<tr><td>도구 사용 모방 없음</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 운동기획(praxis) 평가</td><td>기능적 놀이(functional play) 전반 부재</td></tr>
+<tr><td>컵 음용 불가</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 구강운동 평가</td><td>침 흘림(drooling) 과다 지속</td></tr>
+
+<tr><td class="age-toddler" rowspan="6">18-23개월</td>
+<td>쪼그려 앉았다 일어서기(squat-to-stand) 불가</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 자세조절 + 하지근력 평가</td><td>바닥→선 자세 전환 전무</td></tr>
+<tr><td>방향 전환 시 넘어짐 빈번</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 균형 + 전정계 평가 → OT SI 평가 연계</td><td>일상 보행 중 잦은 낙상</td></tr>
+<tr><td>양손 역할 분화 미출현</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 양측협응 평가</td><td>한쪽 손 완전 비사용</td></tr>
+<tr><td>끼적이기(scribble) 없음</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 시각-운동 + 미세운동 평가</td><td>필기도구 관심 전무 + 시각 문제 의심</td></tr>
+<tr><td>회전 씹기(rotary chewing) 미출현</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 구강운동 정밀평가</td><td>고형식 거부 + 구역반사(gag) 과민</td></tr>
+<tr><td>1단계 지시 수행 불가</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 수용언어 평가 + OT 운동기획 평가</td><td class="sev-critical">언어 이해 + 운동 수행 모두 부재</td></tr>
+</tbody>
+</table>
+
+<!-- === 2-3세 === -->
+<h3 style="font-size:15px;margin:16px 0 6px;padding:6px 12px;background:#e8f5e9;border-radius:4px;color:#2e7d32">유아기 (2-3세)</h3>
+<table class="rf-table">
+<thead><tr>
+<th class="col-age">연령</th>
+<th class="col-flag">Red Flag 항목</th>
+<th class="col-lead">주 담당</th>
+<th class="col-referral">의뢰 · 협력 판단</th>
+<th class="col-urgent">즉시 공유 상황</th>
+</tr></thead>
+<tbody>
+<tr><td class="age-preschool" rowspan="6">2세</td>
+<td>달리기 시도 없음</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 대근육 + 균형 평가</td><td>걷기 자체가 불안정</td></tr>
+<tr><td>5cm 장애물 넘기 불가</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 평가 → OT 운동기획 연계</td><td>바닥 높이 변화에 넘어짐</td></tr>
+<tr><td>양발 점프 전혀 없음 (2세 6개월)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 하지근력 + 양측협응 평가</td><td>하지 비대칭 사용</td></tr>
+<tr><td>블록 4개 쌓기 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 + 시각-운동통합 평가</td><td>블록 1개도 쌓기 불가</td></tr>
+<tr><td>세로선/가로선 모방 없음 (2세 6개월)</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 시각-운동통합 평가</td><td>필기도구 파지 불가</td></tr>
+<tr><td>2단계 지시 수행 불가</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 수용언어 + OT 운동기획 협력</td><td class="sev-critical">1단계 지시도 수행 불가 (퇴행 의심)</td></tr>
+
+<tr><td class="age-preschool" rowspan="6">3세</td>
+<td>한발서기 — 한쪽 발로 잠시라도 서려는 시도 자체 없음 (4세 미달 기준)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 균형 + 전정계 평가 → OT SI 연계</td><td>한발서기 시도 없음 + 양발 점프도 불가</td></tr>
+<tr><td>세발자전거 페달 밟기 불가</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 양측협응 + OT 운동기획 협력</td><td>하지 교대 동작 전무</td></tr>
+<tr><td>가위 잡기 시도 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 평가</td><td>양손 협응 전반 부재</td></tr>
+<tr><td>원(circle) 모방 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 시각-운동통합 평가</td><td>끼적이기 단계에 머무름</td></tr>
+<tr><td>옷 입고 벗기 전혀 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 운동기획 + 일상생활 평가</td><td>ADL 전반 타인 의존</td></tr>
+<tr><td>발음 명료도(intelligibility) 50% 미만</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 조음 평가 + OT 구강운동 협력</td><td class="sev-critical">의사소통 수단 전무</td></tr>
+</tbody>
+</table>
+
+<!-- === 4-5세 === -->
+<h3 style="font-size:15px;margin:16px 0 6px;padding:6px 12px;background:#e8f5e9;border-radius:4px;color:#2e7d32">유아후기 (4-5세)</h3>
+<table class="rf-table">
+<thead><tr>
+<th class="col-age">연령</th>
+<th class="col-flag">Red Flag 항목</th>
+<th class="col-lead">주 담당</th>
+<th class="col-referral">의뢰 · 협력 판단</th>
+<th class="col-urgent">즉시 공유 상황</th>
+</tr></thead>
+<tbody>
+<tr><td class="age-preschool" rowspan="5">4세</td>
+<td>한발서기 — 지지 없이 한발 잠시 유지 불가 (5세 미달 기준)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 균형 + OT 전정-고유감각 평가</td><td>정적·동적 균형 모두 부재</td></tr>
+<tr><td>십자(+) 모방 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 시각-운동통합 정밀평가</td><td>원(circle)도 모방 불가 (퇴행/정체)</td></tr>
+<tr><td>가위로 직선 자르기 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 양측협응 + 미세운동 평가</td><td>가위 열기·닫기 자체 불가</td></tr>
+<tr><td>단추 채우기 전혀 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 + 운동기획 평가</td><td>옷 입기 전반 불가</td></tr>
+<tr><td>양발 교대 계단 오르기 불가</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 하지근력 + 균형 평가</td><td>한 발씩 모아 오르기도 불가</td></tr>
+
+<tr><td class="age-preschool" rowspan="5">5세</td>
+<td>한발서기 — 양팔 체간 부착+눈 뜬 조건에서 잠시도 유지 불가 (6세 미달 기준)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT + OT SI 전정계 평가 협력</td><td>눈 뜬 상태에서도 한발서기 시도 자체 없음</td></tr>
+<tr><td>삼각형 모방 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 시각-운동통합 평가 → 학습준비도 확인</td><td>도형 모방 전반 불가 (학습 지연 고위험)</td></tr>
+<tr><td>이름 쓰기 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 + 시각-운동 + 운동기획 종합</td><td>글자 모방 전반 불가</td></tr>
+<tr><td>공 한 손으로 받기 불가</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT + OT 양측협응 + 시각-운동 평가</td><td>공 던지기·받기 모두 불가</td></tr>
+<tr><td>운동 순서화(sequencing) 3단계 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 운동기획 정밀평가</td><td class="sev-critical">새로운 운동 과제 학습 전반 불가</td></tr>
+</tbody>
+</table>
+
+<!-- === 6-10세 === -->
+<h3 style="font-size:15px;margin:16px 0 6px;padding:6px 12px;background:#e3f2fd;border-radius:4px;color:#1565c0">학령기 (6-10세)</h3>
+<table class="rf-table">
+<thead><tr>
+<th class="col-age">연령</th>
+<th class="col-flag">Red Flag 항목</th>
+<th class="col-lead">주 담당</th>
+<th class="col-referral">의뢰 · 협력 판단</th>
+<th class="col-urgent">즉시 공유 상황</th>
+</tr></thead>
+<tbody>
+<tr><td class="age-school" rowspan="5">6세</td>
+<td>한발서기 — 눈 감은 조건에서 잠시도 유지 불가 (7세 미달 기준)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT + OT 전정-고유감각 평가</td><td>동적 균형 과제 전반 불가</td></tr>
+<tr><td>글씨 판독 불가 수준</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 시각-운동 + 미세운동 종합평가</td><td class="sev-critical">학업 참여 전반 불가</td></tr>
+<tr><td>줄넘기/스킵(skipping) 패턴 전무</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT + OT 양측협응 + 운동기획 평가</td><td>좌우 교대 동작 전반 불가</td></tr>
+<tr><td>신발끈 묶기 시도 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 + 양측협응 평가</td><td>ADL 자립 전반 지연</td></tr>
+<tr><td>또래 체육 활동 참여 회피</td><td><span class="badge badge-team">팀</span></td>
+<td>팀 회의 → OT 감각 + PT 운동 + 심리 연계</td><td class="sev-critical">사회적 고립 + 운동 회피</td></tr>
+
+<tr><td class="age-school" rowspan="5">7-8세</td>
+<td>눈 감고 한발서기(양팔 자유) — 잠시도 유지 불가 (9세 미달 기준)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 균형 + OT 전정계 평가</td><td>눈 뜬 상태에서도 한발서기 불가 (6세 수준 미달)</td></tr>
+<tr><td>필기 속도 또래 대비 50% 미만</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 + 시각-운동 정밀평가</td><td>필기 시 통증/피로 호소</td></tr>
+<tr><td>줄 위 걷기(tandem walk) 3발 미만</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 균형 + OT 전정 감각통합 평가</td><td>전방 보행 자체 불안정</td></tr>
+<tr><td>가위로 곡선 자르기 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 양측협응 + 미세운동 평가</td><td>학교 미술/공작 활동 전반 불가</td></tr>
+<tr><td>구강 과민 또는 저민감성 지속</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 구강감각 + OT SI 감각조절 평가</td><td>식이 제한으로 영양 불균형</td></tr>
+
+<tr><td class="age-school" rowspan="5">9-10세</td>
+<td>눈 감고 한발서기(양팔 자유) — 잠시도 유지 불가 (10세 미달 기준)</td><td><span class="badge badge-pt">PT</span></td>
+<td>PT 균형 정밀평가</td><td>눈 뜬 상태에서도 한발서기 불가 (7세 수준 미달)</td></tr>
+<tr><td>필기 지구력 — 20분 이내 파지 변형·글자 크기 급변 등 피로 징후 (10세 미달 기준)</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 미세운동 + 자세조절 + 감각조절 평가</td><td class="sev-critical">학업 수행 전반 영향</td></tr>
+<tr><td>복잡한 운동 순서 학습 불가</td><td><span class="badge badge-ot">OT</span></td>
+<td>OT 운동기획(dyspraxia) 정밀평가</td><td>새 운동 기술 습득 전반 불가</td></tr>
+<tr><td>혀 측방이동 부재 → 고형식 안전 섭취 불가</td><td><span class="badge badge-slp">SLP</span></td>
+<td>SLP 구강운동 + 연하 평가</td><td class="sev-critical">질식(choking) 위험</td></tr>
+<tr><td>또래 스포츠/놀이 참여 지속 회피</td><td><span class="badge badge-team">팀</span></td>
+<td>팀 회의 → OT+PT+심리 종합 접근</td><td>자존감 저하 + 사회적 위축 심화</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===================== SECTION 2: SLP 교차점 ===================== -->
+<div class="section container" id="sec2">
+<h2 style="font-size:18px;margin:12px 0 8px;color:#ad1457">2. SLP(언어재활사)와의 교차점 및 핵심 질문</h2>
+
+<div class="cross-card">
+<div class="cross-header cross-header-slp">SLP-OT/SI 교차 영역 개요</div>
+<div class="cross-body">
+<div class="info-box">
+<h4>왜 SLP와의 협력이 필수적인가?</h4>
+<ul>
+<li>구강-운동(oral-motor)은 감각통합(SI)의 핵심 하위 체계 — 촉각·고유감각 처리가 섭식(feeding)과 조음(articulation)에 직접 영향</li>
+<li>운동기획(praxis) 결함은 언어 산출의 운동 프로그래밍(말실행증, CAS)과 공통 기전 공유</li>
+<li>양측협응 → 호흡-발성-조음의 타이밍 협응과 구조적으로 유사</li>
+</ul>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F444;</span> 구강-운동 영역 (Oral-Motor)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 빨기-삼키기-호흡 협응(suck-swallow-breathe coordination)의 리듬과 효율성은 어떠한가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 정상 협응은 1:1:1 비율(빨기1회-삼키기1회-호흡1회)이 기본이며, 신생아기에는 2-3:1:1도 정상 범위입니다. 비효율적 패턴 징후: ① 수유 중 잦은 중단(30초 이내 멈춤), ② 수유 시간 30분 초과, ③ 수유 후 피로/수면, ④ 코로 역류. SLP에게 수유 시 1분당 빨기-삼키기 횟수, 연속 빨기 횟수(burst length), 수유 소요 시간을 공유하면 평가에 도움이 됩니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 회전 씹기(rotary chewing) 패턴이 연령에 적합하게 출현했는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 발달 순서: 으깨기(munching, 6-9개월) → 측방 씹기(lateral chewing, 9-12개월) → 회전 씹기(rotary chewing, 15-20개월). 회전 씹기는 턱이 상하+좌우+원형으로 움직이는 성숙한 패턴입니다. 평가 방법: 반고형식(바나나 조각)을 어금니 쪽에 놓고 턱 움직임을 관찰합니다. 상하 운동만 반복되면 으깨기 단계에 머무른 것이며, 23개월 이후에도 미출현 시 SLP 구강운동 평가를 의뢰합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 혀의 측방 이동(lateralization)이 가능한가? 구강 내 음식 이동 효율은?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 혀 측방이동은 9-12개월에 출현하며, 구강 내에서 음식을 어금니 쪽으로 밀어 씹고 다시 중앙으로 모으는 기능입니다. 평가 방법: 볼 바깥쪽에 퓌레를 소량 바르고 혀가 해당 방향으로 이동하는지 관찰합니다. 혀가 정중선에서만 전후 운동을 하면 측방이동 미발달입니다. 12개월 이후 부재 시 고형식 안전 섭취 불가로 질식 위험이 있으므로 SLP에 즉시 공유합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> 촉각 과민/저민감이 구강 영역에 어떻게 나타나는지 (감각 프로파일 결과)</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT 감각 프로파일에서 구강 감각 처리 섹션의 점수와 해석을 SLP에 공유합니다. 구강 촉각 과민: 특정 질감 거부, 양치질 거부, 구역반사(gag) 과민, 음식을 입 앞쪽에만 유지. 구강 촉각 저민감: 침 흘림 지속, 입 안 음식 인식 저하, 과도한 구강 탐색(물어뜯기), 볼 안쪽 음식 잔류 미인식. 이 정보는 SLP의 섭식/조음 치료 방향 설정에 핵심적입니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 구강 감각 둔감(hyposensitivity) → 침 흘림(drooling) 지속 → 감각 기반 접근 공동 계획</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> OT는 구강 감각 입력 프로그램(진동 칫솔, 차가운/따뜻한 자극, 다양한 질감 탐색)을 제공하고, SLP는 입술 폐쇄(lip closure) 훈련과 삼키기 빈도 증가 전략을 담당합니다. 공동 목표 예시: "4주 내 놀이 중 침 흘림 빈도를 50% 감소시킨다." 가정 프로그램도 OT-SLP가 일관된 전략으로 통합 구성합니다.</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F9E0;</span> 운동기획 영역 (Motor Planning / Praxis)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 구두 운동기획(oral praxis)과 사지 운동기획(limb praxis)의 패턴이 일치하는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> Ayres의 감각통합 이론에 따르면 운동기획(praxis)은 관념화-계획-실행의 3단계로 구성되며, 구두(oral)와 사지(limb) 운동기획은 공통 신경 기반을 공유합니다. 일치 패턴 확인법: ① OT에서 신체 모방 과제(SIPT-Postural Praxis) 수행 저조 + SLP에서 구강 모방 과제(입술 오므리기, 혀 좌우) 수행 저조 → 전반적 운동기획 장애 시사. ② 사지는 양호하나 구강만 저조 → 구강 특이적 실행증(oral apraxia) 의심. ③ 두 영역 모두 관념화 단계에서 어려움 → 감각 처리(특히 촉각·고유감각) 기반 문제 우선 평가.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 새로운 구강 동작 모방(예: 혀 내밀기, 볼 부풀리기) 시 어려움이 관찰되는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 구강 동작 모방 평가 시 난이도 순서: 입 벌리기 → 혀 내밀기 → 입술 오므리기 → 볼 부풀리기 → 혀로 입천장 찍기 → 혀 측방 이동. 관찰 포인트: ① 시도 자체를 하지 못함(관념화 장애), ② 시도하나 잘못된 동작 산출(계획 장애), ③ 간헐적 성공이나 일관성 없음(실행 장애). 구강 동작 모방 어려움이 3개 이상 항목에서 관찰되면 말실행증(CAS) 가능성을 SLP와 논의합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT에서 관찰된 운동 순서화(motor sequencing) 어려움이 SLP의 말 순서화 소견과 일치하는지</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT 관찰 기록에서 운동 순서화 관련 소견을 정리합니다. 예: "3단계 운동 과제(공 줍기→바구니에 넣기→손뼉치기)에서 순서 오류 빈번, 반복 연습 후에도 자동화되지 않음." SLP가 관찰한 말 순서화 소견(예: 음절 순서 오류, 단어 길이 증가 시 오류 증가)과 대조하여 두 영역 간 일관성 여부를 확인합니다. 일치할 경우 전반적 순서화(sequencing) 결함으로 통합 접근이 필요합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 아동이 말실행증(CAS) 의심일 경우 → OT 신체 운동기획 평가와 통합 해석</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> CAS 의심 아동에게 OT는 SIPT(감각통합 및 실행 검사) 또는 BOT-2의 운동기획 하위검사를 실시하고, SLP는 DEMSS(조기 운동 말 기술 검사) 또는 KSPT 등을 실시합니다. 통합 해석 회의에서: ① 감각 기반 운동기획 문제(촉각·고유감각 처리 저하가 기저 원인)인지, ② 운동 실행 자체의 문제인지를 감별합니다. 감각 기반이면 OT SI 치료가 선행되어야 하고, 실행 자체 문제면 SLP의 반복 연습 기반 접근과 병행합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-flag">의뢰</span> 양육자 얼굴 움직임 모방 시도 전무(6개월) → SLP 초기 의사소통 평가 의뢰</li>
+</ul>
+<div class="q-answer"><b>의뢰 근거:</b> 6개월까지 얼굴 모방(혀 내밀기, 입 벌리기 따라하기) 시도가 전혀 없으면 초기 사회적 의사소통 발달 지연의 강력한 지표입니다. 의뢰 시 포함 정보: ① OT 관찰에서 시각 고정/추적 능력(시각적 모델 인식 가능 여부), ② 사회적 미소 유무, ③ 양육자 목소리에 대한 방향 전환 반응. SLP는 이를 바탕으로 전언어기(prelinguistic) 의사소통 평가를 실시합니다.</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F37D;</span> 섭식 영역 (Feeding)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 이유식 전환 시 질감(texture) 수용 범위는? 특정 질감만 거부하는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 질감 수용 발달 순서: 액체(0-4개월) → 퓌레(4-6개월) → 으깬 음식(6-8개월) → 잘게 자른 부드러운 고형식(8-10개월) → 다양한 고형식(12개월+). 질감 거부 유형 분류: ① 특정 질감만 거부(예: 끈적한 것, 알갱이) → 촉각 과민 가능성, ② 퓌레 이상 모든 질감 거부 → 구강운동 미성숙 가능성, ③ 새로운 음식 전반 거부 → 감각 방어 + 행동적 요인 복합. 식이 일지(3일간 섭취 음식, 질감, 거부 반응 기록)를 SLP에 공유하면 평가에 유용합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 숟가락 이유식 시 상순(upper lip) 닦아내기가 가능한가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 상순 닦아내기(upper lip clearance)는 5-7개월에 출현하며, 숟가락이 입에 들어왔을 때 윗입술이 능동적으로 내려와 음식을 긁어내는 동작입니다. 미성숙 패턴: ① 숟가락을 윗잇몸에 긁어 빼야 함(수동적 제거), ② 혀로만 음식을 밀어넣음(혀 돌출 패턴 지속), ③ 입술을 닫지 못해 옆으로 흘림. 9개월 이후에도 상순 닦아내기가 불가하면 입술 근력/협응 저하를 의미하며, 이는 이후 컵 음용, 발음 명료도에도 영향을 줍니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 컵 음용/빨대 음용의 구강 운동 패턴은 연령에 적합한가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 발달 순서: 열린 컵(보조, 6-9개월) → 빨대 컵(12-15개월) → 열린 컵(독립, 15-18개월) → 흘리지 않는 컵 음용(24개월). 관찰 포인트 - 컵: ① 턱 안정성(컵 가장자리를 물어 안정시키는지), ② 입술 폐쇄(옆으로 흘리는 양), ③ 액체 조절(한 모금씩 vs 과다 유입). 빨대: ① 진정한 빨기(빨대를 혀로 압축) vs 씹기, ② 입술 밀폐. 23개월까지 컵/빨대 음용 모두 불가하면 구강 근력 및 협응 전반 평가가 필요합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT 자세조절 평가 결과 — 식사 시 자세 안정성이 구강 기능에 미치는 영향</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> 식사 시 자세가 구강 기능에 직접 영향을 줍니다. SLP에 공유할 내용: ① 몸통 안정성(의자에서 양손 자유로운 사용 가능 여부), ② 발 지지(발이 바닥/발판에 닿는지 — 미지지 시 턱 안정성 저하), ③ 머리 정렬(전방 기울기 시 연하 곤란 증가), ④ 권장 식사 자세 세팅(의자 높이, 테이블 높이, 발판 유무). 자세 불안정이 심하면 SLP 섭식치료와 OT 자세 세팅을 동시에 적용해야 효과적입니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 감각 기반 식이 거부 → OT 감각조절 + SLP 섭식치료 공동 목표 수립</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> 감각 기반 식이 거부는 구강 촉각 방어가 핵심이므로 OT-SLP 공동 접근이 필수적입니다. OT 역할: ① 전신 감각조절 프로그램(식사 전 고유감각 활동으로 각성 조절), ② 구강 외부 탈감작(얼굴-입술-잇몸 순서로 촉각 자극 단계적 도입), ③ 감각 식이(sensory diet) 구성. SLP 역할: ① 음식 탐색 프로토콜(보기→만지기→냄새맡기→입술 터치→맛보기→씹기 단계), ② 구강 운동 훈련, ③ 질감 단계적 확대. 공동 목표 예시: "8주 내 수용 가능 질감 범위를 2단계에서 4단계로 확대한다."</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F4AC;</span> 의사소통 기반 운동 (Communication-Motor Interface)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 제스처 모방(바이바이, 가리키기)의 출현 시기와 질은?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 발달 순서: 팔 뻗기로 요구(9개월) → 바이바이(9-12개월) → 가리키기(pointing, 12-14개월) → 고개 끄덕이기/젓기(14-16개월) → 상징적 제스처(전화기 귀에 대기, 15-18개월). 관찰 포인트: ① 자발적 vs 모방만 가능(자발적이 더 성숙), ② 의사소통 의도 동반 여부(상대방 얼굴을 보며 제스처하는지), ③ 제스처의 정확성(바이바이 시 손목 회전 vs 팔 전체 흔들기). 가리키기 부재(14개월+)는 공동주의(joint attention) 발달 지연의 핵심 지표이므로 SLP와 반드시 공유합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> "~해 줘" 같은 언어 지시에 따른 운동 수행 능력은 어느 수준인가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 언어 지시 따르기 발달: 1단계 지시(15-18개월, "공 가져와") → 2단계 지시(24개월, "공 가져와서 상자에 넣어") → 3단계 지시(36개월+). OT 평가 시 감별해야 할 것: ① 지시를 이해하나 운동 수행이 어려운 경우(운동기획 문제 → OT 주도), ② 지시 자체를 이해하지 못하는 경우(수용언어 문제 → SLP 주도), ③ 둘 다 해당하는 경우. 감별 방법: 시각적 시범(demonstration)을 함께 제공했을 때 수행이 향상되면 언어 이해 문제가 우세, 시범 후에도 어려우면 운동기획 문제가 우세합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> 수용언어 이해력이 운동기획 과제의 수행 패턴에 미치는 영향 관찰 소견</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT 치료 세션 중 언어 지시 기반 과제와 시각 시범 기반 과제의 수행 차이를 기록하여 SLP에 공유합니다. 예시: "언어 지시만으로 '블록을 컵 안에 넣어'는 실패하나, 치료사가 시범을 보여주면 즉시 수행 가능 → 수용언어 이해가 운동 수행을 제한하는 것으로 판단." 또는 "시범 후에도 3단계 과제 순서 오류 빈번 → 운동기획 자체의 순서화 결함이 주요 원인." 이 감별 정보는 SLP의 치료 목표 설정에 직접적으로 도움이 됩니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 다단계 지시 수행 불가 시 → 언어 이해 문제 vs 운동기획 문제 감별 위한 공동 평가</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> 공동 평가 프로토콜: ① SLP가 수용언어 수준을 공식 검사로 확인(SELSI, PRES 등), ② OT가 동일 난이도 과제를 언어 지시 조건과 시각 시범 조건으로 각각 실시, ③ 두 조건 간 수행 차이를 비교 분석. 결과 해석: 언어 지시 조건만 저조 → SLP 언어 이해 중재 우선 + OT는 시각 지원 전략 사용. 두 조건 모두 저조 → OT 운동기획 중재 + SLP는 단순화된 언어 사용. 공동 목표 예시: "2단계 언어 지시에 따른 운동 과제를 80% 정확도로 수행한다."</div>
+<ul class="q-list">
+<li><span class="q-label q-label-flag">의뢰</span> 15개월까지 제스처 모방 전무 → SLP 의사소통 발달 평가 의뢰</li>
+</ul>
+<div class="q-answer"><b>의뢰 근거:</b> 15개월까지 제스처 모방(바이바이, 가리키기, 손 흔들기 등)이 전혀 없으면 초기 의사소통 발달 지연 + 자폐 스펙트럼 장애(ASD) 조기 선별 지표입니다. 의뢰 시 포함 정보: ① 사회적 참조(social referencing) 유무 — 낯선 상황에서 양육자 얼굴을 확인하는지, ② 공동주의(joint attention) — 관심 있는 것을 가리키며 타인과 공유하려는지, ③ OT 세션 중 관찰된 감각 처리 특이사항(감각 추구/회피 패턴). SLP는 M-CHAT-R/F 등 선별 도구와 함께 종합 판단합니다.</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F50A;</span> 감각처리 ↔ 언어 연계</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 청각 과민이 언어 환경 참여에 영향을 미치는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 청각 과민(auditory hypersensitivity) 징후: ① 시끄러운 환경에서 귀 막기, ② 특정 소리(핸드 드라이어, 화장실 물 내리기, 박수 소리)에 공포 반응, ③ 소음 환경에서 언어 이해력 급격히 저하, ④ 그룹 활동(원 시간, 음악 시간) 회피. 언어 발달 영향: 청각 과민 아동은 소음 환경에서 말소리 변별(speech discrimination)이 어려워 어휘 습득 속도가 저하될 수 있습니다. OT SI 평가에서 청각 감각 조절 점수가 저조하면 SLP에 공유하여, SLP 치료실 환경(소음 수준, 배경 음악 유무)을 조정하고 조용한 1:1 환경에서 언어 중재를 시작하도록 권장합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 전정감각 처리 문제가 청각 처리에 영향을 줄 가능성은? (전정-청각 연결)</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 전정계와 청각계는 해부학적으로 내이(inner ear)의 제8뇌신경(vestibulocochlear nerve)을 공유하며, Ayres는 전정-청각-언어 연결(vestibular-auditory-language connection)을 강조했습니다. 임상적 관련성: ① 전정 처리 저하 아동에서 청각 처리 장애(APD) 동반 빈도 높음, ② 전정 자극 활동(그네, 회전) 후 언어 산출이 일시적으로 향상되는 사례 보고, ③ 자세 불안정이 청각 주의집중에 에너지를 소모시켜 언어 처리 효율 저하. OT SI 평가에서 전정 처리 저하 소견이 있고 SLP에서 청각적 언어 이해 저하가 관찰되면, 전정-청각 연결 가설을 팀 논의 안건으로 제안합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> 감각 프로파일에서 구강 감각 처리 점수 및 해석</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> Sensory Profile-2(SP-2) 또는 유아감각 프로파일의 구강 감각 처리 섹션 결과를 SLP에 공유합니다. 핵심 정보: ① 구강 감각 추구 점수(높으면 → 비식용 물건 물어뜯기, 옷 깨물기 빈번), ② 구강 감각 회피 점수(높으면 → 양치질 거부, 새 음식 거부, 특정 질감 구역질), ③ 구강 감각 등록 점수(낮으면 → 침 흘림 미인식, 입 주변 음식 잔류 미인식). 이 점수를 SLP의 구강운동/섭식 평가 소견과 통합 해석하면 감각 처리 기반 vs 구강 운동 기반 문제를 감별할 수 있습니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 감각 조절 곤란이 치료 세션 참여도에 미치는 영향 → 환경 조정 공동 계획</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> 감각 조절 곤란 아동은 OT/SLP 치료실 환경에 따라 수행이 크게 달라집니다. 공동 환경 조정 계획: ① 각성 수준 관리 — SLP 세션 전 OT가 제공하는 감각 식이(sensory diet) 활동(예: 무거운 담요, 관절 압박)을 SLP 세션 시작 루틴에 포함, ② 치료실 환경 — 형광등 대신 자연광, 시각 자극 최소화, 대기 공간 소음 차단, ③ 세션 구조 — 고요구 과제와 감각 휴식(sensory break)을 교대 배치, ④ 공동 각성 척도 사용 — 양 치료사가 동일한 각성 수준 척도(예: Alert Program의 엔진 비유)를 사용하여 아동 상태를 일관되게 기록·소통합니다.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ===================== SECTION 3: PT 교차점 ===================== -->
+<div class="section container" id="sec3">
+<h2 style="font-size:18px;margin:12px 0 8px;color:#0d47a1">3. PT(물리치료사)와의 교차점 및 핵심 질문</h2>
+
+<div class="cross-card">
+<div class="cross-header cross-header-pt">PT-OT/SI 교차 영역 개요</div>
+<div class="cross-body">
+<div class="info-box">
+<h4>왜 PT와의 협력이 필수적인가?</h4>
+<ul>
+<li>자세조절(postural control)은 OT의 모든 상위 기능(미세운동, 시각-운동, 양측협응)의 기초</li>
+<li>대근육 운동 이정표(gross motor milestones)는 PT의 핵심 영역이나 감각처리 문제와 밀접</li>
+<li>전정계(vestibular) + 고유감각(proprioception) 처리 → PT의 균형/보행과 OT의 감각통합이 중첩</li>
+</ul>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F9CD;</span> 자세조절 영역 (Postural Control)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 근긴장도(muscle tone)는 저긴장/고긴장/변동성 중 어디에 해당하는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 근긴장도 분류와 OT 영향: ① <b>저긴장(hypotonia)</b> — 관절 과가동성, 'W-sitting' 선호, 지지면에 기대기 빈번. OT 영향: 미세운동 시 손가락 관절 과신전으로 필기 피로 증가, 가위질 시 손 안 아치(hand arch) 유지 곤란. ② <b>고긴장(hypertonia)</b> — 관절 가동 범위 제한, 동작 경직. OT 영향: 연필 과도한 압력(필기구 파손), 조작 정밀도 저하. ③ <b>변동성(fluctuating)</b> — 과제/자세에 따라 긴장도 변화. OT 영향: 수행 일관성 저하, 좋은 날/나쁜 날 편차 큼. PT에 근긴장 평가 결과를 요청하고, OT는 해당 결과를 기반으로 상지 기능 중재 전략을 수립합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 복와위 신전(prone extension) 유지 시간은 연령 기준에 부합하는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 복와위 신전(prone extension)은 항중력 신전근(antigravity extensor) 기능의 핵심 지표입니다. 연령별 기준: 13-23개월: 5초 이상, 2세: 10초 이상, 3-4세: 15-20초, 5-6세: 20-30초, 7세+: 30초 이상. 측정 방법: 엎드린 자세에서 양팔·양다리·머리를 바닥에서 동시에 들고 유지하는 시간(슈퍼맨 자세). 관찰 포인트: ① 유지 시간, ② 자세의 질(비대칭 여부, 머리 위치), ③ 보상 전략(팔꿈치 지지, 한쪽만 들기). 연령 기준 미만이면 PT에 항중력 근력 강화 프로그램을 요청하고, OT는 책상 활동 시 경사면(slant board) 등 보상 전략을 적용합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 보호반응(protective extension)은 전방·측방·후방 모두 출현했는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 보호반응 출현 순서: 전방(6-7개월) → 측방(7-8개월) → 후방(9-10개월). 평가 방법: 좌위에서 아동을 각 방향으로 부드럽게 기울여 팔을 뻗어 지지하는 반응을 관찰합니다. 등급: 부재(0) → 지연(1, 반응은 있으나 넘어짐) → 불완전(2, 팔 뻗으나 체중 지지 부족) → 완전(3, 즉각적이고 효과적 지지). 10개월 이후 한 방향이라도 보호반응이 완전 부재하면 낙상 안전 위험으로 PT에 즉시 공유합니다. OT에서는 보호반응 부재 방향을 감안하여 치료 환경의 안전 세팅(매트, 쿠션 배치)을 조정합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT 치료 중 관찰된 자세 불안정이 미세운동 수행에 미치는 영향</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT 세션 중 과제별 자세 관찰을 기록하여 PT에 공유합니다. 예시 형식: "책상 활동(그리기 10분) 시: ① 3분 후 머리를 비우세손에 기댐, ② 5분 후 상체가 책상에 엎어짐, ③ 7분 후 의자에서 미끄러져 W-sitting으로 전환. 이때 필기 정확도와 속도가 현저히 저하됨." 핵심 메시지: "자세 지구력이 미세운동 수행의 제한 요인이므로, PT에서 몸통 근력/지구력 향상 시 OT 미세운동 중재 효과도 함께 향상될 것으로 예상됩니다."</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 저긴장 → 책상 활동 시 지구력 저하 → PT 근력 강화 + OT 과제 적응 공동 목표</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> PT 역할: ① 몸통 근력 강화(복근, 척추기립근, 견갑대 안정근), ② 항중력 자세 유지 훈련, ③ 균형공/불안정면 활동으로 자세 근지구력 향상. OT 역할: ① 의자/책상 세팅 최적화(발판, 좌면 경사, 등받이 지지), ② 경사대(slant board) 제공으로 팔 무게 부담 감소, ③ 과제 시간 분할(5분 활동-1분 감각 휴식 순환), ④ 연필 그립 보조도구로 파지 에너지 절약. 공동 목표 예시: "8주 내 책상 활동 지속 시간을 5분에서 15분으로 연장한다(자세 유지 포함)."</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F6B6;</span> 대근육 운동 영역 (Gross Motor)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 독립 보행의 질(gait pattern) — 기저면 넓이, 팔 흔들기, 발뒤꿈치 착지 패턴은?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 성숙한 보행 패턴(24개월+) 특징: ① 좁은 기저면(양발 간격 5-10cm), ② 교대 팔 흔들기(arm swing), ③ 발뒤꿈치 착지(heel-strike) → 발가락 밀기(toe-off) 패턴, ④ 골반 회전 동반. 미성숙/비정상 징후: 넓은 기저면(>15cm) → 균형 보상, 팔 흔들기 부재/비대칭 → 상지 긴장 이상 의심, 발가락 보행(toe-walking) 지속 → 아킬레스건 단축 또는 감각 추구, 보행 시 몸통 동요 과다 → 몸통 근력/전정계 문제. PT에 보행 분석 소견을 요청하고, OT는 보행 질이 일상활동(물건 운반, 놀이터 이동)에 미치는 기능적 영향을 보고합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 계단 오르기/내려가기 시 교대 패턴(reciprocal pattern)이 가능한가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 계단 이동 발달 순서: 양손 잡고 한 발씩 모아 오르기(15-20개월) → 난간 잡고 한 발씩 모아 오르기(2세) → 교대 발 오르기(3세) → 교대 발 내려가기(4세) → 난간 없이 교대 발 오르내리기(4-5세). 관찰 포인트: ① 교대 패턴 유무(한 발씩 모아 올라가면 미성숙), ② 난간 의존 정도, ③ 속도와 자신감, ④ 내려가기 시 발뒤꿈치 vs 발가락 착지. 4세 이후 교대 패턴 불가 시 PT에 하지 근력 + 균형 평가를 의뢰하고, OT는 학교 환경(2-3층 이동)에서의 기능적 영향을 평가합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 점프/깡충뛰기/스킵 등 양측 하지 협응 과제의 수행 수준은?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 하지 양측협응 발달 순서: 양발 모아 제자리 뛰기(2세) → 양발 앞으로 뛰기(2세 6개월) → 한발 깡충뛰기(3-4세) → 갤럽(gallop, 4세) → 스킵(skip, 5-6세). 각 단계 관찰 포인트: ① 양발 동시 이륙/착지(비동시 → 양측협응 지연), ② 착지 시 무릎 굽힘 충격 흡수(경직 착지 → 고유감각 처리 문제 의심), ③ 스킵 시 좌우 교대 리듬(한쪽만 깡충 → 비대칭 협응). 5세 이후 스킵 전혀 불가 시 PT + OT 양측협응 공동 평가를 권장합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT 운동기획 평가에서 나타난 대근육 순서화(sequencing) 어려움</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT 치료 세션 중 대근육 순서화 과제 관찰을 기록하여 PT에 공유합니다. 예시: "장애물 코스(터널 기기→징검다리 건너기→공 던지기) 수행 시: ① 순서 기억 오류(3단계 중 2단계 건너뜀), ② 전환 지연(한 과제 끝나고 다음 과제 시작까지 10초+ 소요), ③ 반복 연습(5회) 후에도 순서 자동화 미달성." PT는 이 정보를 바탕으로 대근육 훈련 시 순서화 요소를 점진적으로 포함하고, OT는 상지 운동기획에서도 유사 패턴이 나타나는지 확인하여 전반적 실행 장애(dyspraxia) 여부를 감별합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 놀이터/체육 활동 참여 목표 → PT 대근육 + OT 운동기획 + 감각통합 공동 접근</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> 놀이터/체육 참여는 대근육 기술 + 운동기획 + 감각조절이 동시에 요구되므로 PT-OT 공동 접근이 효과적입니다. PT 역할: ① 구체적 대근육 기술 훈련(달리기, 점프, 공 차기의 생체역학적 패턴), ② 근력·지구력 향상. OT 역할: ① 새로운 놀이 기구 사용법 습득을 위한 운동기획 중재(관념화→계획→실행), ② 감각 과민/추구 관리(높이 공포 → 전정 탈감작, 충돌 추구 → 고유감각 대체 전략), ③ 사회적 놀이 참여 기술(규칙 이해, 차례 지키기). 공동 목표 예시: "학기 말까지 쉬는 시간에 또래와 축구에 10분 이상 참여한다."</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x2696;</span> 균형 및 전정계 (Balance & Vestibular)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 한발서기 유지 시간이 연령 기준에 부합하는가? (3세:1초, 4세:3초, 5세:5초, 6세:8초, 7-8세:10초)</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 한발서기는 정적 균형의 핵심 지표이며 SI 체크리스트의 자세조절 영역에서 연령별로 반복 측정됩니다. 측정 방법: 양팔 자유, 선호하는 발로 서기, 들어올린 발이 바닥에 닿으면 종료, 3회 중 최장 시간 기록. 연령별 기준: 3세≥1초, 4세≥3초, 5세≥5초, 6세≥8초, 7-8세≥10초, 9-10세≥15초. 추가 정보로 PT에 제공할 것: ① 눈 뜨고 vs 눈 감고 차이(큰 차이 → 시각 의존 균형, 전정-고유감각 처리 저하 시사), ② 좌우 차이(>3초 차이 → 비대칭 의심), ③ 보상 전략(팔 벌리기, 몸통 동요 방향).</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 동적 균형(보행 중 방향 전환, 줄 위 걷기) 수행 수준은?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 동적 균형은 일상생활 기능과 더 직접적으로 연관됩니다. 주요 평가 과제와 발달 기준: ① 보행 중 방향 전환(15-23개월 출현, 23개월까지 빈번 낙상 시 Red Flag), ② 줄 위 걷기/일렬 보행(tandem walk, 5세: 3-4발, 6세: 5-6발, 7-8세: 8발+), ③ 장애물 넘기(2세: 5cm, 3세: 15cm, 4세+: 25cm), ④ 균형대 걷기(4세: 넓은 균형대, 6세: 좁은 균형대). PT에 동적 균형 평가 시 OT가 관찰한 기능적 영향을 추가합니다: "놀이터에서 울퉁불퉁한 바닥 걸을 때 잦은 넘어짐" 또는 "교실에서 의자 사이 좁은 통로 이동 시 책상/의자에 부딪힘."</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 전정 자극(그네, 회전)에 대한 반응 — 과민/저민감/정상 범위?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 전정 자극 반응 유형: ① <b>전정 과민(gravitational insecurity/vestibular hypersensitivity)</b> — 그네 거부, 높이 공포, 발이 바닥에서 떨어지면 불안, 차 멀미 심함, 에스컬레이터/엘리베이터 공포. ② <b>전정 저민감(vestibular hyposensitivity/seeking)</b> — 회전 자극 과도 추구, 어지러움 잘 느끼지 못함, 빠른 움직임 선호, 높은 곳에서 뛰어내리기, 의자에서 계속 흔들기. ③ <b>정상 범위</b> — 적절한 즐거움, 과도한 회전 후 어지러움 느낌, 적응적 자세 반응 관찰. OT SI 평가 시 전정 자극 후 안진(post-rotary nystagmus) 지속 시간도 측정합니다: 정상 10-15초, 짧으면 저등록, 길면 과민 가능성.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT SI 평가에서 전정-고유감각 처리 결과 → PT 균형 훈련 계획에 반영</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT SI 평가에서 PT에 공유할 핵심 정보: ① 전정 처리 유형(과민/저민감/혼합)과 구체적 행동 예시, ② 고유감각 처리 수준(관절 위치 인식, 힘 조절 능력, 고유감각 추구 행동 유무), ③ 전정-고유감각 상호작용 패턴(예: 전정 과민이나 고유감각 입력 시 안정 → 무거운 담요, 관절 압박 후 균형 과제 수행 향상). 공유 형식 예시: "전정 과민(그네 거부, 높이 불안) + 고유감각 추구(무거운 물건 옮기기 선호). 균형 훈련 시 고유감각 입력을 선행 제공하면 전정 자극 수용도가 향상됩니다."</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 전정계 과민 아동 → PT 균형 훈련 시 OT 감각조절 전략 공동 적용</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> 전정 과민 아동의 균형 훈련은 PT-OT 공동 접근이 필수적입니다. OT가 PT에 제공할 감각조절 전략: ① <b>선행 전략</b> — 균형 훈련 전 고유감각 활동(벽 밀기, 무거운 공 옮기기, 관절 압박)으로 신경계 안정화, ② <b>점진적 노출</b> — 안정면 → 약간 불안정면 → 그네(짧은 호, 느린 속도부터), ③ <b>조절 단서</b> — "엔진이 너무 빨리 돌아가면 바닥에 발 쿵쿵 밟기"(Alert Program 활용), ④ <b>안전 신호</b> — 아동이 "그만" 할 수 있는 통제감 제공. PT는 이 전략을 균형 훈련 프로토콜에 통합하고, 아동의 전정 자극 수용도 변화를 OT에 보고합니다.</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F4AA;</span> 양측협응 ↔ 대근육 협응</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 양발 모아 점프, 양발 교대 계단 등 하지 양측협응 수준은?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 하지 양측협응 발달 단계: ① <b>대칭적 양측(symmetrical bilateral)</b> — 양발 모아 점프(2세), 양발 모아 앞으로 뛰기(2세6개월). ② <b>교대적 양측(reciprocal bilateral)</b> — 교대 발 계단 오르기(3세), 교대 발 계단 내리기(4세), 페달 밟기(3세). ③ <b>비대칭적 양측(asymmetrical bilateral)</b> — 한발 깡충뛰기(3-4세), 스킵(5-6세), 갤럽(4세). 관찰 포인트: ① 양발 동시 이륙 가능 여부(한 발이 먼저 떨어지면 타이밍 협응 저하), ② 교대 동작의 리듬감, ③ 좌우 대칭성(한쪽만 우세하면 비대칭 의심). 하지 양측협응 지연은 상지 양측협응과 비교하여 전반적 양측통합 문제인지 하지 특이적 문제인지 감별합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 공 차기/던지기에서 상-하지 협응 패턴은 연령에 적합한가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 공 기술 발달 순서 - <b>던지기</b>: 서서 앞으로 밀기(18개월) → 머리 위 양손 던지기(2세) → 한 손 어깨 위 던지기(3-4세) → 체중 이동+스텝 동반 던지기(5세+). <b>차기</b>: 정지된 공 밀기(18-23개월) → 서서 차기(2세) → 달려가며 차기(3-4세) → 정확한 방향 차기(5세+). <b>받기</b>: 양팔로 안기(2-3세) → 양손으로 받기(4-5세) → 한 손으로 받기(5-6세+). 관찰 포인트: ① 던지기 시 반대쪽 발 앞으로 내딛기(상-하지 교차 협응), ② 차기 시 지지발 안정성, ③ 받기 시 시선 추적 + 손 타이밍 일치. 상-하지 협응 패턴이 연령 기준에 2단계 이상 뒤처지면 PT+OT 공동 평가를 권장합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT에서 평가한 상지 양측협응 결과 → 하지 패턴과의 일관성 비교</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT 상지 양측협응 평가 결과를 PT에 공유하여 전신 양측통합 패턴을 확인합니다. 공유 항목: ① 상지 대칭 과제(양손 드럼치기, 양손 공 굴리기) 수행 수준, ② 상지 교대 과제(한 손 고정-다른 손 조작, 가위질) 수행 수준, ③ 정중선 교차(crossing midline) 가능 여부, ④ 손 우세 확립 시기. 일관성 분석: 상지+하지 모두 양측협응 지연 → 전반적 양측통합 장애(뇌량 기능 연관), 하지만 지연+상지 정상 → 하지 특이적 근력/균형 문제 가능성, 상지만 지연+하지 정상 → 미세운동/운동기획 특이적 문제.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 전신 양측협응 지연 → PT 대근육 + OT 상지 협응 동시 접근</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> 전신 양측협응 지연 아동에게 PT-OT 동시 접근이 효과적입니다. PT 역할: ① 하지 대칭/교대 운동(트램폴린 양발 점프, 교대 스텝핑), ② 전신 협응 과제(징검다리 건너기, 줄넘기 준비 활동), ③ 리듬 기반 훈련(메트로놈에 맞춰 걷기/뛰기). OT 역할: ① 상지 양측협응 과제(양손 절기, 가위질, 양손 구슬 꿰기), ② 정중선 교차 활동(반대쪽 무릎 터치, 대각선 그리기), ③ 감각통합 기반 양측협응(그네 타며 양손으로 공 던지기). 공동 목표 예시: "12주 내 양발 교대 계단 오르기(PT) + 가위로 곡선 자르기(OT)를 독립 수행한다."</div>
+<ul class="q-list">
+<li><span class="q-label q-label-flag">의뢰</span> 좌우 비대칭 운동 패턴 지속 → 신경과 의뢰 공동 판단</li>
+</ul>
+<div class="q-answer"><b>의뢰 근거:</b> 좌우 비대칭이 의뢰를 요하는 경우: ① 한쪽 사지의 지속적 비사용 또는 현저한 약화, ② 12개월 이전 강한 편측 손 우세(편측 신경학적 문제 의심), ③ 한쪽으로만 구르기/기기(비대칭 긴장 의심), ④ 보행 시 한쪽 팔 흔들기 부재, ⑤ 한쪽 발 지속적 발가락 보행. PT+OT 공동 의뢰 시 포함 정보: 양측 근긴장 비교(PT), 양측 미세운동 수행 비교(OT), 비대칭 패턴의 기능적 영향, 관찰 기간과 변화 추이. 신경과에서 뇌영상(MRI) 및 신경전도 검사를 통해 편측 마비(hemiplegia) 등을 감별합니다.</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F476;</span> 신경학적 징후 (Neurological Signs)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 원시반사(ATNR, STNR, TLR 등)의 잔존 여부와 정도는?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 주요 원시반사와 소실 시기: ① <b>ATNR(비대칭 긴장성 경반사)</b> — 소실 4-6개월. 잔존 시 영향: 정중선 교차 곤란, 양손 활동 방해, 필기 시 고개 돌리면 팔 신전. ② <b>STNR(대칭 긴장성 경반사)</b> — 소실 6-9개월. 잔존 시 영향: 책상에서 고개 숙이면 팔 굴곡/다리 신전 → 의자에서 미끄러짐, 네발기기 어려움. ③ <b>TLR(긴장성 미로반사)</b> — 소실 4-6개월. 잔존 시 영향: 앙와위 시 전신 굴곡, 복와위 시 전신 신전 → 구르기·앉기 곤란. ④ <b>파악반사(grasp reflex)</b> — 소실 4-6개월. 잔존 시 영향: 의도적 놓기 불가, 필기구 과도한 쥠. PT에 잔존 반사 유무와 강도(약함/중간/강함)를 요청하고, OT는 해당 반사가 일상활동에 미치는 기능적 영향을 평가합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 근긴장 분포의 비대칭이 있는가? 사지 vs 몸통 긴장 차이는?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 근긴장 분포 패턴과 임상적 의미: ① <b>사지 고긴장 + 몸통 저긴장</b> — 뇌성마비(특히 경직형)에서 흔한 패턴. 몸통 안정성 부족으로 사지가 과긴장으로 보상. ② <b>전반적 저긴장</b> — 다운증후군, 프래더-윌리 등 유전적 조건 또는 근육병에서 관찰. ③ <b>편측 긴장 차이</b> — 한쪽 상하지 긴장 증가 → 편마비(hemiplegia) 의심. ④ <b>변동성 긴장</b> — 과제/자세에 따라 변화 → 운동이상형(dyskinetic) 뇌성마비 가능성. PT 평가 시 수동적 관절 가동 범위(PROM), 자세 변화에 따른 긴장 변화, 심부건 반사를 확인합니다. OT는 근긴장 패턴이 상지 기능(파지, 조작, 필기)에 미치는 영향을 보고합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT 평가 중 관찰된 연합반응(associated reactions), 불수의 운동 등</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> OT 세션 중 관찰되는 신경학적 soft sign을 기록하여 PT에 공유합니다. ① <b>연합반응(associated reactions)</b> — 한 손으로 어려운 과제 수행 시 반대편 손이 거울 운동(mirror movement)을 보이는지, 혀 내밀기 등 구강 연합반응이 동반되는지. 예: "가위질 시 반대손 개폐 동시 발생, 혀 내밀기 동반." ② <b>불수의 운동</b> — 안정 시 떨림(tremor), 불수의적 운동(chorea, athetosis), 의도 떨림(intention tremor). ③ <b>연화 징후(soft signs)</b> — 양손 빠른 교대 운동(diadochokinesis) 곤란, 손가락-코 검사 부정확. 이 소견들은 신경과 의뢰 여부 판단의 근거가 됩니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 원시반사 잔존 + 근긴장 이상 → PT+OT 공동으로 신경과 의뢰 판단</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> 신경과 의뢰 판단을 위한 PT-OT 공동 논의 프로토콜: ① PT 소견 취합 — 잔존 반사 목록과 강도, 근긴장 분포, 심부건 반사, 병적 반사(바빈스키 등), 보행 패턴 이상. ② OT 소견 취합 — 연합반응, 미세운동 비대칭, 감각 처리 이상, 일상활동 기능적 영향. ③ 공동 판단 기준: 다수 원시반사 잔존(2개+) + 근긴장 이상 + 운동 발달 지연이 동시 관찰되면 신경과 의뢰 강력 권장. ④ 의뢰서에 PT+OT 소견을 통합하여 작성하면 신경과에서 보다 정확한 평가가 가능합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-flag">의뢰</span> 비대칭 긴장, 진행성 근력 저하, 운동 퇴행 발견 시 → 신경과 즉시 의뢰</li>
+</ul>
+<div class="q-answer"><b>의뢰 근거:</b> 즉시 의뢰가 필요한 긴급 신경학적 징후: ① <b>운동 퇴행</b> — 기존에 가능했던 운동 이정표(앉기, 걷기 등)가 상실되면 진행성 신경 질환(퇴행성 뇌질환, 대사성 질환) 가능성 → 24시간 이내 신경과 의뢰. ② <b>급성 비대칭 출현</b> — 갑자기 한쪽 사지 약화/비사용 → 뇌혈관 사건(소아 뇌졸중) 가능성 → 응급 의뢰. ③ <b>진행성 근력 저하</b> — 점차 악화되는 근력/지구력 → 근이영양증(muscular dystrophy) 등 감별 필요. ④ <b>경련/발작 의심</b> — 반복적 고정 자세, 비자발적 움직임 에피소드 → 즉시 신경과. 의뢰 시 PT+OT 공동 기록: 증상 최초 관찰 시점, 진행 속도, 기능적 영향 정도를 명시합니다.</div>
+</div>
+
+<div class="cross-domain">
+<h4><span class="icon">&#x1F3C3;</span> 운동기획 ↔ 운동 학습 (Motor Planning ↔ Motor Learning)</h4>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 새로운 대근육 과제(예: 줄넘기, 자전거) 학습 시 시행 횟수 대비 향상률은?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 운동 학습 향상률은 운동기획 능력의 핵심 지표입니다. 정상 발달 아동: 새 과제 10-15회 시행 후 뚜렷한 향상, 2-3세션 내 기본 패턴 습득. 운동기획 장애(dyspraxia) 아동: 동일 과제 30-50회+ 시행 후에도 향상이 미미하거나 불안정. 평가 방법: ① 기초선 수행 측정(1-3회 시행), ② 5회마다 수행 질/정확도 기록, ③ 20회 시행 후 기초선 대비 변화량 산출. PT에 질문할 구체적 항목: "줄넘기 기본 패턴(양발 점프+줄 타이밍) 습득까지 몇 세션 소요되었는가?", "자전거 페달링 자동화까지의 시행 횟수는?" 이 정보는 OT에서 상지 운동기획 학습 속도와 비교하여 전반적 운동 학습 능력을 판단하는 데 활용합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-ask">질문</span> 운동 학습 전이(transfer) — 치료실에서 배운 기술이 놀이터/학교로 일반화되는가?</li>
+</ul>
+<div class="q-answer"><b>임상 답변:</b> 운동 학습 전이(transfer)는 습득한 기술을 다른 환경·맥락에서 적용하는 능력입니다. 전이 유형: ① <b>근전이(near transfer)</b> — 유사 환경에서 유사 과제 수행(치료실 균형대 → 다른 치료실 균형대), ② <b>원전이(far transfer)</b> — 다른 환경에서 다른 맥락의 과제(치료실 균형대 → 놀이터 낮은 담장 걷기). 운동기획 장애 아동의 특징: 근전이는 가능하나 원전이에 현저한 곤란을 보입니다. PT에 확인할 사항: "치료실에서 가능한 계단 교대 오르기가 학교/집 계단에서도 가능한가?", "과제 조건이 변경되면(높이, 속도, 방향) 수행이 급격히 저하되는가?" 전이 곤란이 뚜렷하면 치료 환경 다양화(실외, 놀이터, 학교 체육관)와 과제 변형(variable practice)을 공동 계획합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-share">공유</span> OT 운동기획 평가 결과 → 관념화/계획/실행 중 어느 단계가 주 어려움인지</li>
+</ul>
+<div class="q-answer"><b>공유 방법:</b> Ayres의 운동기획(praxis) 3단계 모델에 기반한 OT 평가 결과를 PT에 공유합니다. ① <b>관념화(ideation) 장애</b> — "무엇을 할지" 모름. 새 장난감/기구 앞에서 무엇을 해야 할지 아이디어가 없음. 주로 감각 처리(촉각·고유감각) 저하가 기저 원인. PT 적용: 새 과제 도입 시 반드시 시범 제공, 명확한 목표 제시. ② <b>계획(planning) 장애</b> — "어떻게 할지" 모름. 아이디어는 있으나 동작 순서/방향/힘 조절 계획 수립 곤란. PT 적용: 과제를 단계별로 분해, 언어적 단서 제공. ③ <b>실행(execution) 장애</b> — 계획은 있으나 신체가 따르지 못함. PT 적용: 반복 연습, 신체 유도(physical guidance), 점진적 단서 감소. 주 어려움 단계에 따라 PT의 교수 전략이 달라져야 합니다.</div>
+<ul class="q-list">
+<li><span class="q-label q-label-collab">협력</span> 발달성 협응 장애(DCD) 의심 → PT+OT 공동 평가 및 중재 계획</li>
+</ul>
+<div class="q-answer"><b>협력 방안:</b> DCD(Developmental Coordination Disorder) 진단 기준(DSM-5): ① 운동 협응이 연령 기대 수준보다 현저히 낮음, ② 일상생활에 유의미한 영향, ③ 아동기에 시작, ④ 지적장애·시각장애·신경학적 조건으로 설명 불가. PT-OT 공동 평가 프로토콜: PT — MABC-2(운동평가배터리), 대근육 기능 평가, 균형·보행 분석. OT — BOT-2 미세운동 하위검사, SIPT 운동기획 하위검사, 일상활동 수행 평가(COPM). 공동 중재 접근: ① <b>CO-OP(Cognitive Orientation to Occupational Performance)</b> — 목표-계획-실행-확인 전략을 PT·OT 세션 모두에서 일관 적용, ② <b>과제 지향적 접근(task-oriented approach)</b> — 아동이 원하는 구체적 과제(자전거 타기, 글씨쓰기)를 목표로 설정, ③ <b>NTT(Neuromotor Task Training)</b> — PT가 주도하는 과제 특이적 훈련에 OT의 운동기획 전략 통합. 공동 목표 예시: "한 학기 내 MABC-2 총점 15백분위 이상 달성 + COPM 수행도 2점 이상 향상."</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ===================== SECTION 4: 즉시 팀 공유 ===================== -->
+<div class="section container" id="sec4">
+<h2 style="font-size:18px;margin:12px 0 8px;color:#b71c1c">4. 즉시 팀 공유 상황</h2>
+<p style="font-size:13px;color:#666;margin-bottom:12px">아래 상황이 관찰되면 해당 전문가에게 <b>24시간 이내</b> 공유하고, 팀 회의 안건으로 상정합니다.</p>
+
+<div class="cross-card">
+<div class="cross-header cross-header-urgent">즉시 공유 의사결정 흐름도</div>
+<div class="cross-body">
+<div class="flow-wrap">
+  <div class="flow-step flow-red">Red Flag<br>관찰</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step flow-orange">안전 위험?<br>(질식/낙상/흡인)</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step flow-red">YES → 즉시<br>담당자 연락</div>
+</div>
+<div class="flow-wrap" style="margin-top:4px">
+  <div class="flow-step" style="visibility:hidden;min-width:160px"></div>
+  <span class="flow-arrow" style="visibility:hidden">→</span>
+  <div class="flow-step flow-blue">NO → 퇴행?<br>기능 상실?</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step flow-orange">YES → 24시간<br>이내 공유</div>
+</div>
+<div class="flow-wrap" style="margin-top:4px">
+  <div class="flow-step" style="visibility:hidden;min-width:160px"></div>
+  <span class="flow-arrow" style="visibility:hidden">→</span>
+  <div class="flow-step flow-green">NO → 다음<br>팀 회의 안건</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step flow-blue">모니터링<br>+ 기록</div>
+</div>
+</div>
+</div>
+
+<div class="urgent-grid">
+
+<div class="urgent-card">
+<h4>즉시 공유 — 안전 관련 (Safety Critical)</h4>
+<ul>
+<li><b>흡인(aspiration) 징후</b>: 수유/식사 중 기침, 청색증, 젖은 목소리 → <span class="badge badge-slp">SLP</span> 즉시</li>
+<li><b>질식(choking) 위험</b>: 혀 측방이동 부재로 고형식 안전 섭취 불가 → <span class="badge badge-slp">SLP</span></li>
+<li><b>반복 낙상</b>: 일상 활동 중 잦은 낙상, 보호반응 부재 → <span class="badge badge-pt">PT</span> 즉시</li>
+<li><b>경련/발작</b>: 운동 평가 중 의심 징후 관찰 → <span class="badge badge-neuro">신경과</span> 즉시</li>
+</ul>
+</div>
+
+<div class="urgent-card">
+<h4>즉시 공유 — 신경학적 징후 (Neurological)</h4>
+<ul>
+<li><b>운동 퇴행</b>: 기존에 가능했던 이정표의 상실 → <span class="badge badge-neuro">신경과</span> + <span class="badge badge-team">전체 팀</span></li>
+<li><b>비대칭 긴장/운동</b>: 한쪽 사지 지속적 비사용, 편측 약화 → <span class="badge badge-neuro">신경과</span> + <span class="badge badge-pt">PT</span></li>
+<li><b>원시반사 다수 잔존</b>: 해당 연령 이후 다수 원시반사 지속 → <span class="badge badge-neuro">신경과</span> + <span class="badge badge-pt">PT</span></li>
+<li><b>진행성 근력 저하</b>: 점차 악화되는 근력/지구력 → <span class="badge badge-neuro">신경과</span> 즉시</li>
+<li><b>12개월 이전 강한 편측 우세</b>: 편측 신경학적 문제 의심 → <span class="badge badge-neuro">신경과</span></li>
+</ul>
+</div>
+
+<div class="urgent-card">
+<h4>즉시 공유 — 발달 정체 (Developmental Stagnation)</h4>
+<ul>
+<li><b>18개월 독립 보행 불가</b>: 최우선 의뢰 → <span class="badge badge-pt">PT</span> + <span class="badge badge-neuro">신경과</span></li>
+<li><b>언어 + 운동 동시 부재</b>: 수용언어 이해 + 운동 수행 모두 부재 → <span class="badge badge-team">전체 팀</span></li>
+<li><b>3개 이상 영역 동시 지연</b>: 자세+미세운동+운동기획 등 다영역 → <span class="badge badge-team">팀 회의</span></li>
+<li><b>기능적 놀이 전반 부재</b>: 도구 사용, 모방, 관념화 모두 부재 → <span class="badge badge-ot">OT</span> + <span class="badge badge-slp">SLP</span></li>
+</ul>
+</div>
+
+<div class="urgent-card">
+<h4>즉시 공유 — 감각 관련 (Sensory)</h4>
+<ul>
+<li><b>전 질감 거부 + 체중 미증가</b>: 영양 위험 → <span class="badge badge-slp">SLP</span> + 소아과</li>
+<li><b>전신 촉각 방어(tactile defensiveness)</b>: 일상 활동 심각 제한 → <span class="badge badge-ot">OT</span> SI</li>
+<li><b>전정 자극 극단 반응</b>: 움직임 공포 또는 위험한 자극 추구 → <span class="badge badge-ot">OT</span> SI</li>
+<li><b>자해 행동</b>: 머리 박기, 물어뜯기 등 → <span class="badge badge-team">전체 팀</span> + 행동 전문가</li>
+</ul>
+</div>
+
+<div class="urgent-card">
+<h4>즉시 공유 — 사회참여 관련 (Participation)</h4>
+<ul>
+<li><b>학업 수행 전반 불가</b>: 글씨 판독 불가, 필기 지구력 극도 저하 → <span class="badge badge-ot">OT</span> + 교육팀</li>
+<li><b>또래 활동 지속 회피</b>: 체육/놀이 참여 거부 + 사회적 위축 → <span class="badge badge-team">전체 팀</span></li>
+<li><b>ADL 전반 타인 의존</b>: 연령 대비 자립 기술 심각 지연 → <span class="badge badge-ot">OT</span></li>
+<li><b>양육자 번아웃 징후</b>: 돌봄 부담 과중 호소 → <span class="badge badge-team">사회복지</span> 연계</li>
+</ul>
+</div>
+
+<div class="urgent-card">
+<h4>팀 공유 시 포함해야 할 정보</h4>
+<ul>
+<li><b>아동 기본 정보</b>: 이름, 생년월일, 진단명</li>
+<li><b>관찰 내용</b>: 무엇을, 언제, 어떤 맥락에서 관찰했는가</li>
+<li><b>관련 영역 점수</b>: SI 체크리스트의 해당 영역 수행률</li>
+<li><b>판단 근거</b>: Red Flag 기준 중 어디에 해당하는가</li>
+<li><b>긴급도</b>: 즉시 / 24시간 이내 / 다음 팀 회의</li>
+<li><b>제안 사항</b>: 추가 평가 필요 항목, 협력 가능 영역</li>
+</ul>
+</div>
+</div>
+
+<div class="info-box critical" style="margin-top:20px">
+<h4>팀 공유 원칙</h4>
+<ul>
+<li><b>관찰 기반</b>: 추측이 아닌 관찰된 사실을 기반으로 공유</li>
+<li><b>양육자 포함</b>: 양육자의 보고와 우려를 반드시 포함</li>
+<li><b>강점 함께</b>: Red Flag과 함께 아동의 강점 영역도 공유</li>
+<li><b>기록 유지</b>: 공유 일시, 대상, 내용을 반드시 기록</li>
+<li><b>추적 관찰</b>: 의뢰 후 결과 확인 및 중재 계획 반영</li>
+</ul>
+</div>
+</div>
+</div>
+
+<script>
+function showSec(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+
+<a href="../" id="pwa-back-btn" title="메인으로 돌아가기" style="
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:2147483647;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#1a1a1a;
+  color:#fff;
+  border:2px solid #fff;
+  border-radius:30px;
+  padding:12px 20px 12px 16px;
+  font-size:14px;
+  font-weight:700;
+  text-decoration:none;
+  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+">
+  <span style="font-size:18px;line-height:1;">←</span>
+  <span>메인으로</span>
+</a>
+
+</body>
+</html>

@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CDA-MSC · 다회기 비교 분석</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#37474F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CDA-MSC">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;background:#f0f2f5;color:#333;font-size:14px;line-height:1.5}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+
+/* ── TOP BAR ── */
+.top-bar{background:#37474F;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.back-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:4px;font-size:12px;font-weight:600;white-space:nowrap}
+.back-btn:hover{background:rgba(255,255,255,.25)}
+.top-title{flex:1;text-align:center}
+.top-title h1{font-size:17px;color:#fff;line-height:1.2}
+.top-title .sub{font-size:11px;color:rgba(255,255,255,.65);letter-spacing:.3px}
+
+/* ── MAIN WRAP ── */
+.wrap{max-width:900px;margin:0 auto;padding:16px 12px 40px}
+
+/* ── CHILD NAME ── */
+.child-row{background:#fff;border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.child-row label{font-size:12px;color:#777;white-space:nowrap}
+.child-row input{border:1px solid #ddd;border-radius:4px;padding:5px 10px;font-size:14px;font-family:inherit;flex:1;outline:none}
+.child-row input:focus{border-color:#37474F}
+
+/* ── DROP ZONE ── */
+.drop-zone{background:#fff;border:2px dashed #ccc;border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:14px}
+.drop-zone.drag-over{border-color:#37474F;background:#f0f4f8}
+.drop-zone .dz-icon{font-size:32px;margin-bottom:8px;color:#aaa}
+.drop-zone p{font-size:13px;color:#888}
+.drop-zone p b{color:#37474F}
+#fileInput{display:none}
+
+/* ── SESSIONS LIST ── */
+.sessions-wrap{margin-bottom:18px}
+.session-card{background:#fff;border-radius:8px;padding:12px 14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.session-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.session-label{font-size:13px;font-weight:700;color:#37474F;white-space:nowrap}
+.session-date{font-size:12px;color:#888}
+.badges{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;color:#fff;display:flex;align-items:center;gap:4px}
+.badge.obs1{background:#E55D62}
+.badge.obs2{background:#FAAB23}
+.badge.std1{background:#7DB0C7}
+.badge.std2{background:#9b7dc7}
+.del-btn{background:none;border:1px solid #ddd;border-radius:3px;font-size:11px;color:#999;padding:1px 6px}
+.del-btn:hover{background:#fee;color:#c00;border-color:#c00}
+
+/* ── ACTION BAR ── */
+.action-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.act-btn{padding:8px 18px;border:none;border-radius:5px;font-size:13px;font-weight:600;color:#fff}
+.act-btn.primary{background:#37474F}
+.act-btn.primary:hover{background:#263238}
+.act-btn.xlsx{background:#217346}
+.act-btn.xlsx:hover{background:#1a5c38}
+.act-btn:disabled{opacity:.4;cursor:not-allowed}
+.act-btn.print{background:#546e7a}
+.act-btn.print:hover{background:#455a64}
+
+@media print{.top-bar,.action-bar,.drop-zone,.tabs-bar,.del-btn,#pwa-back-btn{display:none!important}body{background:#fff}}
+
+/* ── TABS ── */
+.tabs-bar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.tab-btn{padding:7px 14px;border:1px solid #ccc;border-radius:5px;font-size:12px;font-weight:600;background:#fff;color:#555;transition:.15s}
+.tab-btn.active{background:#37474F;color:#fff;border-color:#37474F}
+.tab-btn:hover:not(.active){background:#eceff1}
+
+/* ── TABLE COMMON ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:400px;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+th{background:#E3F2FD;font-size:12px;font-weight:700;padding:8px 10px;text-align:center;border-bottom:2px solid #90CAF9;white-space:nowrap}
+th.row-head{background:#ECEFF1;text-align:left;min-width:140px}
+td{font-size:12px;padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+td.row-label{text-align:left;color:#555;font-weight:600;background:#fafafa}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f5f8ff}
+tr:hover td.row-label{background:#f0f3f7}
+
+/* ── CHANGE ARROWS ── */
+.chg{font-size:11px;font-weight:700;margin-left:3px}
+.chg.up2{color:#1B5E20}.chg.up1{color:#388E3C}
+.chg.same{color:#9E9E9E}.chg.dn1{color:#E65100}.chg.dn2{color:#B71C1C}
+
+/* ── SR BADGES ── */
+.sr-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;color:#fff}
+.sr-badge.SOR{background:#E55D62}.sr-badge.SUR{background:#78909C}.sr-badge.SEEK{background:#43A047}.sr-badge.MIX{background:#7B1FA2}
+.sr-badge.none{background:#e0e0e0;color:#888}
+
+/* ── CSP2 COLORS ── */
+.bucket-1{color:#1565C0;font-weight:700}.bucket-2{color:#2E7D32;font-weight:700}
+.bucket-3{color:#E65100;font-weight:700}.bucket-4{color:#B71C1C;font-weight:700}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px 20px;color:#aaa;font-size:13px}
+.section-title{font-size:13px;font-weight:700;color:#37474F;margin:18px 0 8px;padding-bottom:5px;border-bottom:2px solid #CFD8DC}
+
+/* ── CHARTS ── */
+.chart-box{background:#fff;border-radius:8px;padding:14px 12px 10px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow-x:auto}
+.chart-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.chart-row .chart-box{flex:1;min-width:240px;margin-bottom:0}
+.chart-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:10px;color:#555;line-height:1.6}
+.chart-legend span{white-space:nowrap}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;z-index:9999;display:none;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="location.href='../'">← 홈</button>
+  <div class="top-title">
+    <h1>CDA-MSC · 다회기 비교 분석</h1>
+    <div class="sub">Multi-Session Comparison — SI-Cog CDA</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Child name -->
+  <div class="child-row">
+    <label>아동 이름</label>
+    <input type="text" id="childName" placeholder="파일 로드 시 자동 입력됩니다">
+  </div>
+
+  <!-- Drop zone -->
+  <div class="drop-zone" id="dropZone">
+    <div class="dz-icon">📂</div>
+    <p><b>JSON 파일을 여기에 드래그하거나 클릭하여 업로드</b></p>
+    <p>OBS1 · OBS2 · K-CSP2 · K-DTVP-2 파일 (여러 개 동시 선택 가능)</p>
+  </div>
+  <input type="file" id="fileInput" accept=".json" multiple>
+
+  <!-- Sessions -->
+  <div class="sessions-wrap" id="sessionsWrap"></div>
+
+  <!-- Action bar -->
+  <div class="action-bar">
+    <button class="act-btn primary" id="analyzeBtn" onclick="buildTabs()" disabled>분석 보기</button>
+    <button class="act-btn xlsx" id="xlsxBtn" onclick="exportXlsx()" disabled>Excel 내보내기</button>
+    <button class="act-btn print" id="printBtn" onclick="window.print()" disabled>인쇄</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-bar" id="tabsBar" style="display:none"></div>
+
+  <!-- Content -->
+  <div id="tabContent"></div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA STORE
+// ═══════════════════════════════════════════════════════════
+// sessions: { dateKey: { date, files: { obs1, obs2, std1, std2 } } }
+const sessions = {};
+let activeTab = null;
+
+// ═══════════════════════════════════════════════════════════
+// FILE DETECTION & PARSING
+// ═══════════════════════════════════════════════════════════
+function detectType(json) {
+  const v = json.version || '';
+  if (v === 'si_motor_v3' || v === 'si_motor_v3_sr') return 'obs1';
+  if (v === 'v5' && json.sectionScores) return 'obs2';
+  if (v === 'std1_csp2_v1') return 'std1';
+  if (v === 'std2_dtvp2_v1') return 'std2';
+  return null;
+}
+
+function extractDate(type, json) {
+  if (type === 'obs1') return json.patient?.evalDate || '';
+  if (type === 'obs2') return json.patient?.edate || '';
+  if (type === 'std1') return json.patient?.evalDate || '';
+  if (type === 'std2') return json.patient?.evalDate || '';
+  return '';
+}
+
+function extractName(type, json) {
+  return json.patient?.name || '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// OBS1 DOMAIN ACHRATE
+// ═══════════════════════════════════════════════════════════
+const OBS1_DOMAINS = [
+  { id: 'postural', label: '자세조절' },
+  { id: 'bilateral', label: '양측협응' },
+  { id: 'praxis', label: '운동기획' },
+  { id: 'vmi', label: '시각-운동통합' },
+  { id: 'fine', label: '미세운동' },
+  { id: 'gross', label: '대근육운동' },
+  { id: 'oral', label: '구강-운동' }
+];
+
+function computeObs1DomainAch(json) {
+  const result = {};
+  const age = json.currentAge;
+  const scores = json.scores || {};
+  for (const d of OBS1_DOMAINS) {
+    let sum = 0, count = 0;
+    for (let i = 0; i < 20; i++) {
+      const key = `r_${age}_${d.id}_${i}`;
+      if (key in scores && scores[key] !== undefined && scores[key] !== null) {
+        sum += scores[key];
+        count++;
+      }
+    }
+    result[d.id] = count === 0 ? null : Math.round(sum / (count * 4) * 100);
+  }
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════
+// OBS1 SR TYPE INFERENCE
+// ═══════════════════════════════════════════════════════════
+const SR_SYSTEMS = [
+  { prefix: 'VS', label: '전정' },
+  { prefix: 'PR', label: '고유수용' },
+  { prefix: 'TA', label: '촉각' },
+  { prefix: 'VI', label: '시각' },
+  { prefix: 'AU', label: '청각' },
+  { prefix: 'AR', label: '상태조절' }
+];
+
+function inferSrType(entry) {
+  if (!entry) return null;
+  const s = entry.score;
+  if (s === null || s === 0 || s === 4) return null;
+  // responseType array first
+  if (entry.responseType && entry.responseType.length > 0 && entry.responseType[0]) {
+    return entry.responseType[0];
+  }
+  const dir = entry.behaviorDirection || '';
+  if (dir === '회피/억제') return 'SOR';
+  if (dir === '접근/반복') return 'SEEK';
+  if (dir === '무반응/둔감') return 'SUR';
+  // fallback heuristic
+  const lat = entry.latency || '';
+  const rec = entry.recoveryTime || '';
+  if (['즉시','5초 이내'].includes(lat) && ['2-5분','5분 이상','회복 안 됨/중단'].includes(rec)) return 'SOR';
+  if (['30초 이상','지연/무반응'].includes(lat)) return 'SUR';
+  return null;
+}
+
+function computeObs1SR(json) {
+  const sr = json.sr || {};
+  const result = {};
+  for (const sys of SR_SYSTEMS) {
+    const types = new Set();
+    for (const [key, entry] of Object.entries(sr)) {
+      if (!key.startsWith('SR-' + sys.prefix + '-')) continue;
+      const t = inferSrType(entry);
+      if (t) types.add(t);
+    }
+    if (types.size === 0) result[sys.prefix] = null;
+    else if (types.size === 1) result[sys.prefix] = [...types][0];
+    else result[sys.prefix] = 'MIX';
+  }
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILE LOADING
+// ═══════════════════════════════════════════════════════════
+async function loadFiles(files) {
+  let loaded = 0;
+  for (const file of files) {
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      const type = detectType(json);
+      if (!type) { toast('인식 불가: ' + file.name); continue; }
+      const date = extractDate(type, json);
+      const dateKey = date || ('no-date-' + Date.now());
+      if (!sessions[dateKey]) sessions[dateKey] = { date, files: {} };
+      sessions[dateKey].files[type] = json;
+      // auto-fill child name
+      const name = extractName(type, json);
+      if (name && !document.getElementById('childName').value) {
+        document.getElementById('childName').value = name;
+      }
+      loaded++;
+    } catch(e) {
+      toast('오류: ' + file.name);
+    }
+  }
+  if (loaded) { renderSessions(); toast(loaded + '개 파일 로드됨'); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER SESSIONS
+// ═══════════════════════════════════════════════════════════
+function getSortedSessions() {
+  return Object.entries(sessions)
+    .sort(([, a], [, b]) => (a.date || '').localeCompare(b.date || ''));
+}
+
+function renderSessions() {
+  const wrap = document.getElementById('sessionsWrap');
+  const sorted = getSortedSessions();
+  if (!sorted.length) { wrap.innerHTML = ''; updateBtns(); return; }
+  wrap.innerHTML = sorted.map(([key, sess], idx) => {
+    const n = idx + 1;
+    const types = ['obs1','obs2','std1','std2'];
+    const labels = { obs1:'OBS1', obs2:'OBS2', std1:'K-CSP2', std2:'K-DTVP-2' };
+    const badges = types.filter(t => sess.files[t]).map(t =>
+      `<span class="badge ${t}">${labels[t]}<button class="del-btn" onclick="deleteFile('${key}','${t}')">×</button></span>`
+    ).join('');
+    return `<div class="session-card">
+      <div class="session-header">
+        <span class="session-label">${n}회기</span>
+        <span class="session-date">${sess.date || '날짜 없음'}</span>
+        <div class="badges">${badges}</div>
+      </div>
+    </div>`;
+  }).join('');
+  updateBtns();
+}
+
+function deleteFile(key, type) {
+  if (!sessions[key]) return;
+  delete sessions[key].files[type];
+  if (!Object.keys(sessions[key].files).length) delete sessions[key];
+  renderSessions();
+  document.getElementById('tabsBar').style.display = 'none';
+  document.getElementById('tabContent').innerHTML = '';
+}
+
+function updateBtns() {
+  const has = Object.keys(sessions).length > 0;
+  document.getElementById('analyzeBtn').disabled = !has;
+  document.getElementById('xlsxBtn').disabled = !has;
+  document.getElementById('printBtn').disabled = !has;
+}
+
+// ═══════════════════════════════════════════════════════════
+// DRAG & DROP
+// ═══════════════════════════════════════════════════════════
+const dz = document.getElementById('dropZone');
+dz.addEventListener('click', () => document.getElementById('fileInput').click());
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag-over'); loadFiles(e.dataTransfer.files); });
+document.getElementById('fileInput').addEventListener('change', e => loadFiles(e.target.files));
+
+// ═══════════════════════════════════════════════════════════
+// TABS & ANALYSIS
+// ═══════════════════════════════════════════════════════════
+const TAB_DEFS = [
+  { id: 'summary', label: '요약 비교',  check: () => true },
+  { id: 'obs1mc',  label: 'OBS1 MC',    check: () => getSortedSessions().some(([,s]) => s.files.obs1) },
+  { id: 'obs1sr',  label: 'OBS1 SR',    check: () => getSortedSessions().some(([,s]) => s.files.obs1) },
+  { id: 'obs2',    label: 'OBS2 인지',   check: () => getSortedSessions().some(([,s]) => s.files.obs2) },
+  { id: 'std1',    label: 'K-CSP2',      check: () => getSortedSessions().some(([,s]) => s.files.std1) },
+  { id: 'std2',    label: 'K-DTVP-2',   check: () => getSortedSessions().some(([,s]) => s.files.std2) }
+];
+
+function buildTabs() {
+  const bar = document.getElementById('tabsBar');
+  bar.innerHTML = '';
+  bar.style.display = 'flex';
+  const visible = TAB_DEFS.filter(t => t.check());
+  visible.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (activeTab === t.id ? ' active' : '');
+    btn.textContent = t.label;
+    btn.onclick = () => { activeTab = t.id; buildTabs(); };
+    bar.appendChild(btn);
+  });
+  if (!activeTab || !visible.find(t => t.id === activeTab)) {
+    activeTab = visible[0]?.id || 'summary';
+    buildTabs(); return;
+  }
+  renderTab(activeTab);
+}
+
+function renderTab(id) {
+  const el = document.getElementById('tabContent');
+  if (id === 'summary') el.innerHTML = buildSummary();
+  else if (id === 'obs1mc') el.innerHTML = buildObs1MC();
+  else if (id === 'obs1sr') el.innerHTML = buildObs1SR();
+  else if (id === 'obs2') el.innerHTML = buildObs2();
+  else if (id === 'std1') el.innerHTML = buildSTD1();
+  else if (id === 'std2') el.innerHTML = buildSTD2();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CHANGE INDICATOR
+// ═══════════════════════════════════════════════════════════
+function changeArrow(first, last) {
+  if (first === null || last === null || first === undefined || last === undefined) return '';
+  const d = last - first;
+  if (d >= 15) return '<span class="chg up2">↑↑</span>';
+  if (d >= 5)  return '<span class="chg up1">↑</span>';
+  if (d <= -15) return '<span class="chg dn2">↓↓</span>';
+  if (d <= -5)  return '<span class="chg dn1">↓</span>';
+  return '<span class="chg same">→</span>';
+}
+
+// ═══════════════════════════════════════════════════════════
+// SVG CHART HELPERS
+// ═══════════════════════════════════════════════════════════
+const SESS_COLORS=['#E55D62','#FAAB23','#7DB0C7','#9b7dc7','#43A047','#F57F17','#0288D1','#6D4C41','#00838F','#AD1457'];
+
+function svgE(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function lineChart(datasets,xLabels,opts={}){
+  const W=500,H=200,px=50,py=14,pw=W-px-14,ph=H-py-38;
+  const yMin=opts.yMin??0,yMax=opts.yMax??100;
+  const n=xLabels.length;
+  const xPos=i=>px+(n>1?pw*i/(n-1):pw/2);
+  const yPos=v=>py+ph*(1-(v-yMin)/(yMax-yMin));
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block">`;
+  for(const gv of [0,25,50,75,100].filter(v=>v>=yMin&&v<=yMax)){
+    const gy=yPos(gv);
+    svg+=`<line x1="${px}" y1="${gy.toFixed(1)}" x2="${px+pw}" y2="${gy.toFixed(1)}" stroke="#ececec" stroke-width="1"/>`;
+    svg+=`<text x="${px-4}" y="${(gy+3.5).toFixed(1)}" text-anchor="end" font-size="9" fill="#bbb">${gv}</text>`;
+  }
+  svg+=`<line x1="${px}" y1="${(py+ph).toFixed(1)}" x2="${px+pw}" y2="${(py+ph).toFixed(1)}" stroke="#ccc" stroke-width="1"/>`;
+  xLabels.forEach((l,i)=>svg+=`<text x="${xPos(i).toFixed(1)}" y="${(py+ph+13).toFixed(1)}" text-anchor="middle" font-size="9" fill="#888">${svgE(l)}</text>`);
+  for(const ds of datasets){
+    let d='',pen=false;
+    ds.values.forEach((v,i)=>{
+      if(v===null||v===undefined){pen=false;return;}
+      const x=xPos(i).toFixed(1),y=yPos(v).toFixed(1);
+      d+=pen?` L${x} ${y}`:`M${x} ${y}`;pen=true;
+    });
+    if(d)svg+=`<path d="${d}" fill="none" stroke="${ds.color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    ds.values.forEach((v,i)=>{
+      if(v===null||v===undefined)return;
+      const x=xPos(i).toFixed(1),y=yPos(v).toFixed(1);
+      svg+=`<circle cx="${x}" cy="${y}" r="4" fill="${ds.color}" stroke="#fff" stroke-width="1.5"/>`;
+      if(n<=6)svg+=`<text x="${x}" y="${(yPos(v)-7).toFixed(1)}" text-anchor="middle" font-size="9" fill="${ds.color}" font-weight="700">${v}</text>`;
+    });
+  }
+  return svg+'</svg>';
+}
+
+function radarChart(datasets,axisLabels){
+  const N=axisLabels.length;
+  if(N<3)return'';
+  const W=280,H=260,cx=140,cy=128,R=85;
+  const ang=i=>-Math.PI/2+2*Math.PI/N*i;
+  const pt=(r,i)=>[cx+r*Math.cos(ang(i)),cy+r*Math.sin(ang(i))];
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block">`;
+  for(const f of [0.25,0.5,0.75,1]){
+    const pts=axisLabels.map((_,i)=>pt(R*f,i));
+    svg+=`<polygon points="${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${f===1?'#ccc':'#ececec'}" stroke-width="1"/>`;
+    if(f<1)svg+=`<text x="${cx}" y="${(cy-R*f-2).toFixed(1)}" text-anchor="middle" font-size="8" fill="#ccc">${Math.round(f*100)}</text>`;
+  }
+  axisLabels.forEach((_,i)=>{
+    const[x,y]=pt(R,i);
+    svg+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#e0e0e0" stroke-width="1"/>`;
+    const[lx,ly]=pt(R+16,i);
+    const anchor=lx<cx-4?'end':lx>cx+4?'start':'middle';
+    svg+=`<text x="${lx.toFixed(1)}" y="${(ly+3.5).toFixed(1)}" text-anchor="${anchor}" font-size="9" fill="#666">${svgE(axisLabels[i])}</text>`;
+  });
+  for(const ds of datasets){
+    const pts=ds.values.map((v,i)=>pt(R*Math.max(0,Math.min(100,v??0))/100,i));
+    svg+=`<polygon points="${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="${ds.color}" fill-opacity="0.18" stroke="${ds.color}" stroke-width="2"/>`;
+    pts.forEach(([x,y])=>svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="${ds.color}" stroke="#fff" stroke-width="1"/>`);
+  }
+  return svg+'</svg>';
+}
+
+function heatmapSVG(rowLabels,colLabels,cells){
+  const RH=28,CW=Math.max(50,Math.min(80,Math.floor(340/Math.max(colLabels.length,1))));
+  const LW=86,W=LW+CW*colLabels.length+2,H=22+RH*rowLabels.length+4;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block">`;
+  colLabels.forEach((l,ci)=>svg+=`<text x="${(LW+CW*ci+CW/2).toFixed(1)}" y="15" text-anchor="middle" font-size="9" fill="#555" font-weight="700">${svgE(l)}</text>`);
+  rowLabels.forEach((rl,ri)=>{
+    const y=22+RH*ri;
+    svg+=`<text x="${LW-4}" y="${(y+RH/2+3.5).toFixed(1)}" text-anchor="end" font-size="9" fill="#555">${svgE(rl)}</text>`;
+    colLabels.forEach((_,ci)=>{
+      const cell=cells[ri]?.[ci]||{text:'-',bg:'#f5f5f5',fg:'#ccc'};
+      svg+=`<rect x="${LW+CW*ci+1}" y="${y+1}" width="${CW-2}" height="${RH-2}" rx="3" fill="${cell.bg}"/>`;
+      svg+=`<text x="${(LW+CW*ci+CW/2).toFixed(1)}" y="${(y+RH/2+3.5).toFixed(1)}" text-anchor="middle" font-size="9" fill="${cell.fg}" font-weight="700">${svgE(cell.text)}</text>`;
+    });
+  });
+  return svg+'</svg>';
+}
+
+function chartBox(title,svgHtml,legend=[]){
+  const t=title?`<div style="font-size:11px;font-weight:700;color:#37474F;margin-bottom:6px">${svgE(title)}</div>`:'';
+  const leg=legend.length?`<div class="chart-legend">${legend.map(l=>`<span><svg width="20" height="10" style="vertical-align:middle;margin-right:3px"><line x1="0" y1="5" x2="20" y2="5" stroke="${l.color}" stroke-width="2.5" stroke-linecap="round"/></svg>${svgE(l.label)}</span>`).join('')}</div>`:'';
+  return `<div class="chart-box">${t}${svgHtml}${leg}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// SUMMARY TAB
+// ═══════════════════════════════════════════════════════════
+function buildSummary() {
+  const sorted = getSortedSessions();
+  const xLabels = sorted.map((_,i)=>`${i+1}회기`);
+  const headers = sorted.map(([,s],i) =>
+    `<th>${i+1}회기<br><span style="font-weight:400;color:#555">${s.date||'-'}</span></th>`
+  ).join('');
+
+  let rows = '';
+
+  const hasObs1 = sorted.some(([,s]) => s.files.obs1);
+  if (hasObs1) {
+    rows += `<tr><td class="row-label" colspan="${sorted.length+1}" style="background:#FFEBEE;color:#B71C1C;font-weight:700;font-size:11px">▸ OBS1 운동 능력 (달성률 %)</td></tr>`;
+    for (const d of OBS1_DOMAINS) {
+      const vals = sorted.map(([,s]) => s.files.obs1 ? computeObs1DomainAch(s.files.obs1)[d.id] : null);
+      const first = vals.find(v => v !== null);
+      const last = [...vals].reverse().find(v => v !== null);
+      rows += `<tr><td class="row-label">${d.label}</td>${vals.map((v,i) => {
+        const arrow = (i === vals.length-1) ? changeArrow(first, last) : '';
+        return `<td>${v !== null ? v+'%' : '-'}${arrow}</td>`;
+      }).join('')}</tr>`;
+    }
+  }
+
+  const hasObs2 = sorted.some(([,s]) => s.files.obs2);
+  if (hasObs2) {
+    const allSections = new Set();
+    sorted.forEach(([,s]) => { if(s.files.obs2) Object.keys(s.files.obs2.sectionScores||{}).forEach(k => allSections.add(k)); });
+    rows += `<tr><td class="row-label" colspan="${sorted.length+1}" style="background:#FFF8E1;color:#E65100;font-weight:700;font-size:11px">▸ OBS2 인지 (달성률 %)</td></tr>`;
+    for (const sec of allSections) {
+      const vals = sorted.map(([,s]) => s.files.obs2?.sectionScores?.[sec]?.achRate ?? null);
+      const first = vals.find(v => v !== null);
+      const last = [...vals].reverse().find(v => v !== null);
+      rows += `<tr><td class="row-label">${sec}</td>${vals.map((v,i) => {
+        const arrow = (i === vals.length-1) ? changeArrow(first, last) : '';
+        return `<td>${v !== null ? v+'%' : '-'}${arrow}</td>`;
+      }).join('')}</tr>`;
+    }
+  }
+
+  const hasStd1 = sorted.some(([,s]) => s.files.std1);
+  if (hasStd1) {
+    const allSec = new Set();
+    sorted.forEach(([,s]) => { if(s.files.std1) Object.keys(s.files.std1.sections||{}).forEach(k => allSec.add(k)); });
+    rows += `<tr><td class="row-label" colspan="${sorted.length+1}" style="background:#E3F2FD;color:#0D47A1;font-weight:700;font-size:11px">▸ K-CSP2 분류</td></tr>`;
+    for (const sec of allSec) {
+      const vals = sorted.map(([,s]) => s.files.std1?.sections?.[sec] || null);
+      rows += `<tr><td class="row-label">${sec}</td>${vals.map(v =>
+        `<td class="bucket-${v?.bucket||0}">${v ? (v.classText||'-') : '-'}</td>`
+      ).join('')}</tr>`;
+    }
+  }
+
+  const hasStd2 = sorted.some(([,s]) => s.files.std2);
+  if (hasStd2) {
+    const allComp = new Set();
+    sorted.forEach(([,s]) => { (s.files.std2?.standardScores?.composites||[]).forEach(c => allComp.add(c.key+':'+c.name)); });
+    rows += `<tr><td class="row-label" colspan="${sorted.length+1}" style="background:#EDE7F6;color:#4A148C;font-weight:700;font-size:11px">▸ K-DTVP-2 합성 지수</td></tr>`;
+    for (const ck of allComp) {
+      const [key, name] = ck.split(':');
+      const vals = sorted.map(([,s]) => { const c=(s.files.std2?.standardScores?.composites||[]).find(x=>x.key===key); return c?.index??null; });
+      const first = vals.find(v => v !== null);
+      const last = [...vals].reverse().find(v => v !== null);
+      rows += `<tr><td class="row-label">${name}</td>${vals.map((v,i) => {
+        const arrow = (i === vals.length-1) ? changeArrow(first, last) : '';
+        return `<td>${v !== null ? v : '-'}${arrow}</td>`;
+      }).join('')}</tr>`;
+    }
+  }
+
+  // Trend chart
+  const chartDs = [];
+  if (hasObs1) {
+    const vals = sorted.map(([,s]) => {
+      if (!s.files.obs1) return null;
+      const ach = computeObs1DomainAch(s.files.obs1);
+      const vs = OBS1_DOMAINS.map(d => ach[d.id]).filter(v => v !== null);
+      return vs.length ? Math.round(vs.reduce((a,b)=>a+b) / vs.length) : null;
+    });
+    chartDs.push({label:'OBS1 MC 평균', values:vals, color:'#E55D62'});
+  }
+  if (hasObs2) {
+    const allS = new Set(); sorted.forEach(([,s])=>{if(s.files.obs2)Object.keys(s.files.obs2.sectionScores||{}).forEach(k=>allS.add(k));});
+    const vals = sorted.map(([,s]) => {
+      if (!s.files.obs2) return null;
+      const sc = s.files.obs2.sectionScores || {};
+      const vs = [...allS].map(k=>sc[k]?.achRate??null).filter(v=>v!==null);
+      return vs.length ? Math.round(vs.reduce((a,b)=>a+b) / vs.length) : null;
+    });
+    chartDs.push({label:'OBS2 인지 평균', values:vals, color:'#FAAB23'});
+  }
+  if (hasStd2) {
+    const vals = sorted.map(([,s]) => { const c=(s.files.std2?.standardScores?.composites||[]).find(x=>x.key==='GVP'); return c?.index??null; });
+    if (vals.some(v=>v!==null)) chartDs.push({label:'K-DTVP-2 GVP지수', values:vals, color:'#9b7dc7'});
+  }
+  const chartHtml = chartDs.length && sorted.length >= 2
+    ? chartBox('회기별 종합 추이', lineChart(chartDs, xLabels), chartDs.map(d=>({color:d.color,label:d.label})))
+    : '';
+
+  return chartHtml + `<div class="tbl-wrap"><table>
+    <thead><tr><th class="row-head">항목</th>${headers}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// OBS1 MC TAB
+// ═══════════════════════════════════════════════════════════
+function buildObs1MC() {
+  const sorted = getSortedSessions().filter(([,s]) => s.files.obs1);
+  if (!sorted.length) return '<div class="empty">OBS1 데이터 없음</div>';
+  const allSorted = getSortedSessions();
+  const xLabels = allSorted.map((_,i)=>`${i+1}회기`);
+  const headers = allSorted.map(([,s],i) =>
+    `<th>${i+1}회기<br><span style="font-weight:400;color:#555">${s.date||'-'}</span></th>`
+  ).join('');
+  let rows = '';
+  for (const d of OBS1_DOMAINS) {
+    const vals = allSorted.map(([,s]) => s.files.obs1 ? computeObs1DomainAch(s.files.obs1)[d.id] : null);
+    const first = vals.find(v => v !== null);
+    const last = [...vals].reverse().find(v => v !== null);
+    rows += `<tr><td class="row-label">${d.label}</td>${vals.map((v,i) => {
+      const arrow = (i === vals.length-1) ? changeArrow(first, last) : '';
+      const color = v===null ? '#ccc' : v>=75 ? '#2E7D32' : v>=50 ? '#F57F17' : '#C62828';
+      return `<td style="color:${color};font-weight:600">${v !== null ? v+'%' : '-'}${arrow}</td>`;
+    }).join('')}</tr>`;
+  }
+
+  // Line chart
+  const mcDs = OBS1_DOMAINS.map((d,di)=>({
+    label:d.label, color:SESS_COLORS[di%SESS_COLORS.length],
+    values:allSorted.map(([,s])=>s.files.obs1?computeObs1DomainAch(s.files.obs1)[d.id]:null)
+  }));
+  const lineHtml = chartBox('도메인별 달성률 추이 (%)', lineChart(mcDs, xLabels),
+    OBS1_DOMAINS.map((d,i)=>({color:SESS_COLORS[i%SESS_COLORS.length], label:d.label})));
+
+  // Radar: first vs last
+  let radarHtml = '';
+  if (sorted.length >= 2) {
+    const firstAch = computeObs1DomainAch(sorted[0][1].files.obs1);
+    const lastAch  = computeObs1DomainAch(sorted[sorted.length-1][1].files.obs1);
+    const rDs = [
+      {label:`1회기 (${sorted[0][1].date||'-'})`, values:OBS1_DOMAINS.map(d=>firstAch[d.id]??0), color:'#78909C'},
+      {label:`최근 (${sorted[sorted.length-1][1].date||'-'})`, values:OBS1_DOMAINS.map(d=>lastAch[d.id]??0), color:'#E55D62'}
+    ];
+    radarHtml = chartBox('초기 vs 최근', radarChart(rDs, OBS1_DOMAINS.map(d=>d.label)),
+      rDs.map(d=>({color:d.color, label:d.label})));
+  }
+
+  const chartSection = allSorted.length >= 2
+    ? `<div class="chart-row">${lineHtml}${radarHtml}</div>`
+    : '';
+
+  return chartSection + `<div class="section-title">OBS1 운동 능력 (MC) 도메인별 달성률</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th class="row-head">도메인</th>${headers}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// OBS1 SR TAB
+// ═══════════════════════════════════════════════════════════
+function buildObs1SR() {
+  const allSorted = getSortedSessions();
+  const colLabels = allSorted.map((_,i)=>`${i+1}회기`);
+  const headers = allSorted.map(([,s],i) =>
+    `<th>${i+1}회기<br><span style="font-weight:400;color:#555">${s.date||'-'}</span></th>`
+  ).join('');
+  let rows = '';
+  for (const sys of SR_SYSTEMS) {
+    const vals = allSorted.map(([,s]) => {
+      if (!s.files.obs1) return null;
+      return computeObs1SR(s.files.obs1)[sys.prefix];
+    });
+    rows += `<tr><td class="row-label">${sys.label} (${sys.prefix})</td>${vals.map(v => {
+      if (v === null) return '<td>-</td>';
+      return `<td><span class="sr-badge ${v}">${v}</span></td>`;
+    }).join('')}</tr>`;
+  }
+
+  // Heatmap
+  const srColor = {SOR:'#E55D62', SUR:'#78909C', SEEK:'#43A047', MIX:'#7B1FA2'};
+  const hmCells = SR_SYSTEMS.map(sys => allSorted.map(([,s]) => {
+    if (!s.files.obs1) return {text:'-', bg:'#f5f5f5', fg:'#ccc'};
+    const t = computeObs1SR(s.files.obs1)[sys.prefix];
+    if (!t) return {text:'-', bg:'#f5f5f5', fg:'#bbb'};
+    return {text:t, bg:srColor[t]||'#ccc', fg:'#fff'};
+  }));
+  const hmHtml = chartBox('감각반응 유형 변화',
+    heatmapSVG(SR_SYSTEMS.map(s=>s.label+' ('+s.prefix+')'), colLabels, hmCells));
+
+  return hmHtml + `<div class="section-title">OBS1 감각반응 (SR) 유형별 비교</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th class="row-head">감각 시스템</th>${headers}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+    <span class="sr-badge SOR">SOR</span> 과반응
+    <span class="sr-badge SUR">SUR</span> 저반응
+    <span class="sr-badge SEEK">SEEK</span> 감각추구
+    <span class="sr-badge MIX">MIX</span> 혼합
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// OBS2 TAB
+// ═══════════════════════════════════════════════════════════
+function buildObs2() {
+  const allSorted = getSortedSessions();
+  const allSections = new Set();
+  allSorted.forEach(([,s]) => { if(s.files.obs2) Object.keys(s.files.obs2.sectionScores||{}).forEach(k => allSections.add(k)); });
+  if (!allSections.size) return '<div class="empty">OBS2 데이터 없음</div>';
+  const xLabels = allSorted.map((_,i)=>`${i+1}회기`);
+  const headers = allSorted.map(([,s],i) =>
+    `<th>${i+1}회기<br><span style="font-weight:400;color:#555">${s.date||'-'}</span></th>`
+  ).join('');
+  let rows = '';
+  for (const sec of allSections) {
+    const vals = allSorted.map(([,s]) => s.files.obs2?.sectionScores?.[sec]?.achRate ?? null);
+    const rfs = allSorted.map(([,s]) => s.files.obs2?.sectionScores?.[sec]?.rfCount ?? null);
+    const first = vals.find(v => v !== null);
+    const last = [...vals].reverse().find(v => v !== null);
+    rows += `<tr><td class="row-label">${sec}</td>${vals.map((v,i) => {
+      const arrow = (i === vals.length-1) ? changeArrow(first, last) : '';
+      const rf = rfs[i];
+      const rfBadge = rf !== null && rf > 0 ? `<span style="font-size:10px;color:#C62828;margin-left:3px">RF${rf}</span>` : '';
+      const color = v===null ? '#ccc' : v>=75 ? '#2E7D32' : v>=50 ? '#F57F17' : '#C62828';
+      return `<td style="color:${color};font-weight:600">${v !== null ? v+'%' : '-'}${rfBadge}${arrow}</td>`;
+    }).join('')}</tr>`;
+  }
+
+  // Line chart
+  const obs2Ds = [...allSections].map((sec,si) => ({
+    label:sec, color:SESS_COLORS[si%SESS_COLORS.length],
+    values:allSorted.map(([,s])=>s.files.obs2?.sectionScores?.[sec]?.achRate??null)
+  }));
+  const lineHtml = allSorted.length >= 2
+    ? chartBox('영역별 달성률 추이 (%)', lineChart(obs2Ds, xLabels),
+        [...allSections].map((s,i)=>({color:SESS_COLORS[i%SESS_COLORS.length], label:s})))
+    : '';
+
+  return lineHtml + `<div class="section-title">OBS2 기초인지 영역별 달성률</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th class="row-head">영역</th>${headers}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>
+  <p style="font-size:11px;color:#888;margin-top:8px">RF = Red Flag 항목 수</p>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STD1 (K-CSP2) TAB
+// ═══════════════════════════════════════════════════════════
+function buildSTD1() {
+  const allSorted = getSortedSessions();
+  const allSec = new Set();
+  allSorted.forEach(([,s]) => { if(s.files.std1) Object.keys(s.files.std1.sections||{}).forEach(k => allSec.add(k)); });
+  if (!allSec.size) return '<div class="empty">K-CSP2 데이터 없음</div>';
+  const colLabels = allSorted.map((_,i)=>`${i+1}회기`);
+  const headers = allSorted.map(([,s],i) =>
+    `<th>${i+1}회기<br><span style="font-weight:400;color:#555">${s.date||'-'}</span></th>`
+  ).join('');
+  let rows = '';
+  for (const sec of allSec) {
+    const vals = allSorted.map(([,s]) => s.files.std1?.sections?.[sec] || null);
+    rows += `<tr><td class="row-label">${sec}</td>${vals.map(v => {
+      if (!v) return '<td>-</td>';
+      return `<td class="bucket-${v.bucket||0}">${v.classText||'-'}<br><span style="font-size:10px;font-weight:400;color:#777">${v.pctText||''}</span></td>`;
+    }).join('')}</tr>`;
+  }
+
+  // Heatmap
+  const bColor = {0:'#f5f5f5', 1:'#1565C0', 2:'#2E7D32', 3:'#E65100', 4:'#B71C1C'};
+  const bFg    = {0:'#bbb',    1:'#fff',    2:'#fff',    3:'#fff',    4:'#fff'};
+  const hmCells = [...allSec].map(sec => allSorted.map(([,s]) => {
+    const v = s.files.std1?.sections?.[sec];
+    if (!v) return {text:'-', bg:'#f5f5f5', fg:'#ccc'};
+    const b = v.bucket || 0;
+    return {text: v.classText||'-', bg: bColor[b]||'#f5f5f5', fg: bFg[b]||'#333'};
+  }));
+  const hmHtml = chartBox('K-CSP2 분류 변화', heatmapSVG([...allSec], colLabels, hmCells));
+
+  return hmHtml + `<div class="section-title">K-CSP2 감각처리 프로파일 분류</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th class="row-head">영역</th>${headers}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>
+  <div style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px">
+    <span class="bucket-1">■ 1수준: 또래와 유사</span>
+    <span class="bucket-2">■ 2수준: 경계선</span>
+    <span class="bucket-3">■ 3수준: 차이 있음</span>
+    <span class="bucket-4">■ 4수준: 현저한 차이</span>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STD2 (K-DTVP-2) TAB
+// ═══════════════════════════════════════════════════════════
+function buildSTD2() {
+  const allSorted = getSortedSessions();
+  const hasData = allSorted.some(([,s]) => s.files.std2);
+  if (!hasData) return '<div class="empty">K-DTVP-2 데이터 없음</div>';
+  const xLabels = allSorted.map((_,i)=>`${i+1}회기`);
+  const headers = allSorted.map(([,s],i) =>
+    `<th>${i+1}회기<br><span style="font-weight:400;color:#555">${s.date||'-'}</span></th>`
+  ).join('');
+
+  // Composites
+  const allComp = new Map();
+  allSorted.forEach(([,s]) => {
+    (s.files.std2?.standardScores?.composites||[]).forEach(c => { if(!allComp.has(c.key)) allComp.set(c.key, c.name); });
+  });
+  let compRows = '';
+  for (const [key, name] of allComp) {
+    const vals = allSorted.map(([,s]) => {
+      const c = (s.files.std2?.standardScores?.composites||[]).find(x => x.key===key);
+      return c ? { index: c.index, pct: c.percentile, level: c.level } : null;
+    });
+    const numVals = vals.map(v => v?.index ?? null);
+    const first = numVals.find(v => v !== null);
+    const last = [...numVals].reverse().find(v => v !== null);
+    compRows += `<tr><td class="row-label">${name}</td>${vals.map((v,i) => {
+      if (!v) return '<td>-</td>';
+      const arrow = (i === vals.length-1) ? changeArrow(first, last) : '';
+      return `<td>${v.index ?? '-'}${arrow}<br><span style="font-size:10px;color:#777">${v.pct !== undefined ? v.pct+'%ile' : ''}</span></td>`;
+    }).join('')}</tr>`;
+  }
+
+  // Subtests
+  const allSub = new Map();
+  allSorted.forEach(([,s]) => {
+    (s.files.std2?.standardScores?.subtests||[]).forEach(t => { if(!allSub.has(t.id)) allSub.set(t.id, t.name); });
+  });
+  let subRows = '';
+  for (const [id, name] of allSub) {
+    const vals = allSorted.map(([,s]) => {
+      const t = (s.files.std2?.standardScores?.subtests||[]).find(x => x.id===id);
+      return t ? { raw: t.raw, standard: t.standard, level: t.level } : null;
+    });
+    const numVals = vals.map(v => v?.standard ?? null);
+    const first = numVals.find(v => v !== null);
+    const last = [...numVals].reverse().find(v => v !== null);
+    subRows += `<tr><td class="row-label" style="padding-left:16px">${name}</td>${vals.map((v,i) => {
+      if (!v) return '<td>-</td>';
+      const arrow = (i === vals.length-1) ? changeArrow(first, last) : '';
+      return `<td>${v.standard ?? '-'}${arrow}<br><span style="font-size:10px;color:#777">원점수 ${v.raw ?? '-'}</span></td>`;
+    }).join('')}</tr>`;
+  }
+
+  // Line chart: composite indices
+  const compDs = [...allComp.entries()].map(([key,name],ki) => ({
+    label:name, color:SESS_COLORS[ki%SESS_COLORS.length],
+    values:allSorted.map(([,s])=>{ const c=(s.files.std2?.standardScores?.composites||[]).find(x=>x.key===key); return c?.index??null; })
+  }));
+  const lineHtml = allSorted.length >= 2
+    ? chartBox('합성 지수 추이', lineChart(compDs, xLabels, {yMin:40, yMax:160}),
+        compDs.map(d=>({color:d.color, label:d.label})))
+    : '';
+
+  return lineHtml + `<div class="section-title">K-DTVP-2 합성 지수</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th class="row-head">합성 척도</th>${headers}</tr></thead>
+    <tbody>${compRows}</tbody>
+  </table></div>
+  <div class="section-title" style="margin-top:18px">K-DTVP-2 소검사 표준점수</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th class="row-head">소검사</th>${headers}</tr></thead>
+    <tbody>${subRows}</tbody>
+  </table></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.style.display = 'none', 2500);
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXCEL EXPORT — PURE JS XLSX
+// ═══════════════════════════════════════════════════════════
+
+// CRC32
+const CRC32_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let j = 0; j < 8; j++) c = (c & 1) ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+    t[i] = c;
+  }
+  return t;
+})();
+
+function crc32(bytes) {
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) c = CRC32_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+function strToBytes(str) {
+  return new TextEncoder().encode(str);
+}
+
+function u16LE(n) { return [n & 0xFF, (n >> 8) & 0xFF]; }
+function u32LE(n) { return [n & 0xFF, (n >> 8) & 0xFF, (n >> 16) & 0xFF, (n >> 24) & 0xFF]; }
+
+function buildZip(files) {
+  // files: [{name, data: Uint8Array}]
+  const centralDir = [];
+  const parts = [];
+  let offset = 0;
+
+  for (const f of files) {
+    const nameBytes = strToBytes(f.name);
+    const crc = crc32(f.data);
+    const size = f.data.length;
+
+    // Local file header
+    const local = [
+      0x50,0x4B,0x03,0x04, // sig
+      0x14,0x00,           // version needed
+      0x00,0x00,           // flags
+      0x00,0x00,           // compression (STORED)
+      0x00,0x00,0x00,0x00, // mod time/date
+      ...u32LE(crc),
+      ...u32LE(size),
+      ...u32LE(size),
+      ...u16LE(nameBytes.length),
+      0x00,0x00            // extra length
+    ];
+    const localHeader = new Uint8Array([...local, ...nameBytes]);
+
+    // Central dir entry
+    const central = [
+      0x50,0x4B,0x01,0x02,
+      0x14,0x00, 0x14,0x00,
+      0x00,0x00, 0x00,0x00,
+      0x00,0x00,0x00,0x00,
+      ...u32LE(crc),
+      ...u32LE(size),
+      ...u32LE(size),
+      ...u16LE(nameBytes.length),
+      0x00,0x00, 0x00,0x00, 0x00,0x00,
+      0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,
+      ...u32LE(offset)
+    ];
+    centralDir.push(new Uint8Array([...central, ...nameBytes]));
+    parts.push(localHeader, f.data);
+    offset += localHeader.length + f.data.length;
+  }
+
+  const centralDirBytes = concat(centralDir);
+  const centralDirOffset = offset;
+  const centralDirSize = centralDirBytes.length;
+
+  const eocd = new Uint8Array([
+    0x50,0x4B,0x05,0x06,
+    0x00,0x00, 0x00,0x00,
+    ...u16LE(files.length),
+    ...u16LE(files.length),
+    ...u32LE(centralDirSize),
+    ...u32LE(centralDirOffset),
+    0x00,0x00
+  ]);
+
+  return concat([...parts, centralDirBytes, eocd]);
+}
+
+function concat(arrays) {
+  const total = arrays.reduce((s, a) => s + a.length, 0);
+  const out = new Uint8Array(total);
+  let pos = 0;
+  for (const a of arrays) { out.set(a, pos); pos += a.length; }
+  return out;
+}
+
+// XLSX helpers
+function xmlEsc(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Build shared strings
+function buildSS(strings) {
+  const items = strings.map(s => `<si><t xml:space="preserve">${xmlEsc(s)}</t></si>`).join('');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${strings.length}" uniqueCount="${strings.length}">${items}</sst>`;
+}
+
+// Build styles
+function buildStyles() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  <fonts count="2">
+    <font><sz val="10"/><name val="Malgun Gothic"/></font>
+    <font><sz val="10"/><name val="Malgun Gothic"/><b/></font>
+  </fonts>
+  <fills count="3">
+    <fill><patternFill patternType="none"/></fill>
+    <fill><patternFill patternType="gray125"/></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFE3F2FD"/></patternFill></fill>
+  </fills>
+  <borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+  <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+  <cellXfs count="3">
+    <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+    <xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>
+    <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment wrapText="1"/></xf>
+  </cellXfs>
+</styleSheet>`;
+}
+
+// Convert col index to letter (0-based)
+function colLetter(n) {
+  let s = '';
+  n++;
+  while (n > 0) { n--; s = String.fromCharCode(65 + n%26) + s; n = Math.floor(n/26); }
+  return s;
+}
+
+// Build worksheet from 2D array
+// rows: [{cells:[{v, isHeader}], header?}]
+function buildSheet(rows2d, ssMap) {
+  // rows2d: array of arrays of {v: string|number, hdr?: bool}
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<sheetData>`;
+  for (let ri = 0; ri < rows2d.length; ri++) {
+    const row = rows2d[ri];
+    xml += `<row r="${ri+1}">`;
+    for (let ci = 0; ci < row.length; ci++) {
+      const cell = row[ci];
+      const addr = colLetter(ci) + (ri+1);
+      const v = cell.v;
+      const s = cell.hdr ? '1' : '0';
+      if (v === null || v === undefined || v === '') {
+        xml += `<c r="${addr}" s="${s}"/>`;
+      } else if (typeof v === 'number') {
+        xml += `<c r="${addr}" t="n" s="${s}"><v>${v}</v></c>`;
+      } else {
+        const idx = ssMap.get(String(v));
+        xml += `<c r="${addr}" t="s" s="${s}"><v>${idx}</v></c>`;
+      }
+    }
+    xml += '</row>';
+  }
+  xml += '</sheetData></worksheet>';
+  return xml;
+}
+
+function makeCell(v, hdr) { return { v, hdr: !!hdr }; }
+
+// Collect all strings for SST
+function collectStrings(allSheetRows) {
+  const set = new Set();
+  for (const rows of allSheetRows) {
+    for (const row of rows) {
+      for (const cell of row) {
+        if (cell.v !== null && cell.v !== undefined && cell.v !== '' && typeof cell.v !== 'number') {
+          set.add(String(cell.v));
+        }
+      }
+    }
+  }
+  return [...set];
+}
+
+// Sheet data builders
+function sheetSummary(sorted) {
+  const rows = [];
+  const hdrs = ['항목', ...sorted.map(([,s],i) => `${i+1}회기 (${s.date||'-'})`)];
+  rows.push(hdrs.map(h => makeCell(h, true)));
+
+  const hasObs1 = sorted.some(([,s]) => s.files.obs1);
+  if (hasObs1) {
+    rows.push([makeCell('▸ OBS1 운동능력 (달성률 %)', true)]);
+    for (const d of OBS1_DOMAINS) {
+      const r = [makeCell(d.label)];
+      for (const [,s] of sorted) {
+        const v = s.files.obs1 ? computeObs1DomainAch(s.files.obs1)[d.id] : null;
+        r.push(makeCell(v !== null ? v+'%' : ''));
+      }
+      rows.push(r);
+    }
+  }
+
+  const hasObs2 = sorted.some(([,s]) => s.files.obs2);
+  if (hasObs2) {
+    const allSec = new Set();
+    sorted.forEach(([,s]) => { if(s.files.obs2) Object.keys(s.files.obs2.sectionScores||{}).forEach(k => allSec.add(k)); });
+    rows.push([makeCell('▸ OBS2 인지 (달성률 %)', true)]);
+    for (const sec of allSec) {
+      const r = [makeCell(sec)];
+      for (const [,s] of sorted) {
+        const v = s.files.obs2?.sectionScores?.[sec]?.achRate ?? null;
+        r.push(makeCell(v !== null ? v+'%' : ''));
+      }
+      rows.push(r);
+    }
+  }
+
+  const hasStd1 = sorted.some(([,s]) => s.files.std1);
+  if (hasStd1) {
+    const allSec = new Set();
+    sorted.forEach(([,s]) => { if(s.files.std1) Object.keys(s.files.std1.sections||{}).forEach(k => allSec.add(k)); });
+    rows.push([makeCell('▸ K-CSP2 분류', true)]);
+    for (const sec of allSec) {
+      const r = [makeCell(sec)];
+      for (const [,s] of sorted) {
+        const v = s.files.std1?.sections?.[sec];
+        r.push(makeCell(v ? v.classText : ''));
+      }
+      rows.push(r);
+    }
+  }
+
+  const hasStd2 = sorted.some(([,s]) => s.files.std2);
+  if (hasStd2) {
+    const allComp = new Map();
+    sorted.forEach(([,s]) => { (s.files.std2?.standardScores?.composites||[]).forEach(c => { if(!allComp.has(c.key)) allComp.set(c.key, c.name); }); });
+    rows.push([makeCell('▸ K-DTVP-2 합성 지수', true)]);
+    for (const [key, name] of allComp) {
+      const r = [makeCell(name)];
+      for (const [,s] of sorted) {
+        const c = (s.files.std2?.standardScores?.composites||[]).find(x => x.key===key);
+        r.push(makeCell(c?.index ?? ''));
+      }
+      rows.push(r);
+    }
+  }
+  return rows;
+}
+
+function sheetObs1MC(sorted) {
+  const rows = [];
+  rows.push(['도메인', ...sorted.map(([,s],i) => `${i+1}회기 (${s.date||'-'})`)].map((h,i) => makeCell(h, true)));
+  for (const d of OBS1_DOMAINS) {
+    const r = [makeCell(d.label)];
+    for (const [,s] of sorted) {
+      const v = s.files.obs1 ? computeObs1DomainAch(s.files.obs1)[d.id] : null;
+      r.push(makeCell(v !== null ? v+'%' : ''));
+    }
+    rows.push(r);
+  }
+  return rows;
+}
+
+function sheetObs1SR(sorted) {
+  const rows = [];
+  rows.push(['감각 시스템', ...sorted.map(([,s],i) => `${i+1}회기 (${s.date||'-'})`)].map(h => makeCell(h, true)));
+  for (const sys of SR_SYSTEMS) {
+    const r = [makeCell(sys.label + ' (' + sys.prefix + ')')];
+    for (const [,s] of sorted) {
+      const v = s.files.obs1 ? computeObs1SR(s.files.obs1)[sys.prefix] : null;
+      r.push(makeCell(v || ''));
+    }
+    rows.push(r);
+  }
+  return rows;
+}
+
+function sheetObs2(sorted) {
+  const allSec = new Set();
+  sorted.forEach(([,s]) => { if(s.files.obs2) Object.keys(s.files.obs2.sectionScores||{}).forEach(k => allSec.add(k)); });
+  const rows = [];
+  rows.push(['영역', ...sorted.map(([,s],i) => `${i+1}회기 (${s.date||'-'})`)].map(h => makeCell(h, true)));
+  for (const sec of allSec) {
+    const r = [makeCell(sec)];
+    for (const [,s] of sorted) {
+      const v = s.files.obs2?.sectionScores?.[sec]?.achRate ?? null;
+      r.push(makeCell(v !== null ? v+'%' : ''));
+    }
+    rows.push(r);
+  }
+  return rows;
+}
+
+function sheetSTD1(sorted) {
+  const allSec = new Set();
+  sorted.forEach(([,s]) => { if(s.files.std1) Object.keys(s.files.std1.sections||{}).forEach(k => allSec.add(k)); });
+  const rows = [];
+  rows.push(['영역', ...sorted.map(([,s],i) => `${i+1}회기 (${s.date||'-'})`)].map(h => makeCell(h, true)));
+  for (const sec of allSec) {
+    const r = [makeCell(sec)];
+    for (const [,s] of sorted) {
+      const v = s.files.std1?.sections?.[sec];
+      r.push(makeCell(v ? v.classText + ' ' + (v.pctText||'') : ''));
+    }
+    rows.push(r);
+  }
+  return rows;
+}
+
+function sheetSTD2(sorted) {
+  const rows = [];
+  rows.push(['K-DTVP-2', ...sorted.map(([,s],i) => `${i+1}회기 (${s.date||'-'})`)].map(h => makeCell(h, true)));
+
+  // Composites
+  rows.push([makeCell('▸ 합성 지수 (지수점수 / %ile)', true)]);
+  const allComp = new Map();
+  sorted.forEach(([,s]) => { (s.files.std2?.standardScores?.composites||[]).forEach(c => { if(!allComp.has(c.key)) allComp.set(c.key, c.name); }); });
+  for (const [key, name] of allComp) {
+    const r = [makeCell(name)];
+    for (const [,s] of sorted) {
+      const c = (s.files.std2?.standardScores?.composites||[]).find(x => x.key===key);
+      r.push(makeCell(c ? `${c.index ?? '-'} / ${c.percentile ?? '-'}%ile` : ''));
+    }
+    rows.push(r);
+  }
+
+  // Subtests
+  rows.push([makeCell('▸ 소검사 (표준점수)', true)]);
+  const allSub = new Map();
+  sorted.forEach(([,s]) => { (s.files.std2?.standardScores?.subtests||[]).forEach(t => { if(!allSub.has(t.id)) allSub.set(t.id, t.name); }); });
+  for (const [id, name] of allSub) {
+    const r = [makeCell(name)];
+    for (const [,s] of sorted) {
+      const t = (s.files.std2?.standardScores?.subtests||[]).find(x => x.id===id);
+      r.push(makeCell(t ? (t.standard ?? '') : ''));
+    }
+    rows.push(r);
+  }
+  return rows;
+}
+
+function exportXlsx() {
+  const sorted = getSortedSessions();
+  if (!sorted.length) return;
+
+  const sheetDefs = [
+    { name: '요약비교', rows: sheetSummary(sorted), always: true },
+    { name: 'OBS1_MC비교', rows: sheetObs1MC(sorted), check: () => sorted.some(([,s]) => s.files.obs1) },
+    { name: 'OBS1_SR비교', rows: sheetObs1SR(sorted), check: () => sorted.some(([,s]) => s.files.obs1) },
+    { name: 'OBS2_비교', rows: sheetObs2(sorted), check: () => sorted.some(([,s]) => s.files.obs2) },
+    { name: 'K-CSP2_비교', rows: sheetSTD1(sorted), check: () => sorted.some(([,s]) => s.files.std1) },
+    { name: 'K-DTVP-2_비교', rows: sheetSTD2(sorted), check: () => sorted.some(([,s]) => s.files.std2) }
+  ];
+
+  const active = sheetDefs.filter(d => d.always || d.check?.());
+
+  // Collect all strings
+  const allStrings = collectStrings(active.map(d => d.rows));
+  const ssMap = new Map(allStrings.map((s, i) => [s, i]));
+
+  // Build XML files
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+  ${active.map((_,i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('\n  ')}
+  <Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>
+  <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+</Types>`;
+
+  const relsRoot = `<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`;
+
+  const wbRels = `<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  ${active.map((_, i) => `<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('\n  ')}
+  <Relationship Id="rId${active.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>
+  <Relationship Id="rId${active.length+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`;
+
+  const wb = `<?xml version="1.0" encoding="UTF-8"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheets>
+    ${active.map((d, i) => `<sheet name="${xmlEsc(d.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('\n    ')}
+  </sheets>
+</workbook>`;
+
+  const enc = new TextEncoder();
+  const zipFiles = [
+    { name: '[Content_Types].xml', data: enc.encode(contentTypes) },
+    { name: '_rels/.rels', data: enc.encode(relsRoot) },
+    { name: 'xl/workbook.xml', data: enc.encode(wb) },
+    { name: 'xl/_rels/workbook.xml.rels', data: enc.encode(wbRels) },
+    { name: 'xl/sharedStrings.xml', data: enc.encode(buildSS(allStrings)) },
+    { name: 'xl/styles.xml', data: enc.encode(buildStyles()) },
+    ...active.map((d, i) => ({
+      name: `xl/worksheets/sheet${i+1}.xml`,
+      data: enc.encode(buildSheet(d.rows, ssMap))
+    }))
+  ];
+
+  const zipData = buildZip(zipFiles);
+  const blob = new Blob([zipData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const childName = document.getElementById('childName').value || '아동';
+  a.href = url;
+  a.download = `CDA-MSC_${childName}_다회기비교.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Excel 파일 다운로드 완료');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SERVICE WORKER
+// ═══════════════════════════════════════════════════════════
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+</script>
+  <a href="../" id="pwa-back-btn" title="메인으로 돌아가기" style="
+    position:fixed;
+    bottom:calc(20px + env(safe-area-inset-bottom, 0px));
+    right:calc(20px + env(safe-area-inset-right, 0px));
+    z-index:2147483647;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#1a1a1a;
+    color:#fff;
+    border:2px solid #fff;
+    border-radius:30px;
+    padding:12px 20px 12px 16px;
+    font-size:14px;
+    font-weight:700;
+    text-decoration:none;
+    font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);
+    -webkit-tap-highlight-color:transparent;
+    cursor:pointer;
+    pointer-events:auto;
+    -webkit-transform:translateZ(0);
+    transform:translateZ(0);
+  ">
+    <span style="font-size:18px;line-height:1;">←</span>
+    <span>메인으로</span>
+  </a>
+</body>
+</html>

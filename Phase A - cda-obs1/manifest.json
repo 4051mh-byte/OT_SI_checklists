@@ -1,0 +1,16 @@
+{
+  "name": "CDA-OBS1 SI 운동능력 임상관찰 체크리스트",
+  "short_name": "CDA-OBS1",
+  "description": "SI 운동능력 임상관찰 체크리스트",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#2196F3",
+  "orientation": "portrait-primary",
+  "lang": "ko",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

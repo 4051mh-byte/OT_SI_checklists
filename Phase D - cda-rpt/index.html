@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CPRG - 종합 프로파일 리포트 자동생성기">
+  <meta name="theme-color" content="#1B4F72">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="CPRG">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <title>CPRG - 종합 프로파일 리포트 자동생성기</title>
+  
+  <style>
+    /* === CSS Variables === */
+    :root {
+      --bg: #f5f5f5;
+      --bg-card: #fff;
+      --text: #333;
+      --text-sub: #666;
+      --border: #ddd;
+      --si: #E55D62;
+      --gf: #43A047;
+      --oc: #1565C0;
+      --cog: #F9A825;
+      --good: #4CAF50;
+      --caution: #FF9800;
+      --observe: #F57C00;
+      --critical: #F44336;
+      --header-bg: #1B4F72;
+      --header-text: #fff;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --radius: 8px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* === Reset & Base === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.6;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* === Header === */
+    .header {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--spacing-sm);
+      overflow-x: auto;
+    }
+
+    .step-nav button {
+      padding: var(--spacing-sm) var(--spacing-md);
+      background-color: rgba(255, 255, 255, 0.2);
+      color: var(--header-text);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .step-nav button.active {
+      background-color: var(--header-text);
+      color: var(--header-bg);
+      border-color: var(--header-text);
+    }
+
+    .step-nav button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* === Toolbar === */
+    .toolbar {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: var(--spacing-md);
+      display: flex;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+      position: sticky;
+      top: 120px;
+      z-index: 99;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .toolbar button {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background-color: var(--bg-card);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .toolbar button:hover {
+      background-color: var(--bg);
+      border-color: var(--text-sub);
+    }
+
+    .toolbar button.primary {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      border-color: var(--header-bg);
+    }
+
+    .toolbar button.primary:hover {
+      opacity: 0.9;
+    }
+
+    /* === Main Container === */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-md);
+      min-height: calc(100vh - 300px);
+    }
+
+    /* === Screen Visibility === */
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* === Subject Bar (Patient Info) === */
+    .subject-bar {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .subject-bar h2 {
+      font-size: 18px;
+      margin-bottom: var(--spacing-md);
+      color: var(--header-bg);
+    }
+
+    .subject-fields {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .field label {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .field input,
+    .field select {
+      padding: var(--spacing-sm);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--header-bg);
+      box-shadow: 0 0 0 3px rgba(27, 79, 114, 0.1);
+    }
+
+    .field input[type="text"],
+    .field input[type="date"],
+    .field input[type="number"],
+    .field select {
+      background-color: var(--bg);
+    }
+
+    /* === Radio Group === */
+    .radio-group {
+      display: flex;
+      gap: var(--spacing-md);
+      align-items: center;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      margin: 0;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .radio-group input[type="radio"] {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+
+    /* === Domain Tabs === */
+    .domain-tabs {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 2px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .domain-tab {
+      padding: var(--spacing-md) var(--spacing-lg);
+      background-color: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-sub);
+      transition: all 0.2s ease;
+    }
+
+    .domain-tab.si { --tab-color: var(--si); }
+    .domain-tab.gf { --tab-color: var(--gf); }
+    .domain-tab.oc { --tab-color: var(--oc); }
+    .domain-tab.cog { --tab-color: var(--cog); }
+
+    .domain-tab:hover {
+      color: var(--text);
+    }
+
+    .domain-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--tab-color);
+    }
+
+    /* === Domain Tab Content === */
+    .domain-content {
+      display: none;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .domain-content.active {
+      display: block;
+    }
+
+    /* === Area Input Row === */
+    .area-input-row {
+      display: grid;
+      grid-template-columns: 180px 1fr 1fr 1fr;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: var(--spacing-md);
+      align-items: flex-end;
+      background-color: var(--bg);
+    }
+
+    .area-label {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      font-weight: 600;
+      padding-left: var(--spacing-md);
+      border-left: 4px solid var(--header-bg);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .area-label-sub {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-sub);
+    }
+
+    @media (max-width: 900px) {
+      .area-input-row {
+        grid-template-columns: 1fr;
+      }
+      .area-label {
+        grid-column: 1;
+      }
+    }
+
+    /* === Analysis Button === */
+    .analysis-button {
+      display: inline-block;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      margin-top: var(--spacing-md);
+    }
+
+    .analysis-button:hover {
+      opacity: 0.9;
+    }
+
+    /* === Results Section === */
+    .results-section {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .results-section h3 {
+      font-size: 16px;
+      margin-bottom: var(--spacing-md);
+      color: var(--header-bg);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: var(--spacing-md);
+    }
+
+    /* === Chart Placeholder === */
+    .chart-placeholder {
+      width: 100%;
+      height: 400px;
+      background-color: var(--bg);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      font-size: 14px;
+      margin: var(--spacing-md) 0;
+    }
+
+    /* === Report Text === */
+    .report-text {
+      line-height: 1.8;
+      color: var(--text);
+      margin: var(--spacing-md) 0;
+    }
+
+    .report-section {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .report-section h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--header-bg);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* === Level Badges === */
+    .level-badge {
+      display: inline-block;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .level-badge.good { background-color: var(--good); }
+    .level-badge.caution { background-color: var(--caution); }
+    .level-badge.observe { background-color: var(--observe); }
+    .level-badge.critical { background-color: var(--critical); }
+
+    /* === Footer === */
+    .footer {
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: var(--spacing-lg);
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-top: var(--spacing-lg);
+    }
+
+    /* === Print Styles === */
+    /* === Report Styles === */
+    .info-table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+    .info-table td{padding:6px 10px;border:1px solid #ddd}
+    .info-table td:first-child,.info-table td:nth-child(3){background:#f5f5f5;width:15%;font-weight:600}
+    .report-section{margin:16px 0;padding:12px;background:var(--bg-card);border-radius:var(--radius)}
+    .report-section h4{font-size:14px;color:var(--header-bg);margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--header-bg)}
+
+    @media print {
+      .header, .toolbar, .step-nav, .no-print, .step-btn, .analysis-button, button {
+        display: none !important;
+      }
+      .main-container {
+        max-width: 100%;
+        padding: 0;
+      }
+      .screen {
+        display: none !important;
+      }
+      .screen.print-target {
+        display: block !important;
+      }
+      .report-section {
+        page-break-inside: avoid;
+      }
+      body {
+        background-color: white;
+        font-size: 11px;
+      }
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .subject-fields {
+        grid-template-columns: 1fr;
+      }
+      .domain-tabs {
+        gap: var(--spacing-xs);
+      }
+      .domain-tab {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 12px;
+      }
+      .area-input-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* === Utility Classes === */
+    .hidden {
+      display: none;
+    }
+
+    .mt-lg {
+      margin-top: var(--spacing-lg);
+    }
+
+    .mb-lg {
+      margin-bottom: var(--spacing-lg);
+    }
+    /* === CHILD BAR === */
+    .child-bar{background:#1B4F72;color:#fff;padding:7px 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}
+    .child-bar select{padding:4px 8px;border:none;border-radius:4px;font-size:13px;min-width:130px;color:#333}
+    .cb-btn{padding:4px 10px;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700}
+    .cb-add{background:#43a047;color:#fff}.cb-del{background:#e53935;color:#fff}
+    .cb-st{font-size:11px;opacity:.75;margin-left:6px;white-space:nowrap}
+    @media print{.child-bar{display:none!important}}
+  </style>
+</head>
+<body>
+<div id="child-bar" class="child-bar no-print">
+  <span>👶 아동:</span>
+  <select id="child-select" onchange="onChildChange()"><option value="">-- 아동 선택 --</option></select>
+  <button class="cb-btn cb-add" onclick="addNewChild()">+ 새 아동</button>
+  <button class="cb-btn cb-del" onclick="deleteCurrentChild()">삭제</button>
+  <span class="cb-st" id="cb-status"></span>
+</div>
+
+  <!-- === Header === -->
+  <div class="header">
+    <h1>종합 프로파일 리포트 자동생성기 (CPRG)</h1>
+    <div class="step-nav">
+      <button class="step-btn active" data-step="0">① 아동정보</button>
+      <button class="step-btn" data-step="1">② 평가입력</button>
+      <button class="step-btn" data-step="2">③ 종합분석</button>
+      <button class="step-btn" data-step="3">④ 전문가보고서</button>
+      <button class="step-btn" data-step="4">⑤ 부모보고서</button>
+    </div>
+  </div>
+
+  <!-- === Toolbar === -->
+  <div class="toolbar">
+    <button id="saveBtn" class="primary">💾 저장</button>
+    <button id="loadBtn">📂 불러오기</button>
+    <button id="exportBtn">📥 내보내기</button>
+    <button id="importBtn">📤 가져오기</button>
+    <button id="idbAutoLoadBtn" style="background:#6A1B9A;color:#fff;font-weight:700;">⚡ 전체 자동연동</button>
+    <button id="mergeImportBtn" style="background:#E55D62;color:#fff;font-weight:700;">📂 ①/③ 자동완성</button>
+    <button id="stdImportBtn" style="background:#1565C0;color:#fff;font-weight:700;">📊 STD 가져오기</button>
+    <button id="resetBtn" style="color: #F44336;">🔄 초기화</button>
+    <input type="file" id="importFile" accept=".json" style="display: none;">
+    <input type="file" id="mergeImportFile" accept=".json" multiple style="display: none;">
+    <input type="file" id="stdImportFile" accept=".json" multiple style="display: none;">
+  </div>
+
+  <!-- === Main Container === -->
+  <div class="main-container">
+
+    <!-- === Screen 0: Patient Info === -->
+    <div class="screen active" data-screen="0">
+      <div class="subject-bar">
+        <h2>아동 정보 입력</h2>
+        <div class="subject-fields">
+          <div class="field">
+            <label for="patientName">이름 *</label>
+            <input type="text" id="patientName" placeholder="예: 김철수">
+          </div>
+          <div class="field">
+            <label for="patientBirth">생년월일 *</label>
+            <input type="date" id="patientBirth">
+          </div>
+          <div class="field">
+            <label>성별</label>
+            <div class="radio-group">
+              <label><input type="radio" name="gender" value="M" checked> 남</label>
+              <label><input type="radio" name="gender" value="F"> 여</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="monthAge">현재 월령 (자동계산)</label>
+            <input type="text" id="monthAge" readonly placeholder="0세 0개월">
+          </div>
+          <div class="field">
+            <label for="evalDate">평가 날짜 *</label>
+            <input type="date" id="evalDate">
+          </div>
+          <div class="field">
+            <label for="evaluator">평가자</label>
+            <input type="text" id="evaluator" placeholder="예: 작업치료사">
+          </div>
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="diagnosis">진단명/주요 관찰</label>
+            <input type="text" id="diagnosis" placeholder="예: 발달 지연">
+          </div>
+        </div>
+      </div>
+      <!-- STD 데이터 패널 -->
+      <div id="stdPanel" style="margin-top:20px;display:none;">
+        <div style="font-size:13px;font-weight:700;color:#1565C0;border-bottom:2px solid #1565C0;padding-bottom:6px;margin-bottom:10px;">📊 표준화 검사 결과 (STD)</div>
+
+        <div id="stdCsp2Card" style="display:none;padding:12px;border:1px solid #c5cae9;border-radius:8px;margin-bottom:8px;background:#f8f9ff;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:700;color:#1a237e;">K-CSP2 · 아동 감각처리 프로파일</span>
+            <button onclick="DataModel.clearSTD('csp2');UI.renderSTDPanel();UI._autoSave();" style="font-size:11px;padding:2px 8px;border:1px solid #bbb;border-radius:4px;background:#fff;cursor:pointer;">✕ 제거</button>
+          </div>
+          <div id="stdCsp2Info" style="font-size:12px;color:#555;margin-bottom:8px;"></div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:4px;">보고서 통합 방식</div>
+          <div style="display:flex;gap:16px;">
+            <label style="font-size:12px;cursor:pointer;"><input type="radio" name="csp2Mode" value="integrate" onchange="DataModel.setSTDMode('csp2','integrate');UI._autoSave();"> 보고서에 통합</label>
+            <label style="font-size:12px;cursor:pointer;"><input type="radio" name="csp2Mode" value="separate" checked onchange="DataModel.setSTDMode('csp2','separate');UI._autoSave();"> 별도 보관</label>
+          </div>
+        </div>
+
+        <div id="stdDtvp2Card" style="display:none;padding:12px;border:1px solid #c8e6c9;border-radius:8px;background:#f8fff8;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:700;color:#1b5e20;">K-DTVP-2 · 시지각 발달 검사</span>
+            <button onclick="DataModel.clearSTD('dtvp2');UI.renderSTDPanel();UI._autoSave();" style="font-size:11px;padding:2px 8px;border:1px solid #bbb;border-radius:4px;background:#fff;cursor:pointer;">✕ 제거</button>
+          </div>
+          <div id="stdDtvp2Info" style="font-size:12px;color:#555;margin-bottom:8px;"></div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:4px;">보고서 통합 방식</div>
+          <div style="display:flex;gap:16px;">
+            <label style="font-size:12px;cursor:pointer;"><input type="radio" name="dtvp2Mode" value="integrate" onchange="DataModel.setSTDMode('dtvp2','integrate');UI._autoSave();"> 보고서에 통합</label>
+            <label style="font-size:12px;cursor:pointer;"><input type="radio" name="dtvp2Mode" value="separate" checked onchange="DataModel.setSTDMode('dtvp2','separate');UI._autoSave();"> 별도 보관</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="step-btn active" onclick="UI.showScreen(1)" style="background-color: var(--header-bg); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 24px;">다음: 평가입력 →</button>
+    </div>
+
+    <!-- === Screen 1: Domain Input === -->
+    <div class="screen" data-screen="1">
+      <div class="subject-bar">
+        <h2>평가 입력</h2>
+        <p style="color: var(--text-sub); margin-top: 8px;">각 영역별로 달성률(%)과 RF수를 입력하세요.</p>
+      </div>
+
+      <div class="domain-tabs">
+        <button class="domain-tab si active" data-domain="SI">감각통합/운동</button>
+        <button class="domain-tab gf" data-domain="GF">대소근육</button>
+        <button class="domain-tab oc" data-domain="OC">작업인지</button>
+        <button class="domain-tab cog" data-domain="COG">기초인지</button>
+      </div>
+
+      <!-- SI Tab -->
+      <div class="domain-content active" id="content-SI"></div>
+
+      <!-- GF Tab -->
+      <div class="domain-content" id="content-GF"></div>
+
+      <!-- OC Tab -->
+      <div class="domain-content" id="content-OC"></div>
+
+      <!-- COG Tab -->
+      <div class="domain-content" id="content-COG"></div>
+
+      <div style="display: flex; gap: 16px; margin-top: 24px;">
+        <button class="step-btn" onclick="UI.showScreen(0)" style="background-color: #999; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">← 이전</button>
+        <button class="analysis-button" id="runAnalysisBtn">🔍 분석 실행</button>
+      </div>
+    </div>
+
+    <!-- === Screen 2: Analysis Results === -->
+    <div class="screen" data-screen="2">
+      <h2 style="margin-bottom: 24px; color: var(--header-bg);">종합 분석 결과</h2>
+
+      <div class="results-section">
+        <h3>영역별 레이더 차트</h3>
+        <div class="chart-placeholder">
+          <span style="color:#999;font-size:13px">📊 분석 실행 후 영역별 레이더 차트가 표시됩니다</span>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <h3>영역별 히트맵</h3>
+        <div class="chart-placeholder" style="height: 200px;">
+          <span style="color:#999;font-size:13px">🗂️ 분석 실행 후 SI·COG 교차 히트맵이 표시됩니다</span>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <h3>계층별 캐스케이드</h3>
+        <div class="chart-placeholder" style="height: 250px;">
+          <span style="color:#999;font-size:13px">🔗 분석 실행 후 계층별 캐스케이드 차트가 표시됩니다</span>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <h3>분석 결과 요약</h3>
+        <div id="analysisFindings" class="report-text">
+          분석 결과 로딩 중...
+        </div>
+      </div>
+
+      <div class="results-section" style="border-left: 4px solid var(--critical);">
+        <h3 style="color: var(--critical);">🚩 주의 필요 항목</h3>
+        <div id="redFlags" class="report-text">
+          로딩 중...
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-top: 24px;">
+        <button class="step-btn" onclick="UI.showScreen(1)" style="background-color: #999; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">← 이전</button>
+        <button class="step-btn" onclick="UI.generateReports()" style="background-color: var(--header-bg); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">다음: 보고서 생성 →</button>
+      </div>
+    </div>
+
+    <!-- === Screen 3: Expert Report === -->
+    <div class="screen" data-screen="3">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 style="color: var(--header-bg);">전문가 보고서</h2>
+        <button id="printExpertBtn" style="padding: 8px 16px; background-color: var(--header-bg); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">🖨️ 인쇄</button>
+      </div>
+
+      <div class="subject-bar" style="border-top: 4px solid var(--header-bg);">
+        <h2>종합 프로파일 리포트</h2>
+        <div style="font-size: 12px; color: var(--text-sub); margin-top: 12px;">
+          <p>작성일: <span id="reportDate"></span></p>
+          <p>평가자: <span id="reportEvaluator"></span></p>
+        </div>
+      </div>
+
+      <div id="expertReportContent" class="report-text" style="background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 24px;">
+        보고서 로딩 중...
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-top: 24px;">
+        <button class="step-btn" onclick="UI.showScreen(2)" style="background-color: #999; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">← 이전</button>
+        <button class="step-btn" onclick="UI.showScreen(4)" style="background-color: var(--header-bg); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">다음: 부모보고서 →</button>
+      </div>
+    </div>
+
+    <!-- === Screen 4: Parent Report === -->
+    <div class="screen" data-screen="4">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 style="color: var(--header-bg);">부모 보고서</h2>
+        <button id="printParentBtn" style="padding: 8px 16px; background-color: var(--header-bg); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">🖨️ 인쇄</button>
+      </div>
+
+      <div class="subject-bar" style="border-top: 4px solid #F9A825;">
+        <h2>부모님을 위한 평가 결과 안내</h2>
+        <div style="font-size: 12px; color: var(--text-sub); margin-top: 12px;">
+          <p>아동: <span id="parentReportName"></span></p>
+          <p>평가 날짜: <span id="parentReportDate"></span></p>
+        </div>
+      </div>
+
+      <div id="parentReportContent" class="report-text" style="background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 24px;">
+        보고서 로딩 중...
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-top: 24px;">
+        <button class="step-btn" onclick="UI.showScreen(3)" style="background-color: #999; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">← 이전</button>
+        <button class="step-btn" onclick="UI.showScreen(0)" style="background-color: var(--header-bg); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">완료: 처음으로 ↻</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- === Footer === -->
+  <div class="footer">
+    <p>CPRG v1.0 | 종합 프로파일 리포트 자동생성기 | 작업치료사용 평가도구</p>
+    <p style="margin-top: 8px;">© 2026 | 이 도구는 참고용이며, 전문가의 판단을 대체할 수 없습니다.</p>
+  </div>
+
+  <script>
+    /* === CONFIG Constants === */
+    const CONFIG = {
+      SI: {
+        code: 'SI',
+        name: '감각통합/운동',
+        parentName: '감각과 움직임',
+        color: '#E55D62',
+        areas: [
+          { code: 'SR-OR', name: '감각조절-과반응', parentName: '자극에 예민한 반응' },
+          { code: 'SR-UR', name: '감각조절-저반응', parentName: '자극에 둔한 반응' },
+          { code: 'SR-SK', name: '감각조절-추구', parentName: '자극을 적극 찾는 행동' },
+          { code: 'MC-PS', name: '자세조절', parentName: '바른 자세 유지하기' },
+          { code: 'MC-PX', name: '운동계획', parentName: '새로운 동작 배우기' },
+          { code: 'MC-BL', name: '양측협응', parentName: '양손 함께 쓰기' },
+          { code: 'SD', name: '감각변별', parentName: '감각 구별하기' }
+        ]
+      },
+      GF: {
+        code: 'GF',
+        name: '대소근육',
+        parentName: '몸 움직임과 손 사용',
+        color: '#43A047',
+        areas: [
+          { code: 'GM', name: '대근육 종합', parentName: '큰 움직임 (달리기, 점프 등)' },
+          { code: 'FM', name: '소근육 종합', parentName: '작은 움직임 (글씨, 가위 등)' }
+        ]
+      },
+      OC: {
+        code: 'OC',
+        name: '작업인지',
+        parentName: '생각하고 계획하기',
+        color: '#1565C0',
+        areas: [
+          { code: 'OC-T1', name: '주의 (Tier1)', parentName: '집중하기' },
+          { code: 'OC-T2', name: '핵심EF (Tier2)', parentName: '기억하면서 참기' },
+          { code: 'OC-T3', name: '복합EF (Tier3)', parentName: '계획하고 실행하기' },
+          { code: 'OC-T4', name: '메타인지 (Tier4)', parentName: '스스로 점검하기' }
+        ]
+      },
+      COG: {
+        code: 'COG',
+        name: '기초인지',
+        parentName: '기초적인 생각 능력',
+        color: '#F9A825',
+        areas: [
+          { code: 'ATT', name: '주의력', parentName: '집중력' },
+          { code: 'MEM', name: '기억력', parentName: '기억하기' },
+          { code: 'PER', name: '지각·변별', parentName: '보고 구별하기' },
+          { code: 'THK', name: '사고·추론', parentName: '생각하고 추리하기' },
+          { code: 'EXF', name: '실행기능', parentName: '계획하고 해내기' },
+          { code: 'LNG', name: '언어인지', parentName: '말로 이해하고 표현하기' }
+        ]
+      },
+      LEVELS: [
+        { min: 80, label: '양호', cls: 'good', color: '#4CAF50', emoji: '🟢' },
+        { min: 60, label: '주의', cls: 'caution', color: '#FF9800', emoji: '🟡' },
+        { min: 40, label: '관찰', cls: 'observe', color: '#F57C00', emoji: '🟠' },
+        { min: 0, label: '정밀평가', cls: 'critical', color: '#F44336', emoji: '🔴' }
+      ]
+    };
+
+    /* === DataModel Module === */
+    const DataModel = {
+      patient: {
+        name: '',
+        birth: '',
+        gender: 'M',
+        evalDate: '',
+        evaluator: '',
+        diagnosis: '',
+        monthAge: 0,
+        ageLabel: ''
+      },
+      domains: {
+        SI: null,
+        GF: null,
+        OC: null,
+        COG: null
+      },
+      std: {
+        csp2: null,
+        dtvp2: null,
+        csp2Mode: 'separate',
+        dtvp2Mode: 'separate'
+      },
+
+      calcMonthAge(birth, evalDate) {
+        if (!birth || !evalDate) return { monthAge: 0, ageLabel: '' };
+        const birthDate = new Date(birth);
+        const evalD = new Date(evalDate);
+        let months = (evalD.getFullYear() - birthDate.getFullYear()) * 12;
+        months += evalD.getMonth() - birthDate.getMonth();
+        const years = Math.floor(months / 12);
+        const remainder = months % 12;
+        return {
+          monthAge: months,
+          ageLabel: `${years}세 ${remainder}개월`
+        };
+      },
+
+      setDomainScores(domainCode, areas) {
+        const domainConfig = CONFIG[domainCode];
+        if (!domainConfig) return;
+        const totalAchRate = areas.reduce((sum, a) => sum + (a.achRate || 0), 0) / areas.length;
+        const totalRfCount = areas.reduce((sum, a) => sum + (a.rfCount || 0), 0);
+        this.domains[domainCode] = {
+          code: domainCode,
+          name: domainConfig.name,
+          totalAchRate: Math.round(totalAchRate),
+          totalRfCount: totalRfCount,
+          areas: areas
+        };
+      },
+
+      getLevel(achRate) {
+        for (let level of CONFIG.LEVELS) {
+          if (achRate >= level.min) return level;
+        }
+        return CONFIG.LEVELS[CONFIG.LEVELS.length - 1];
+      },
+
+      validate() {
+        const errors = [];
+        if (!this.patient.name) errors.push('아동 이름을 입력하세요.');
+        if (!this.patient.birth) errors.push('생년월일을 입력하세요.');
+        if (!this.patient.evalDate) errors.push('평가 날짜를 입력하세요.');
+        if (!this.domains.SI || !this.domains.GF || !this.domains.OC || !this.domains.COG) {
+          errors.push('모든 영역에 평가 데이터를 입력하세요.');
+        }
+        return { valid: errors.length === 0, errors };
+      },
+
+      save() {
+        if(!window.rpChildId)return;
+        const data={patient:this.patient,domains:this.domains,std:this.std,savedAt:new Date().toISOString()};
+        window.rpSaveToIDB(data).catch(()=>{});
+      },
+
+      load() { /* IDB 방식으로 대체 */ },
+
+      exportJSON() {
+        const data = {
+          version: 'cprg_v1',
+          patient: this.patient,
+          domains: this.domains,
+          exportedAt: new Date().toISOString()
+        };
+        const json = JSON.stringify(data, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `CPRG_${this.patient.name}_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      },
+
+      importJSON(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (data.version === 'cprg_v1') {
+              this.patient = data.patient;
+              this.domains = data.domains;
+              UI.loadUIFromData();
+              UI._autoSave();
+            } else {
+              alert('지원하지 않는 파일 형식입니다.');
+            }
+          } catch (err) {
+            alert('파일을 읽을 수 없습니다: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      },
+
+      reset() {
+        this.patient = {
+          name: '', birth: '', gender: 'M', evalDate: '', evaluator: '', diagnosis: '',
+          monthAge: 0, ageLabel: ''
+        };
+        this.domains = { SI: null, GF: null, OC: null, COG: null };
+        this.std = { csp2: null, dtvp2: null, csp2Mode: 'separate', dtvp2Mode: 'separate' };
+        if(window.rpChildId) window.rpSaveToIDB({patient:this.patient,domains:this.domains,std:this.std}).catch(()=>{});
+      },
+
+      importSTD(json) {
+        if (json.version === 'std1_csp2_v1') {
+          this.std.csp2 = json;
+        } else if (json.version === 'std2_dtvp2_v1') {
+          this.std.dtvp2 = json;
+        } else {
+          alert('지원하지 않는 STD 파일 형식입니다.\n(K-CSP2: std1_csp2_v1, K-DTVP-2: std2_dtvp2_v1)');
+        }
+      },
+
+      clearSTD(type) {
+        if (type === 'csp2') { this.std.csp2 = null; this.std.csp2Mode = 'separate'; }
+        if (type === 'dtvp2') { this.std.dtvp2 = null; this.std.dtvp2Mode = 'separate'; }
+      },
+
+      setSTDMode(type, mode) {
+        if (type === 'csp2') this.std.csp2Mode = mode;
+        if (type === 'dtvp2') this.std.dtvp2Mode = mode;
+      }
+    };
+
+    /* === UIController Module === */
+    const UI = {
+      currentScreen: 0,
+      currentDomain: 'SI',
+      autoSaveTimer: null,
+
+      init() {
+        // IDB 초기화 후 아동 목록 로드 (데이터는 아동 선택 시 로드됨)
+        window._rpIDBInit();
+
+        // Bind event listeners
+        document.querySelectorAll('.step-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const step = parseInt(e.target.dataset.step);
+            if (!isNaN(step)) this.showScreen(step);
+          });
+        });
+
+        // Patient info events
+        document.getElementById('patientName').addEventListener('input', () => {
+          DataModel.patient.name = document.getElementById('patientName').value;
+          this._autoSave();
+        });
+        document.getElementById('patientBirth').addEventListener('change', () => {
+          DataModel.patient.birth = document.getElementById('patientBirth').value;
+          this._calcAge();
+          this._autoSave();
+        });
+        document.getElementById('evalDate').addEventListener('change', () => {
+          DataModel.patient.evalDate = document.getElementById('evalDate').value;
+          this._calcAge();
+          this._autoSave();
+        });
+        document.getElementById('evaluator').addEventListener('input', () => {
+          DataModel.patient.evaluator = document.getElementById('evaluator').value;
+          this._autoSave();
+        });
+        document.getElementById('diagnosis').addEventListener('input', () => {
+          DataModel.patient.diagnosis = document.getElementById('diagnosis').value;
+          this._autoSave();
+        });
+        document.querySelectorAll('input[name="gender"]').forEach(radio => {
+          radio.addEventListener('change', (e) => {
+            DataModel.patient.gender = e.target.value;
+            this._autoSave();
+          });
+        });
+
+        // Domain tabs
+        document.querySelectorAll('.domain-tab').forEach(btn => {
+          btn.addEventListener('click', () => {
+            this.showDomainTab(btn.dataset.domain);
+          });
+        });
+
+        // Toolbar buttons
+        document.getElementById('saveBtn').addEventListener('click', () => {
+          DataModel.save();
+          alert('저장되었습니다.');
+        });
+        document.getElementById('loadBtn').addEventListener('click', () => {
+          if (DataModel.load()) {
+            this.loadUIFromData();
+            alert('불러왔습니다.');
+          }
+        });
+        document.getElementById('exportBtn').addEventListener('click', () => {
+          DataModel.exportJSON();
+        });
+        document.getElementById('importBtn').addEventListener('click', () => {
+          document.getElementById('importFile').click();
+        });
+        document.getElementById('importFile').addEventListener('change', (e) => {
+          if (e.target.files[0]) {
+            DataModel.importJSON(e.target.files[0]);
+          }
+        });
+        document.getElementById('resetBtn').addEventListener('click', () => {
+          if (confirm('모든 데이터를 초기화하시겠습니까?')) {
+            DataModel.reset();
+            this.loadUIFromData();
+          }
+        });
+
+        // ⚡ 전체 IDB 자동연동 (OBS1/OBS2 + STD1/STD2)
+        document.getElementById('idbAutoLoadBtn').addEventListener('click', async () => {
+          const cid = window.rpChildId;
+          if (!cid) { alert('아동을 먼저 선택하세요.'); return; }
+          try {
+            const [obs1Raw, obs2Raw, std1Raw, std2Raw] = await Promise.all([
+              ChildDB.loadData('obs1', cid),
+              ChildDB.loadData('obs2', cid),
+              ChildDB.loadData('std1', cid),
+              ChildDB.loadData('std2', cid)
+            ]);
+            const loaded = [];
+            // OBS1/OBS2 → 도메인 입력 자동완성
+            const parsed = [];
+            if (obs1Raw && obs1Raw.scores) parsed.push(parseSIMotorForCPRG(obs1Raw));
+            if (obs2Raw && obs2Raw.sectionScores) parsed.push(parseCognitiveForCPRG(obs2Raw));
+            if (parsed.length > 0) {
+              applyMergedToCPRG(parsed);
+              parsed.forEach(p => loaded.push(p._source === 'si' ? 'OBS1' : 'OBS2'));
+            }
+            // STD1/STD2 → DataModel.std에 직접 적재
+            if (std1Raw && std1Raw.version === 'std1_csp2_v1') {
+              DataModel.importSTD(std1Raw);
+              loaded.push('STD1(K-CSP2)');
+            }
+            if (std2Raw && std2Raw.version === 'std2_dtvp2_v1') {
+              DataModel.importSTD(std2Raw);
+              loaded.push('STD2(K-DTVP2)');
+            }
+            if (loaded.length === 0) { alert('연결된 데이터가 없습니다.\n먼저 해당 모듈에서 저장 후 시도하세요.'); return; }
+            this.renderSTDPanel();
+            DataModel.save();
+            alert(`자동연동 완료: ${loaded.join(' + ')}`);
+          } catch(err) {
+            alert('자동연동 실패: ' + err.message);
+          }
+        });
+
+        // ① + ③ 병합 자동완성
+        document.getElementById('mergeImportBtn').addEventListener('click', () => {
+          document.getElementById('mergeImportFile').click();
+        });
+        document.getElementById('mergeImportFile').addEventListener('change', async (e) => {
+          const files = Array.from(e.target.files);
+          if (!files.length) return;
+          try {
+            const parsed = [];
+            for (const file of files) {
+              const json = JSON.parse(await file.text());
+              if (json.version === 'si_motor_v3' || json.version === 'si_motor_v3_sr') parsed.push(parseSIMotorForCPRG(json));
+              else if (json.version && json.version.startsWith('v') && json.checks) parsed.push(parseCognitiveForCPRG(json));
+              else if (json.version === 'cprg_v1') { DataModel.patient = json.patient; DataModel.domains = json.domains; this.loadUIFromData(); e.target.value=''; return; }
+            }
+            applyMergedToCPRG(parsed);
+            this._calcAge();
+            this._autoSave();
+            const srcNames = parsed.map(p => p._source === 'si' ? '① SI운동' : p._source === 'cog' ? '③ 기초인지' : '파일').join(' + ');
+            const hasSI  = parsed.some(p => p.SI);
+            const hasCOG = parsed.some(p => p.COG);
+            const filledDomains = [hasSI ? 'SI·GF' : null, hasCOG ? 'COG·OC(T1,T2)' : null].filter(Boolean).join(' + ');
+            alert(`✅ 자동완성 완료! (${srcNames})\n입력된 도메인: ${filledDomains}\n비어있는 항목은 직접 확인 후 입력해주세요.`);
+          } catch (err) {
+            alert('가져오기 실패: ' + err.message);
+          }
+          e.target.value = '';
+        });
+
+        // STD import
+        document.getElementById('stdImportBtn').addEventListener('click', () => {
+          document.getElementById('stdImportFile').click();
+        });
+        document.getElementById('stdImportFile').addEventListener('change', async (e) => {
+          const files = Array.from(e.target.files);
+          if (!files.length) return;
+          for (const file of files) {
+            try {
+              const json = JSON.parse(await file.text());
+              DataModel.importSTD(json);
+            } catch (err) {
+              alert('STD 파일 읽기 오류: ' + err.message);
+            }
+          }
+          e.target.value = '';
+          this.renderSTDPanel();
+          this._autoSave();
+        });
+
+        // Analysis button
+        document.getElementById('runAnalysisBtn').addEventListener('click', () => {
+          this.runAnalysis();
+        });
+
+        // Print buttons
+        document.getElementById('printExpertBtn').addEventListener('click', () => {
+          this.printReport('expert');
+        });
+        document.getElementById('printParentBtn').addEventListener('click', () => {
+          this.printReport('parent');
+        });
+
+        // Render domain inputs
+        this._renderDomainInputs('SI');
+        this._renderDomainInputs('GF');
+        this._renderDomainInputs('OC');
+        this._renderDomainInputs('COG');
+
+        // Register SW
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+
+        // Auto-save interval (30초)
+        this.autoSaveTimer = setInterval(() => this._autoSave(), 30000);
+      },
+
+      showScreen(idx) {
+        if (idx < 0 || idx > 4) return;
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.querySelector(`[data-screen="${idx}"]`).classList.add('active');
+        document.querySelectorAll('.step-btn').forEach(btn => {
+          btn.classList.toggle('active', parseInt(btn.dataset.step) === idx);
+        });
+        this.currentScreen = idx;
+      },
+
+      showDomainTab(code) {
+        document.querySelectorAll('.domain-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.domain-content').forEach(c => c.classList.remove('active'));
+        document.querySelector(`[data-domain="${code}"]`).classList.add('active');
+        document.getElementById(`content-${code}`).classList.add('active');
+        this.currentDomain = code;
+      },
+
+      collectInputs() {
+        const domains = {};
+        ['SI', 'GF', 'OC', 'COG'].forEach(domainCode => {
+          const inputs = document.querySelectorAll(`[data-domain="${domainCode}"]`);
+          const areas = [];
+          const seenAreas = new Set();
+          inputs.forEach(input => {
+            const areaCode = input.dataset.area;
+            if (areaCode && !seenAreas.has(areaCode)) {
+              seenAreas.add(areaCode);
+              const achRateInput = document.querySelector(`[data-domain="${domainCode}"][data-area="${areaCode}"][data-field="achRate"]`);
+              const rfCountInput = document.querySelector(`[data-domain="${domainCode}"][data-area="${areaCode}"][data-field="rfCount"]`);
+              const noteInput = document.querySelector(`[data-domain="${domainCode}"][data-area="${areaCode}"][data-field="note"]`);
+              areas.push({
+                code: areaCode,
+                achRate: parseInt(achRateInput?.value || 0),
+                rfCount: parseInt(rfCountInput?.value || 0),
+                note: noteInput?.value || ''
+              });
+            }
+          });
+          DataModel.setDomainScores(domainCode, areas);
+        });
+      },
+
+      runAnalysis() {
+        this.collectInputs();
+        const validation = DataModel.validate();
+        if (!validation.valid) {
+          alert('오류:\n' + validation.errors.join('\n'));
+          return;
+        }
+        
+        // CrossAnalyzer 실행
+        const crossResult = CrossAnalyzer.analyze(DataModel.domains);
+        this._lastCrossResult = crossResult;
+
+        // 레이더 차트
+        const radarContainer = document.querySelector('[data-screen="2"] .results-section:nth-child(1) .chart-placeholder');
+        if (radarContainer) radarContainer.innerHTML = ChartEngine.renderRadar(DataModel.domains, 320);
+
+        // 히트맵
+        const siLabels = ['과반응','저반응','추구','자세','운동계획','양측협응','감각변별'];
+        const cogLabels = ['주의력','기억력','지각변별','사고추론','실행기능','언어인지'];
+        const hmContainer = document.querySelector('[data-screen="2"] .results-section:nth-child(2) .chart-placeholder');
+        if (hmContainer) hmContainer.innerHTML = ChartEngine.renderHeatmap(crossResult.heatmapData, siLabels, cogLabels, 420);
+
+        // 캐스케이드
+        const csContainer = document.querySelector('[data-screen="2"] .results-section:nth-child(3) .chart-placeholder');
+        if (csContainer) csContainer.innerHTML = ChartEngine.renderCascade(DataModel.domains, crossResult.findings);
+
+        // 분석 소견
+        let findingsHTML = '';
+        // 도메인 요약
+        ['SI','GF','OC','COG'].forEach(code => {
+          const d = DataModel.domains[code];
+          if (!d) return;
+          const lvl = DataModel.getLevel(d.totalAchRate);
+          findingsHTML += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eee">
+            <span style="font-weight:600;color:${CONFIG[code].color}">${CONFIG[code].name}</span>
+            <span class="level-badge ${lvl.cls}">${lvl.emoji} ${d.totalAchRate}% (${lvl.label})</span></div>`;
+        });
+        // 교차분석 소견
+        if (crossResult.findings.length > 0) {
+          findingsHTML += '<div style="margin-top:12px;font-weight:700;font-size:13px">교차분석 소견</div>';
+          crossResult.findings.forEach(f => {
+            const sColor = f.severity==='high'?'#F44336':f.severity==='mid'?'#FF9800':'#4CAF50';
+            findingsHTML += `<div style="margin:6px 0;padding:8px;border-left:3px solid ${sColor};background:#fafafa;border-radius:4px;font-size:12px">
+              <b style="color:${sColor}">[${f.ruleId}] ${f.ruleName}</b><br>${f.message}</div>`;
+          });
+        }
+        // 중재 우선순위
+        findingsHTML += `<div style="margin-top:12px;padding:8px;background:#E3F2FD;border-radius:6px;font-weight:600;font-size:12px;color:#1565C0">${crossResult.priorityLabel}</div>`;
+        document.getElementById('analysisFindings').innerHTML = findingsHTML;
+
+        // Red Flag 종합
+        let rfHTML = '';
+        let totalRF = 0;
+        ['SI','GF','OC','COG'].forEach(code => {
+          const d = DataModel.domains[code];
+          if (d && d.totalRfCount > 0) {
+            totalRF += d.totalRfCount;
+            rfHTML += `<div style="font-size:12px;margin:4px 0"><b style="color:${CONFIG[code].color}">${CONFIG[code].name}</b>: 🚩 ${d.totalRfCount}건`;
+            d.areas.filter(a=>a.rfCount>0).forEach(a => { rfHTML += ` — ${a.name}(${a.rfCount})`; });
+            rfHTML += '</div>';
+          }
+        });
+        if (totalRF === 0) rfHTML = '<p style="color:#4CAF50;font-size:13px">Red Flag 없음 — 주의가 필요한 신호가 확인되지 않았습니다.</p>';
+        const rfCross = crossResult.findings.find(f => f.ruleId === 'R5');
+        if (rfCross) rfHTML += `<div style="margin-top:8px;padding:8px;background:#FFF3E0;border-radius:4px;font-size:12px;color:#E65100;font-weight:600">${rfCross.message}</div>`;
+        document.getElementById('redFlags').innerHTML = rfHTML;
+
+        this._autoSave();
+        this.showScreen(2);
+      },
+
+      generateReports() {
+        const patient = DataModel.patient;
+        const today = new Date().toLocaleDateString('ko-KR');
+        const crossResult = this._lastCrossResult || CrossAnalyzer.analyze(DataModel.domains);
+
+        const reportData = {
+          patient,
+          domains: DataModel.domains,
+          cross: crossResult
+        };
+
+        // Expert Report
+        document.getElementById('reportDate').textContent = today;
+        document.getElementById('reportEvaluator').textContent = patient.evaluator;
+        document.getElementById('expertReportContent').innerHTML = ReportGenerator.buildExpertReport(reportData);
+
+        // Parent Report
+        document.getElementById('parentReportName').textContent = patient.name;
+        document.getElementById('parentReportDate').textContent = patient.evalDate;
+        document.getElementById('parentReportContent').innerHTML = ReportGenerator.buildParentReport(reportData);
+
+        this._autoSave();
+        this.showScreen(3);
+      },
+
+      printReport(type) {
+        // 인쇄 대상 화면에 print-target 클래스 추가
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('print-target'));
+        const idx = type === 'expert' ? 3 : 4;
+        document.querySelector(`[data-screen="${idx}"]`).classList.add('print-target');
+        window.print();
+        // 인쇄 후 복원
+        setTimeout(() => {
+          document.querySelector(`[data-screen="${idx}"]`).classList.remove('print-target');
+        }, 500);
+      },
+
+      loadUIFromData() {
+        const p = DataModel.patient;
+        document.getElementById('patientName').value = p.name || '';
+        document.getElementById('patientBirth').value = p.birth || '';
+        document.getElementById('evalDate').value = p.evalDate || '';
+        document.getElementById('evaluator').value = p.evaluator || '';
+        document.getElementById('diagnosis').value = p.diagnosis || '';
+        document.querySelector(`input[name="gender"][value="${p.gender}"]`).checked = true;
+        if (p.ageLabel) document.getElementById('monthAge').value = p.ageLabel;
+
+        // Restore domain inputs
+        ['SI', 'GF', 'OC', 'COG'].forEach(code => {
+          if (DataModel.domains[code]) {
+            DataModel.domains[code].areas.forEach(area => {
+              const achInput = document.querySelector(`[data-domain="${code}"][data-area="${area.code}"][data-field="achRate"]`);
+              const rfInput = document.querySelector(`[data-domain="${code}"][data-area="${area.code}"][data-field="rfCount"]`);
+              const noteInput = document.querySelector(`[data-domain="${code}"][data-area="${area.code}"][data-field="note"]`);
+              if (achInput) achInput.value = area.achRate || 0;
+              if (rfInput) rfInput.value = area.rfCount || 0;
+              if (noteInput) noteInput.value = area.note || '';
+            });
+          }
+        });
+
+        this.renderSTDPanel();
+      },
+
+      renderSTDPanel() {
+        const std = DataModel.std;
+        const panel = document.getElementById('stdPanel');
+        const csp2Card = document.getElementById('stdCsp2Card');
+        const dtvp2Card = document.getElementById('stdDtvp2Card');
+        const hasAny = std.csp2 || std.dtvp2;
+        panel.style.display = hasAny ? '' : 'none';
+
+        if (std.csp2) {
+          csp2Card.style.display = '';
+          const p = std.csp2.patient || {};
+          const secs = std.csp2.sections || {};
+          const sectionCount = Object.keys(secs).length;
+          const atypical = Object.values(secs).filter(r => r.bucket !== 2).length;
+          document.getElementById('stdCsp2Info').textContent =
+            `아동: ${p.name || '-'} · 평가일: ${p.evalDate || '-'} · 영역: ${sectionCount}개 (비전형 ${atypical}개)`;
+          const radio = document.querySelector(`input[name="csp2Mode"][value="${std.csp2Mode}"]`);
+          if (radio) radio.checked = true;
+        } else {
+          csp2Card.style.display = 'none';
+        }
+
+        if (std.dtvp2) {
+          dtvp2Card.style.display = '';
+          const p = std.dtvp2.patient || {};
+          const sc = std.dtvp2.standardScores;
+          const compositeInfo = sc ? sc.composites.map(c => `${c.key}=${c.index}`).join(' · ') : '원점수 미완성';
+          document.getElementById('stdDtvp2Info').textContent =
+            `아동: ${p.name || '-'} · 평가일: ${p.evalDate || '-'} · ${compositeInfo}`;
+          const radio = document.querySelector(`input[name="dtvp2Mode"][value="${std.dtvp2Mode}"]`);
+          if (radio) radio.checked = true;
+        } else {
+          dtvp2Card.style.display = 'none';
+        }
+      },
+
+      _autoSave() {
+        this.collectInputs();
+        DataModel.save();
+      },
+
+      _calcAge() {
+        const result = DataModel.calcMonthAge(
+          document.getElementById('patientBirth').value,
+          document.getElementById('evalDate').value
+        );
+        DataModel.patient.monthAge = result.monthAge;
+        DataModel.patient.ageLabel = result.ageLabel;
+        document.getElementById('monthAge').value = result.ageLabel;
+      },
+
+      _renderDomainInputs(code) {
+        const container = document.getElementById(`content-${code}`);
+        const domainConfig = CONFIG[code];
+        const domainColor = domainConfig.color;
+
+        let html = '';
+        domainConfig.areas.forEach(area => {
+          html += `
+            <div class="area-input-row">
+              <div class="area-label" style="border-left-color: ${domainColor};">
+                ${area.name}
+                <span class="area-label-sub">${area.parentName}</span>
+              </div>
+              <div class="field">
+                <label>달성률(%)</label>
+                <input type="number" min="0" max="100" data-domain="${code}" data-area="${area.code}" data-field="achRate" placeholder="0-100">
+              </div>
+              <div class="field">
+                <label>RF수</label>
+                <input type="number" min="0" max="20" data-domain="${code}" data-area="${area.code}" data-field="rfCount" placeholder="0-20">
+              </div>
+              <div class="field">
+                <label>메모</label>
+                <input type="text" data-domain="${code}" data-area="${area.code}" data-field="note" placeholder="선택">
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+
+        // Add change listeners
+        container.querySelectorAll('input').forEach(input => {
+          input.addEventListener('change', () => this._autoSave());
+        });
+      }
+    };
+
+    /* ================================================================
+       CrossAnalyzer — 도메인 간 교차분석 엔진 (8규칙)
+       ================================================================ */
+    const CrossAnalyzer = {
+      SI_COG_CORR: {
+        'SR-OR':{ATT:3,MEM:1,PER:1,THK:0,EXF:2,LNG:0},
+        'SR-UR':{ATT:3,MEM:1,PER:2,THK:0,EXF:1,LNG:1},
+        'SR-SK':{ATT:2,MEM:0,PER:0,THK:0,EXF:3,LNG:0},
+        'MC-PS':{ATT:3,MEM:0,PER:1,THK:0,EXF:1,LNG:0},
+        'MC-PX':{ATT:1,MEM:1,PER:1,THK:2,EXF:2,LNG:0},
+        'MC-BL':{ATT:1,MEM:0,PER:2,THK:1,EXF:1,LNG:0},
+        'SD'   :{ATT:1,MEM:1,PER:3,THK:1,EXF:0,LNG:0}
+      },
+
+      _area(domain, code) {
+        if (!domain) return null;
+        return domain.areas.find(a => a.code === code) || null;
+      },
+      _avg(domain, codes) {
+        if (!domain) return 100;
+        const matched = domain.areas.filter(a => codes.includes(a.code));
+        if (!matched.length) return 100;
+        return Math.round(matched.reduce((s,a) => s + a.achRate, 0) / matched.length);
+      },
+      _srAvg(si) {
+        return this._avg(si, ['SR-OR','SR-UR','SR-SK']);
+      },
+
+      analyze(domains) {
+        const findings = [];
+        const si = domains.SI, gf = domains.GF, oc = domains.OC, cog = domains.COG;
+
+        // R1: SI→GF 캐스케이드
+        if (si && gf) {
+          const srA = this._srAvg(si);
+          const gmA = this._area(gf,'GM');
+          if (srA <= 60 && gmA && gmA.achRate <= 60) {
+            findings.push({ruleId:'R1', ruleName:'SI→G_F 캐스케이드', severity:'high',
+              message:'감각조절 저하('+srA+'%)와 대근육 저하('+gmA.achRate+'%)가 동반됩니다. 감각 기반 운동 저하 가능성이 높으며, 감각 중재를 선행하는 것이 권고됩니다.',
+              parentMessage:'아이가 감각 자극에 대한 반응이 어려워서 몸의 큰 움직임에도 영향을 줄 수 있습니다. 감각 활동을 먼저 도와주면 움직임도 함께 좋아질 수 있습니다.',
+              relatedAreas:['SR-OR','SR-UR','SR-SK','GM'],
+              intervention:'감각식이(sensory diet) + 자세조절 프로그램 선행 (4~6주)'});
+          }
+        }
+
+        // R2: SI→COG 주의력
+        if (si && cog) {
+          const srA = this._srAvg(si);
+          const attA = this._area(cog,'ATT');
+          if (srA <= 60 && attA && attA.achRate <= 60) {
+            findings.push({ruleId:'R2', ruleName:'SI→COG 주의력 상관', severity:'high',
+              message:'감각조절 저하('+srA+'%)와 주의력 저하('+attA.achRate+'%)가 동반됩니다. 감각 과부하로 인한 주의 자원 소모 가능성이 있습니다.',
+              parentMessage:'아이가 주변 자극(소리, 촉감 등)에 에너지를 많이 쓰다 보니 집중할 힘이 부족할 수 있습니다.',
+              relatedAreas:['SR-OR','SR-UR','SR-SK','ATT'],
+              intervention:'감각 환경 조정 + 주의력 지원 구조화 병행'});
+          }
+        }
+
+        // R3: GF→OC 운동-인지
+        if (gf && oc) {
+          const fmA = this._area(gf,'FM');
+          const t3A = this._area(oc,'OC-T3');
+          if (fmA && fmA.achRate <= 60 && t3A && t3A.achRate <= 60) {
+            findings.push({ruleId:'R3', ruleName:'G_F→OC 운동-인지 상관', severity:'mid',
+              message:'소근육('+fmA.achRate+'%)과 복합 실행기능('+t3A.achRate+'%)이 동반 저하되어 있습니다. 운동 순서화와 인지 순서화가 함께 어려울 수 있습니다.',
+              parentMessage:'아이가 손으로 하는 세밀한 작업과 순서대로 계획하는 능력 모두 도움이 필요합니다.',
+              relatedAreas:['FM','OC-T3'],
+              intervention:'운동계획 훈련 + 과제 단계 분할 병행'});
+          }
+        }
+
+        // R4: OC↔COG 주의
+        if (oc && cog) {
+          const t1A = this._area(oc,'OC-T1');
+          const attA = this._area(cog,'ATT');
+          if (t1A && t1A.achRate <= 60 && attA && attA.achRate <= 60) {
+            findings.push({ruleId:'R4', ruleName:'OC↔COG 주의력 일관성', severity:'high',
+              message:'작업인지 주의('+t1A.achRate+'%)와 기초인지 주의력('+attA.achRate+'%)이 모두 저하되어 주의력 결함이 일관적입니다. ADHD 감별 평가를 고려하십시오.',
+              parentMessage:'아이가 여러 상황에서 집중하는 것이 어려운 것으로 나타났습니다. 전문가와 상의하여 좀 더 자세히 알아볼 필요가 있습니다.',
+              relatedAreas:['OC-T1','ATT'],
+              intervention:'ADHD 감별 평가 의뢰 + 구조화된 주의력 훈련'});
+          }
+        }
+
+        // R5: Red Flag 교차
+        if (si && gf && oc && cog) {
+          const rfDomains = [si,gf,oc,cog].filter(d => d.totalRfCount >= 2).length;
+          if (rfDomains >= 2) {
+            const sev = rfDomains >= 3 ? 'high' : 'mid';
+            findings.push({ruleId:'R5', ruleName:'Red Flag 교차', severity:sev,
+              message: rfDomains+'개 도메인에서 Red Flag가 2건 이상 확인되었습니다. '+(rfDomains>=3?'포괄적 재평가 및 다학제 의뢰가 강력히 권고됩니다.':'추가 평가 및 다학제 팀 협의가 권고됩니다.'),
+              parentMessage:'여러 영역에서 주의가 필요한 신호가 나타났습니다. 다양한 전문가의 도움을 함께 받는 것이 좋겠습니다.',
+              relatedAreas:['RF-CROSS'],
+              intervention:'다학제 팀 의뢰 (OT/PT/SLP/심리)'});
+          }
+        }
+
+        // R6: SI→GF 자세-운동계획
+        if (si && gf) {
+          const psA = this._area(si,'MC-PS');
+          const gmA = this._area(gf,'GM');
+          if (psA && psA.achRate <= 60 && gmA && gmA.achRate <= 60) {
+            const exists = findings.find(f => f.ruleId === 'R1');
+            findings.push({ruleId:'R6', ruleName:'자세조절→대근육 연쇄', severity: exists ? 'mid' : 'high',
+              message:'자세조절('+psA.achRate+'%)과 대근육('+gmA.achRate+'%)이 동반 저하되어 있습니다. 체간 안정성 확립이 우선됩니다.',
+              parentMessage:'아이가 바른 자세를 유지하기 어려워서 큰 움직임에도 영향을 줄 수 있습니다. 몸통 힘을 키우는 활동이 도움이 됩니다.',
+              relatedAreas:['MC-PS','GM'],
+              intervention:'체간 안정화 + 항중력 자세 훈련 우선'});
+          }
+        }
+
+        // R7: GF→COG 소근육-지각
+        if (gf && cog) {
+          const fmA = this._area(gf,'FM');
+          const perA = this._area(cog,'PER');
+          if (fmA && fmA.achRate <= 60 && perA && perA.achRate <= 60) {
+            findings.push({ruleId:'R7', ruleName:'소근육→지각변별 상관', severity:'mid',
+              message:'소근육('+fmA.achRate+'%)과 지각변별('+perA.achRate+'%)이 동반 저하되어 있습니다. 시각-운동 통합(VMI) 평가가 권고됩니다.',
+              parentMessage:'아이가 손으로 하는 작업과 눈으로 구별하는 능력 모두 도움이 필요합니다. 그리기, 만들기 같은 활동이 두 가지를 함께 키워줄 수 있습니다.',
+              relatedAreas:['FM','PER'],
+              intervention:'VMI 평가 + 시각-운동 통합 활동'});
+          }
+        }
+
+        // R8: OC→COG 기억
+        if (oc && cog) {
+          const t2A = this._area(oc,'OC-T2');
+          const memA = this._area(cog,'MEM');
+          if (t2A && t2A.achRate <= 60 && memA && memA.achRate <= 60) {
+            findings.push({ruleId:'R8', ruleName:'작업기억↔기억력 상관', severity:'mid',
+              message:'핵심EF 작업기억('+t2A.achRate+'%)과 기초인지 기억력('+memA.achRate+'%)이 동반 저하되어 기억 체계 전반적 지원이 필요합니다.',
+              parentMessage:'아이가 여러 가지를 기억하면서 동시에 하는 것이 어렵습니다. 한 번에 하나씩, 반복적으로 연습하는 것이 도움됩니다.',
+              relatedAreas:['OC-T2','MEM'],
+              intervention:'기억 전략 훈련 (청킹, 시각 단서, 반복 루틴)'});
+          }
+        }
+
+        // 중재 우선순위
+        const priority = this.calcPriority(domains, findings);
+        const heatmapData = this.buildHeatmap(domains);
+        const overallLevel = this._overallLevel(domains);
+
+        return { findings, ...priority, heatmapData, overallLevel };
+      },
+
+      calcPriority(domains, findings) {
+        const si = domains.SI, gf = domains.GF, oc = domains.OC, cog = domains.COG;
+        // 캐스케이드 순서: SI → GM → FM/OC → COG
+        if (si && this._srAvg(si) < 50)
+          return {priorityTier:1, priorityLabel:'1순위: 감각 중재 선행 (감각식이 + 환경조정)'};
+        const gmA = gf ? this._area(gf,'GM') : null;
+        if (gmA && gmA.achRate < 50)
+          return {priorityTier:2, priorityLabel:'2순위: 자세/운동 기반 확립 (체간 안정화 + 대근육)'};
+        const fmA = gf ? this._area(gf,'FM') : null;
+        const t1A = oc ? this._area(oc,'OC-T1') : null;
+        if ((fmA && fmA.achRate < 50) || (t1A && t1A.achRate < 50))
+          return {priorityTier:3, priorityLabel:'3순위: 소근육 + 기저 주의력 (Tier1-2 EF)'};
+        if (cog && cog.totalAchRate < 50)
+          return {priorityTier:4, priorityLabel:'4순위: 인지 영역 중재 (복합인지/메타인지)'};
+        return {priorityTier:5, priorityLabel:'유지 및 모니터링 단계'};
+      },
+
+      buildHeatmap(domains) {
+        const si = domains.SI, cog = domains.COG;
+        const siCodes = ['SR-OR','SR-UR','SR-SK','MC-PS','MC-PX','MC-BL','SD'];
+        const cogCodes = ['ATT','MEM','PER','THK','EXF','LNG'];
+        const matrix = [];
+        siCodes.forEach(sc => {
+          const row = [];
+          const siArea = si ? si.areas.find(a=>a.code===sc) : null;
+          const siLow = siArea ? siArea.achRate <= 60 : false;
+          cogCodes.forEach(cc => {
+            const cogArea = cog ? cog.areas.find(a=>a.code===cc) : null;
+            const cogLow = cogArea ? cogArea.achRate <= 60 : false;
+            const baseCorr = (this.SI_COG_CORR[sc]||{})[cc] || 0;
+            // 실제 데이터 반영: 둘 다 저하 시 상관 강도 유지, 아니면 감소
+            row.push(siLow && cogLow ? baseCorr : Math.max(0, baseCorr - 2));
+          });
+          matrix.push(row);
+        });
+        return matrix;
+      },
+
+      _overallLevel(domains) {
+        const rates = ['SI','GF','OC','COG'].map(c => domains[c] ? domains[c].totalAchRate : 100);
+        const avg = Math.round(rates.reduce((s,v)=>s+v,0)/rates.length);
+        if (avg >= 80) return 'good';
+        if (avg >= 60) return 'caution';
+        if (avg >= 40) return 'observe';
+        return 'critical';
+      }
+    };
+
+    /* ================================================================
+       ChartEngine — SVG 시각화 (레이더, 히트맵, 캐스케이드, 막대)
+       ================================================================ */
+    const ChartEngine = {
+      _polar(cx, cy, r, angle) {
+        return {x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r};
+      },
+      _polyPts(values, cx, cy, r) {
+        const n = values.length;
+        return values.map((v,i) => {
+          const a = -Math.PI/2 + (2*Math.PI*i/n);
+          const p = this._polar(cx, cy, r * (v/100), a);
+          return p.x.toFixed(1)+','+p.y.toFixed(1);
+        }).join(' ');
+      },
+      _levelColor(v) {
+        if (v >= 80) return '#4CAF50';
+        if (v >= 60) return '#FF9800';
+        if (v >= 40) return '#F57C00';
+        return '#F44336';
+      },
+
+      renderRadar(domains, size) {
+        size = size || 320;
+        const cx = size/2, cy = size/2, r = size/2 - 50;
+        const codes = ['SI','GF','OC','COG'];
+        const labels = codes.map(c => CONFIG[c].name);
+        const values = codes.map(c => domains[c] ? domains[c].totalAchRate : 0);
+        const colors = codes.map(c => CONFIG[c].color);
+        const n = 4;
+        let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="max-width:${size}px;margin:0 auto;display:block">`;
+
+        // 배경 그리드 (20% 간격)
+        for (let lv = 1; lv <= 5; lv++) {
+          const pts = [];
+          for (let i = 0; i < n; i++) {
+            const a = -Math.PI/2 + (2*Math.PI*i/n);
+            const p = this._polar(cx, cy, r * lv/5, a);
+            pts.push(p.x.toFixed(1)+','+p.y.toFixed(1));
+          }
+          svg += `<polygon points="${pts.join(' ')}" fill="none" stroke="#ddd" stroke-width="${lv===5?1.5:0.5}"/>`;
+        }
+
+        // 축 선 + 라벨
+        for (let i = 0; i < n; i++) {
+          const a = -Math.PI/2 + (2*Math.PI*i/n);
+          const p = this._polar(cx, cy, r, a);
+          const lp = this._polar(cx, cy, r + 30, a);
+          svg += `<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="#bbb" stroke-width="0.5"/>`;
+          const anchor = i===0?'middle':i===2?'middle':i===1?'start':'end';
+          svg += `<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="${colors[i]}">${labels[i]}</text>`;
+          svg += `<text x="${lp.x.toFixed(1)}" y="${(lp.y+13).toFixed(1)}" text-anchor="${anchor}" font-size="10" fill="#666">${values[i]}%</text>`;
+        }
+
+        // 데이터 다각형
+        const avg = Math.round(values.reduce((s,v)=>s+v,0)/n);
+        const fillC = this._levelColor(avg);
+        svg += `<polygon points="${this._polyPts(values,cx,cy,r)}" fill="${fillC}" fill-opacity="0.25" stroke="${fillC}" stroke-width="2"/>`;
+
+        // 데이터 점
+        values.forEach((v,i) => {
+          const a = -Math.PI/2 + (2*Math.PI*i/n);
+          const p = this._polar(cx, cy, r*(v/100), a);
+          svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${colors[i]}" stroke="#fff" stroke-width="1.5"/>`;
+        });
+
+        svg += '</svg>';
+        return svg;
+      },
+
+      renderDetailRadar(domain, size) {
+        size = size || 280;
+        const cx = size/2, cy = size/2, r = size/2 - 40;
+        const areas = domain.areas;
+        const n = areas.length;
+        const values = areas.map(a => a.achRate);
+        const color = CONFIG[domain.domainCode].color;
+
+        let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="max-width:${size}px;display:block">`;
+
+        for (let lv = 1; lv <= 5; lv++) {
+          const pts = [];
+          for (let i = 0; i < n; i++) {
+            const a = -Math.PI/2 + (2*Math.PI*i/n);
+            const p = this._polar(cx, cy, r*lv/5, a);
+            pts.push(p.x.toFixed(1)+','+p.y.toFixed(1));
+          }
+          svg += `<polygon points="${pts.join(' ')}" fill="none" stroke="#ddd" stroke-width="${lv===5?1.5:0.5}"/>`;
+        }
+
+        for (let i = 0; i < n; i++) {
+          const a = -Math.PI/2 + (2*Math.PI*i/n);
+          const p = this._polar(cx, cy, r, a);
+          const lp = this._polar(cx, cy, r + 22, a);
+          svg += `<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="#ccc" stroke-width="0.5"/>`;
+          const anchor = Math.abs(lp.x - cx) < 10 ? 'middle' : lp.x > cx ? 'start' : 'end';
+          svg += `<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anchor}" font-size="9" fill="#555">${areas[i].name}</text>`;
+        }
+
+        svg += `<polygon points="${this._polyPts(values,cx,cy,r)}" fill="${color}" fill-opacity="0.2" stroke="${color}" stroke-width="1.5"/>`;
+        values.forEach((v,i) => {
+          const a = -Math.PI/2 + (2*Math.PI*i/n);
+          const p = this._polar(cx, cy, r*(v/100), a);
+          svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${color}"/>`;
+        });
+        svg += '</svg>';
+        return svg;
+      },
+
+      renderHeatmap(matrix, rowLabels, colLabels, width) {
+        width = width || 420;
+        const cellW = 45, cellH = 30, padL = 80, padT = 60;
+        const cols = colLabels.length, rows = rowLabels.length;
+        const h = padT + rows * cellH + 20;
+        const w = padL + cols * cellW + 20;
+        const colors = ['#f5f5f5','#FFE0B2','#FF9800','#E65100'];
+
+        let svg = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="max-width:${width}px;display:block">`;
+
+        // 열 헤더
+        colLabels.forEach((l,i) => {
+          svg += `<text x="${padL+i*cellW+cellW/2}" y="${padT-8}" text-anchor="middle" font-size="9" fill="#333" font-weight="600">${l}</text>`;
+        });
+
+        // 행
+        rowLabels.forEach((rl,ri) => {
+          const y = padT + ri * cellH;
+          svg += `<text x="${padL-6}" y="${y+cellH/2+3}" text-anchor="end" font-size="9" fill="#555">${rl}</text>`;
+          colLabels.forEach((cl,ci) => {
+            const x = padL + ci * cellW;
+            const val = matrix[ri] ? (matrix[ri][ci] || 0) : 0;
+            svg += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" fill="${colors[val]}" stroke="#fff" stroke-width="1" rx="2"/>`;
+            if (val > 0) svg += `<text x="${x+cellW/2}" y="${y+cellH/2+3}" text-anchor="middle" font-size="9" fill="${val>=2?'#fff':'#333'}" font-weight="600">${val}</text>`;
+          });
+        });
+
+        // 범례
+        const ly = h - 14;
+        svg += `<text x="${padL}" y="${ly}" font-size="8" fill="#999">0=무관 1=약 2=중 3=강</text>`;
+        svg += '</svg>';
+        return svg;
+      },
+
+      renderCascade(domains, findings) {
+        const w = 460, h = 260;
+        const tiers = [
+          {label:'SP (감각)', code:'SI', x:40, y:40, w:100, h:44},
+          {label:'GM (대근육)', code:'GF-GM', x:180, y:40, w:100, h:44},
+          {label:'FM (소근육)', code:'GF-FM', x:180, y:110, w:100, h:44},
+          {label:'EF (실행기능)', code:'OC', x:320, y:40, w:100, h:44},
+          {label:'COG (인지)', code:'COG', x:320, y:110, w:100, h:44}
+        ];
+
+        const getRate = (code) => {
+          if (code === 'SI') return domains.SI ? domains.SI.totalAchRate : null;
+          if (code === 'GF-GM') return domains.GF ? (this._findArea(domains.GF,'GM') || 0) : null;
+          if (code === 'GF-FM') return domains.GF ? (this._findArea(domains.GF,'FM') || 0) : null;
+          if (code === 'OC') return domains.OC ? domains.OC.totalAchRate : null;
+          if (code === 'COG') return domains.COG ? domains.COG.totalAchRate : null;
+          return null;
+        };
+
+        let svg = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="max-width:${w}px;display:block">`;
+
+        // 계층 라벨
+        svg += `<text x="90" y="20" text-anchor="middle" font-size="9" fill="#999" font-weight="600">1차 기저</text>`;
+        svg += `<text x="230" y="20" text-anchor="middle" font-size="9" fill="#999" font-weight="600">2-3차 처리</text>`;
+        svg += `<text x="370" y="20" text-anchor="middle" font-size="9" fill="#999" font-weight="600">4차 상위</text>`;
+
+        // 연결선
+        const arrows = [[0,1],[0,2],[1,3],[1,4],[2,3],[2,4]];
+        const activeRules = findings.map(f=>f.ruleId);
+        arrows.forEach(([fi,ti]) => {
+          const f = tiers[fi], t = tiers[ti];
+          const isActive = (fi===0&&ti===1&&activeRules.includes('R1')) || (fi===0&&ti===1&&activeRules.includes('R6'))
+            || (fi===2&&ti===3&&activeRules.includes('R3')) || (fi===2&&ti===4&&activeRules.includes('R7'));
+          svg += `<line x1="${f.x+f.w}" y1="${f.y+f.h/2}" x2="${t.x}" y2="${t.y+t.h/2}" stroke="${isActive?'#F44336':'#ccc'}" stroke-width="${isActive?2:1}" ${isActive?'stroke-dasharray="6,3"':''}/>`;
+        });
+
+        // 노드
+        tiers.forEach(t => {
+          const rate = getRate(t.code);
+          const color = rate !== null ? this._levelColor(rate) : '#bbb';
+          svg += `<rect x="${t.x}" y="${t.y}" width="${t.w}" height="${t.h}" rx="6" fill="${color}" fill-opacity="0.15" stroke="${color}" stroke-width="1.5"/>`;
+          svg += `<text x="${t.x+t.w/2}" y="${t.y+18}" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${t.label}</text>`;
+          if (rate !== null) svg += `<text x="${t.x+t.w/2}" y="${t.y+34}" text-anchor="middle" font-size="12" font-weight="700" fill="${color}">${rate}%</text>`;
+        });
+
+        // 우선순위 화살표 범례
+        svg += `<text x="40" y="${h-30}" font-size="9" fill="#666">캐스케이드 흐름: 기저(SP) → 처리(GM/FM) → 상위(EF/COG)</text>`;
+        svg += `<line x1="40" y1="${h-18}" x2="80" y2="${h-18}" stroke="#F44336" stroke-width="2" stroke-dasharray="6,3"/>`;
+        svg += `<text x="85" y="${h-14}" font-size="8" fill="#F44336">교차 소견 활성</text>`;
+
+        svg += '</svg>';
+        return svg;
+      },
+
+      _findArea(domain, code) {
+        const a = domain.areas.find(a => a.code === code);
+        return a ? a.achRate : 0;
+      },
+
+      renderBarChart(areas, domainColor, width, height) {
+        width = width || 360; height = height || 180;
+        const padL = 80, padB = 30, padT = 10, padR = 40;
+        const chartW = width - padL - padR;
+        const chartH = height - padB - padT;
+        const n = areas.length;
+        const barH = Math.min(24, (chartH - (n-1)*4) / n);
+        const gap = (chartH - n * barH) / (n + 1);
+
+        let svg = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="max-width:${width}px;display:block">`;
+
+        areas.forEach((a, i) => {
+          const y = padT + gap + i * (barH + gap);
+          const bw = chartW * (a.achRate / 100);
+          const color = this._levelColor(a.achRate);
+          svg += `<text x="${padL-4}" y="${y+barH/2+3}" text-anchor="end" font-size="9" fill="#555">${a.name}</text>`;
+          svg += `<rect x="${padL}" y="${y}" width="${chartW}" height="${barH}" fill="#f0f0f0" rx="3"/>`;
+          svg += `<rect x="${padL}" y="${y}" width="${bw}" height="${barH}" fill="${color}" fill-opacity="0.7" rx="3"/>`;
+          svg += `<text x="${padL+bw+4}" y="${y+barH/2+3}" font-size="9" font-weight="600" fill="${color}">${a.achRate}%</text>`;
+          if (a.rfCount > 0) svg += `<text x="${width-padR+4}" y="${y+barH/2+3}" font-size="8" fill="#F44336" font-weight="700">RF:${a.rfCount}</text>`;
+        });
+
+        // 기준선 (60%, 80%)
+        [60,80].forEach(v => {
+          const x = padL + chartW * v / 100;
+          svg += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${height-padB}" stroke="#999" stroke-width="0.5" stroke-dasharray="3,3"/>`;
+          svg += `<text x="${x}" y="${height-padB+12}" text-anchor="middle" font-size="8" fill="#999">${v}%</text>`;
+        });
+
+        svg += '</svg>';
+        return svg;
+      },
+
+      renderSimpleRadar(domains, size) {
+        size = size || 260;
+        const cx = size/2, cy = size/2, r = size/2 - 45;
+        const codes = ['SI','GF','OC','COG'];
+        const labels = codes.map(c => CONFIG[c].parentName);
+        const values = codes.map(c => domains[c] ? domains[c].totalAchRate : 0);
+        const n = 4;
+
+        let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="max-width:${size}px;margin:0 auto;display:block">`;
+
+        for (let lv = 1; lv <= 5; lv++) {
+          const pts = [];
+          for (let i = 0; i < n; i++) {
+            const a = -Math.PI/2 + (2*Math.PI*i/n);
+            const p = this._polar(cx, cy, r*lv/5, a);
+            pts.push(p.x.toFixed(1)+','+p.y.toFixed(1));
+          }
+          svg += `<polygon points="${pts.join(' ')}" fill="none" stroke="${lv===5?'#bbb':'#e0e0e0'}" stroke-width="0.5"/>`;
+        }
+
+        for (let i = 0; i < n; i++) {
+          const a = -Math.PI/2 + (2*Math.PI*i/n);
+          const lp = this._polar(cx, cy, r + 28, a);
+          const anchor = Math.abs(lp.x-cx)<10?'middle':lp.x>cx?'start':'end';
+          svg += `<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anchor}" font-size="11" fill="#555">${labels[i]}</text>`;
+        }
+
+        const avg = Math.round(values.reduce((s,v)=>s+v,0)/n);
+        const color = this._levelColor(avg);
+        svg += `<polygon points="${this._polyPts(values,cx,cy,r)}" fill="${color}" fill-opacity="0.2" stroke="${color}" stroke-width="2"/>`;
+        values.forEach((v,i) => {
+          const a = -Math.PI/2 + (2*Math.PI*i/n);
+          const p = this._polar(cx, cy, r*(v/100), a);
+          svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
+        });
+
+        svg += '</svg>';
+        return svg;
+      }
+    };
+
+    /* ================================================================
+       ReportGenerator — 전문가용/부모용 보고서 HTML 생성
+       ================================================================ */
+    const ReportGenerator = {
+      buildExpertReport(data) {
+        const {patient, domains, cross} = data;
+        let h = '';
+
+        // 1. 아동 기본정보
+        h += `<div class="report-section"><h4>1. 아동 기본정보</h4>
+          <table class="info-table"><tr><td><b>아동명</b></td><td>${patient.name}</td><td><b>성별</b></td><td>${patient.gender==='M'?'남':'여'}</td></tr>
+          <tr><td><b>생년월일</b></td><td>${patient.birth}</td><td><b>월령</b></td><td>${patient.ageLabel}</td></tr>
+          <tr><td><b>평가일</b></td><td>${patient.evalDate}</td><td><b>평가자</b></td><td>${patient.evaluator}</td></tr>
+          ${patient.diagnosis?`<tr><td><b>진단/의뢰사유</b></td><td colspan="3">${patient.diagnosis}</td></tr>`:''}</table></div>`;
+
+        // 2. 도메인별 프로파일
+        h += '<div class="report-section"><h4>2. 도메인별 프로파일</h4>';
+        ['SI','GF','OC','COG'].forEach(code => {
+          const d = domains[code];
+          if (!d) return;
+          const cfg = CONFIG[code];
+          const lvl = DataModel.getLevel(d.totalAchRate);
+          h += `<div style="margin:12px 0;padding:10px;border-left:4px solid ${cfg.color};background:#fafafa;border-radius:4px">`;
+          h += `<div style="display:flex;justify-content:space-between;align-items:center"><b style="color:${cfg.color}">${cfg.name}</b><span class="level-badge ${lvl.cls}">${lvl.emoji} ${d.totalAchRate}% (${lvl.label})</span></div>`;
+          h += ChartEngine.renderBarChart(d.areas, cfg.color, 360, Math.max(120, d.areas.length * 30 + 40));
+          if (d.totalRfCount > 0) h += `<div style="color:#F44336;font-size:12px;margin-top:4px">🚩 Red Flag: ${d.totalRfCount}건</div>`;
+          h += '</div>';
+        });
+        h += '</div>';
+
+        // 3. 종합 레이더
+        h += '<div class="report-section"><h4>3. 종합 프로파일 차트</h4>';
+        h += ChartEngine.renderRadar(domains, 300);
+        h += '</div>';
+
+        // 4. 교차분석
+        h += '<div class="report-section"><h4>4. 도메인 간 교차분석</h4>';
+        if (cross.findings.length === 0) {
+          h += '<p style="color:#4CAF50">교차 소견 없음 — 도메인 간 유의미한 동반 저하 패턴이 확인되지 않았습니다.</p>';
+        } else {
+          cross.findings.forEach(f => {
+            const sColor = f.severity==='high'?'#F44336':f.severity==='mid'?'#FF9800':'#4CAF50';
+            h += `<div style="margin:8px 0;padding:8px 12px;border-left:3px solid ${sColor};background:#fafafa;border-radius:4px">`;
+            h += `<div style="font-weight:700;font-size:12px;color:${sColor}">[${f.ruleId}] ${f.ruleName}</div>`;
+            h += `<div style="font-size:12px;margin:4px 0">${f.message}</div>`;
+            h += `<div style="font-size:11px;color:#1565C0">→ ${f.intervention}</div></div>`;
+          });
+        }
+        // 히트맵
+        const siLabels = ['과반응','저반응','추구','자세','운동계획','양측협응','감각변별'];
+        const cogLabels = ['주의력','기억력','지각변별','사고추론','실행기능','언어인지'];
+        h += '<div style="margin-top:16px"><b style="font-size:12px">SI ↔ COG 상관 히트맵</b></div>';
+        h += ChartEngine.renderHeatmap(cross.heatmapData, siLabels, cogLabels, 400);
+        h += '</div>';
+
+        // 5. Red Flag 종합
+        h += '<div class="report-section"><h4>5. Red Flag 종합</h4>';
+        let totalRF = 0;
+        ['SI','GF','OC','COG'].forEach(code => {
+          const d = domains[code];
+          if (d && d.totalRfCount > 0) {
+            totalRF += d.totalRfCount;
+            h += `<div style="font-size:12px;margin:4px 0"><span style="color:${CONFIG[code].color};font-weight:700">${CONFIG[code].name}</span>: 🚩 ${d.totalRfCount}건`;
+            d.areas.filter(a=>a.rfCount>0).forEach(a => {
+              h += ` — ${a.name}(${a.rfCount})`;
+            });
+            h += '</div>';
+          }
+        });
+        if (totalRF === 0) h += '<p style="color:#4CAF50">Red Flag 없음</p>';
+        h += '</div>';
+
+        // 6. 중재 우선순위
+        h += `<div class="report-section"><h4>6. 중재 우선순위</h4>
+          <div style="padding:10px;background:#E3F2FD;border-radius:6px;font-weight:700;color:#1565C0">${cross.priorityLabel}</div>`;
+        h += ChartEngine.renderCascade(domains, cross.findings);
+        h += '</div>';
+
+        // 7. 임상 인상
+        h += `<div class="report-section"><h4>7. 임상 인상 및 권고</h4>
+          <textarea id="expertClinicalNote" style="width:100%;height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:12px;resize:vertical" placeholder="임상 인상 및 추가 권고 사항을 기록하세요..."></textarea></div>`;
+
+        // 8. 표준화 검사 보충 (통합 모드인 경우만)
+        const std = DataModel.std;
+        if (std.csp2 && std.csp2Mode === 'integrate') {
+          h += '<div class="report-section"><h4>8a. K-CSP2 · 아동 감각처리 프로파일</h4>';
+          const p8 = std.csp2.patient || {};
+          h += `<div style="font-size:12px;color:#555;margin-bottom:8px">아동: ${p8.name||'-'} · 생년월일: ${p8.birth||'-'} · 평가일: ${p8.evalDate||'-'}</div>`;
+          const secs = std.csp2.sections || {};
+          if (Object.keys(secs).length > 0) {
+            h += '<table class="info-table" style="font-size:12px;width:100%;border-collapse:collapse;margin-bottom:8px">';
+            h += '<tr style="background:#e8eaf6"><th style="padding:4px 8px">영역</th><th style="padding:4px 8px">분류</th><th style="padding:4px 8px">백분위</th></tr>';
+            Object.entries(secs).forEach(([label, r]) => {
+              const col = r.bucket >= 3 ? '#c62828' : r.bucket <= 1 ? '#1565c0' : '#2e7d32';
+              h += `<tr><td style="padding:4px 8px">${label}</td><td style="padding:4px 8px;color:${col};font-weight:700">${r.classText}</td><td style="padding:4px 8px">${r.pctText||'-'}</td></tr>`;
+            });
+            h += '</table>';
+          }
+          if (std.csp2.summaryText) {
+            h += `<div style="font-size:12px;background:#f5f5f5;padding:10px;border-radius:4px;white-space:pre-wrap">${std.csp2.summaryText}</div>`;
+          }
+          h += '</div>';
+        }
+
+        if (std.dtvp2 && std.dtvp2Mode === 'integrate') {
+          h += '<div class="report-section"><h4>8b. K-DTVP-2 · 시지각 발달 검사</h4>';
+          const p9 = std.dtvp2.patient || {};
+          h += `<div style="font-size:12px;color:#555;margin-bottom:8px">아동: ${p9.name||'-'} · 생년월일: ${p9.birth||'-'} · 평가일: ${p9.evalDate||'-'} · 연령대: ${p9.ageBand||'-'}</div>`;
+          const sc = std.dtvp2.standardScores;
+          if (sc) {
+            h += '<div style="font-size:12px;font-weight:700;margin-bottom:4px">종합척도 지수</div>';
+            h += '<table class="info-table" style="font-size:12px;width:100%;border-collapse:collapse;margin-bottom:8px">';
+            h += '<tr style="background:#e8f5e9"><th style="padding:4px 8px">척도</th><th style="padding:4px 8px">명칭</th><th style="padding:4px 8px">지수</th><th style="padding:4px 8px">백분위</th><th style="padding:4px 8px">수준</th></tr>';
+            sc.composites.forEach(c => {
+              h += `<tr><td style="padding:4px 8px;font-weight:700">${c.key}</td><td style="padding:4px 8px">${c.name}</td><td style="padding:4px 8px">${c.index}</td><td style="padding:4px 8px">${c.percentile}</td><td style="padding:4px 8px">${c.level}</td></tr>`;
+            });
+            h += '</table>';
+            h += '<div style="font-size:12px;font-weight:700;margin-bottom:4px">하위검사 표준점수</div>';
+            h += '<table class="info-table" style="font-size:12px;width:100%;border-collapse:collapse">';
+            h += '<tr style="background:#e8f5e9"><th style="padding:4px 8px">#</th><th style="padding:4px 8px">검사명</th><th style="padding:4px 8px">원점수</th><th style="padding:4px 8px">표준점수</th><th style="padding:4px 8px">수준</th></tr>';
+            sc.subtests.forEach(s => {
+              h += `<tr><td style="padding:4px 8px">${s.id}</td><td style="padding:4px 8px">${s.name}</td><td style="padding:4px 8px">${s.raw}</td><td style="padding:4px 8px">${s.standard}</td><td style="padding:4px 8px">${s.level}</td></tr>`;
+            });
+            h += '</table>';
+          } else {
+            h += `<p style="color:#e65100;font-size:12px">${std.dtvp2.note || '원점수 미완성 — 표준점수 미산출'}</p>`;
+          }
+          h += '</div>';
+        }
+
+        return h;
+      },
+
+      buildParentReport(data) {
+        const {patient, domains, cross} = data;
+        let h = '';
+
+        // 1. 아이 정보
+        h += `<div class="report-section" style="text-align:center;padding:20px">
+          <div style="font-size:24px;font-weight:700;color:var(--header-bg)">${patient.name}</div>
+          <div style="font-size:14px;color:#666;margin-top:4px">${patient.ageLabel} · ${patient.gender==='M'?'남자':'여자'} · 평가일 ${patient.evalDate}</div></div>`;
+
+        // 2. 우리 아이는 어떤가요?
+        h += '<div class="report-section"><h4>우리 아이는 어떤가요?</h4>';
+        h += ChartEngine.renderSimpleRadar(domains, 260);
+        ['SI','GF','OC','COG'].forEach(code => {
+          const d = domains[code];
+          if (!d) return;
+          const cfg = CONFIG[code];
+          const lvl = DataModel.getLevel(d.totalAchRate);
+          h += ParentTextGen.describeDomain(d, cfg, lvl);
+        });
+        h += '</div>';
+
+        // 3. 강점과 도움 필요 영역
+        const {strengths, needs} = this._classifyAreas(domains);
+        h += '<div class="report-section"><h4>강점과 도움이 필요한 영역</h4>';
+        if (strengths.length) {
+          h += '<div style="margin:8px 0"><b style="color:#4CAF50">잘하고 있어요</b>';
+          strengths.forEach(s => { h += `<div style="font-size:13px;margin:2px 0;padding:4px 8px;background:#E8F5E9;border-radius:4px">🟢 ${s.parentName} (${s.achRate}%)</div>`; });
+          h += '</div>';
+        }
+        if (needs.length) {
+          h += '<div style="margin:8px 0"><b style="color:#F57C00">도움이 필요해요</b>';
+          needs.forEach(n => { h += `<div style="font-size:13px;margin:2px 0;padding:4px 8px;background:#FFF3E0;border-radius:4px">${DataModel.getLevel(n.achRate).emoji} ${n.parentName} (${n.achRate}%)</div>`; });
+          h += '</div>';
+        }
+        h += '</div>';
+
+        // 4. 일상에서 이렇게 도와주세요
+        h += '<div class="report-section"><h4>일상에서 이렇게 도와주세요</h4>';
+        const activities = this._recommendActivities(cross.findings, domains);
+        activities.forEach((act,i) => {
+          h += `<div style="margin:10px 0;padding:10px;background:#F5F5F5;border-radius:6px;border-left:3px solid var(--header-bg)">
+            <div style="font-weight:700;font-size:13px;color:var(--header-bg)">${i+1}. ${act.title}</div>
+            <div style="font-size:12px;margin:4px 0">${act.desc}</div>
+            <div style="font-size:11px;color:#4CAF50">기대 효과: ${act.effect}</div></div>`;
+        });
+        h += '</div>';
+
+        // 5. 다음 단계
+        h += '<div class="report-section"><h4>다음 단계는?</h4>';
+        h += `<div style="font-size:13px;line-height:1.8">`;
+        if (cross.overallLevel === 'good') {
+          h += '<p>전반적으로 연령에 적합한 발달을 보이고 있습니다. 정기적인 관찰을 유지해 주세요.</p>';
+        } else if (cross.overallLevel === 'caution') {
+          h += '<p>일부 영역에서 추가 관찰이 필요합니다. 3~6개월 후 재평가를 권고합니다.</p>';
+        } else {
+          h += '<p>여러 영역에서 지원이 필요합니다. 담당 치료사와 중재 계획을 상의하시고, 정기적인 재평가를 통해 변화를 확인해 주세요.</p>';
+        }
+        if (cross.findings.some(f => f.ruleId === 'R5')) {
+          h += '<p style="color:#F57C00;font-weight:600">다양한 전문가(작업치료사, 물리치료사, 언어치료사, 심리사)의 협력 평가가 권고됩니다.</p>';
+        }
+        h += ParentTextGen.encouragement(cross.overallLevel);
+        h += '</div></div>';
+
+        return h;
+      },
+
+      _classifyAreas(domains) {
+        const strengths = [], needs = [];
+        ['SI','GF','OC','COG'].forEach(code => {
+          const d = domains[code];
+          if (!d) return;
+          d.areas.forEach(a => {
+            const item = {code:a.code, name:a.name, parentName: CONFIG[code].areas.find(ca=>ca.code===a.code)?.parentName || a.name, achRate:a.achRate};
+            if (a.achRate >= 80) strengths.push(item);
+            else if (a.achRate < 60) needs.push(item);
+          });
+        });
+        needs.sort((a,b) => a.achRate - b.achRate);
+        return {strengths, needs};
+      },
+
+      _recommendActivities(findings, domains) {
+        const acts = [];
+        // 기본 활동: 가장 낮은 도메인 기반
+        const lowestDomain = ['SI','GF','OC','COG']
+          .filter(c => domains[c])
+          .sort((a,b) => domains[a].totalAchRate - domains[b].totalAchRate)[0];
+
+        if (lowestDomain === 'SI' || findings.some(f=>f.ruleId==='R1')) {
+          acts.push({title:'감각 놀이 시간 만들기', desc:'매일 15~20분, 다양한 촉감(모래, 물, 밀가루 반죽)을 탐색하는 놀이를 해보세요. 아이가 싫어하는 감각은 천천히, 좋아하는 감각부터 시작합니다.', effect:'감각 조절 능력 향상, 새로운 경험에 대한 적응력 증가'});
+          acts.push({title:'몸으로 하는 놀이', desc:'트램폴린 뛰기, 베개 사이로 밀기, 무거운 물건 나르기 같은 "힘을 쓰는" 놀이를 하루 2~3회 해보세요.', effect:'고유수용 입력 증가로 몸 인식과 자세 안정성 향상'});
+        }
+        if (lowestDomain === 'GF' || findings.some(f=>f.ruleId==='R6')) {
+          acts.push({title:'균형 잡기 놀이', desc:'한 발 서기, 평균대 걷기, 요가 자세 따라하기를 놀이처럼 해보세요. 처음에는 손잡이를 잡고, 점차 혼자 시도합니다.', effect:'체간 안정성과 자세 조절 능력 향상'});
+        }
+        if (lowestDomain === 'OC' || findings.some(f=>f.ruleId==='R4')) {
+          acts.push({title:'순서대로 하기 연습', desc:'간단한 요리(샌드위치 만들기), 정리정돈(옷 개기 3단계)을 그림 순서표와 함께 연습해보세요.', effect:'계획하기, 순서 기억하기, 자기 점검 능력 향상'});
+        }
+        if (lowestDomain === 'COG' || findings.some(f=>f.ruleId==='R8')) {
+          acts.push({title:'기억력 게임', desc:'카드 뒤집기(메모리 게임), "장 보기 목록 외우기" 놀이를 해보세요. 처음 3개부터 시작해서 점차 늘립니다.', effect:'작업 기억과 집중력 향상'});
+        }
+        if (acts.length === 0) {
+          acts.push({title:'다양한 경험 제공하기', desc:'새로운 놀이터, 미술 활동, 음악 활동 등 다양한 감각과 인지 경험을 제공해 주세요.', effect:'전반적 발달 촉진 및 유지'});
+        }
+        return acts.slice(0, 5);
+      }
+    };
+
+    /* ================================================================
+       ParentTextGen — 부모용 쉬운 설명 텍스트 생성
+       ================================================================ */
+    const ParentTextGen = {
+      DICT: {
+        'SR-OR':'자극에 예민한 반응','SR-UR':'자극에 둔한 반응','SR-SK':'자극을 적극 찾는 행동',
+        'MC-PS':'바른 자세 유지하기','MC-PX':'새로운 동작 배우기','MC-BL':'양손 함께 쓰기',
+        'SD':'감각 구별하기','GM':'큰 움직임','FM':'작은 움직임',
+        'OC-T1':'집중하기','OC-T2':'기억하면서 참기','OC-T3':'계획하고 실행하기','OC-T4':'스스로 점검하기',
+        'ATT':'집중력','MEM':'기억하기','PER':'보고 구별하기',
+        'THK':'생각하고 추리하기','EXF':'계획하고 해내기','LNG':'말로 이해하고 표현하기'
+      },
+
+      describeDomain(domain, cfg, level) {
+        const pName = cfg.parentName;
+        let text = `<div style="margin:10px 0;padding:10px;background:#fafafa;border-radius:6px;border-left:3px solid ${cfg.color}">`;
+        text += `<div style="font-weight:700;color:${cfg.color}">${pName} ${level.emoji}</div>`;
+
+        if (level.cls === 'good') {
+          text += `<p style="font-size:13px;margin:4px 0">${pName} 영역에서 또래 아이들과 비슷한 수준을 보이고 있어요. 잘하고 있습니다!</p>`;
+        } else if (level.cls === 'caution') {
+          text += `<p style="font-size:13px;margin:4px 0">${pName} 영역은 대체로 괜찮지만, 일부 부분에서 조금 더 연습이 필요해요.</p>`;
+        } else if (level.cls === 'observe') {
+          text += `<p style="font-size:13px;margin:4px 0">${pName} 영역에서 또래보다 어려움이 있어요. 가정과 치료실에서 함께 도와주면 좋겠습니다.</p>`;
+        } else {
+          text += `<p style="font-size:13px;margin:4px 0">${pName} 영역에서 많은 도움이 필요해요. 전문가와 함께 집중적으로 지원하면 좋아질 수 있습니다.</p>`;
+        }
+
+        // 하위 영역 중 저하 항목 언급
+        const lowAreas = domain.areas.filter(a => a.achRate < 60);
+        if (lowAreas.length > 0) {
+          text += '<div style="font-size:12px;color:#666;margin-top:4px">특히 ';
+          text += lowAreas.map(a => `<b>${this.DICT[a.code] || a.name}</b>(${a.achRate}%)`).join(', ');
+          text += ' 부분에서 도움이 필요합니다.</div>';
+        }
+        text += '</div>';
+        return text;
+      },
+
+      encouragement(level) {
+        if (level === 'good') return '<p style="margin-top:8px;color:#4CAF50">아이가 잘 성장하고 있습니다. 지금처럼 따뜻한 관심과 격려를 계속해 주세요. 😊</p>';
+        if (level === 'caution') return '<p style="margin-top:8px;color:#FF9800">아이의 성장을 위해 관심을 가져주셔서 감사합니다. 조금만 더 도와주시면 좋아질 수 있어요. 😊</p>';
+        return '<p style="margin-top:8px;color:#1565C0">아이를 위해 평가를 받으신 것 자체가 큰 첫걸음입니다. 전문가와 함께라면 분명 좋아질 수 있습니다. 함께 응원합니다. 💪</p>';
+      }
+    };
+
+    // PWA Service Worker registration
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+
+    // ── IndexedDB 공유 헬퍼 ──────────────────────────────────────
+    const ChildDB=(()=>{
+      const DN='si-cog-cda',V=1;let _db=null;
+      function open(){
+        if(_db)return Promise.resolve(_db);
+        return new Promise((res,rej)=>{
+          const r=indexedDB.open(DN,V);
+          r.onupgradeneeded=e=>{
+            const db=e.target.result;
+            if(!db.objectStoreNames.contains('children'))
+              db.createObjectStore('children',{keyPath:'id',autoIncrement:true});
+            ['obs1','obs2','std1','std2','rpt','ace'].forEach(s=>{
+              if(!db.objectStoreNames.contains(s))
+                db.createObjectStore(s,{keyPath:'childId'});
+            });
+          };
+          r.onsuccess=e=>{_db=e.target.result;res(_db);};
+          r.onerror=e=>rej(e.target.error);
+        });
+      }
+      function tx(store,mode,fn){
+        return open().then(db=>new Promise((res,rej)=>{
+          const t=db.transaction(store,mode);
+          const req=fn(t.objectStore(store));
+          req.onsuccess=e=>res(e.target.result);
+          req.onerror=e=>rej(e.target.error);
+        }));
+      }
+      return{
+        listChildren:()=>tx('children','readonly',s=>s.getAll()),
+        addChild:name=>tx('children','readwrite',s=>s.add({name,createdAt:new Date().toISOString()})),
+        deleteChild:id=>tx('children','readwrite',s=>s.delete(id)),
+        saveData:(store,childId,data)=>tx(store,'readwrite',s=>s.put({childId,data,savedAt:new Date().toISOString()})),
+        loadData:(store,childId)=>tx(store,'readonly',s=>s.get(childId)).then(r=>r?r.data:null),
+      };
+    })();
+
+    const RPT_STORE='rpt';
+    const RPT_LEGACY_KEY='cprg_data';
+    window.rpChildId=null;
+    window.rpSaveToIDB=(data)=>{
+      if(!window.rpChildId)return Promise.resolve();
+      return ChildDB.saveData(RPT_STORE,window.rpChildId,data);
+    };
+
+    function setCbStatus(msg){const el=document.getElementById('cb-status');if(el)el.textContent=msg;}
+
+    async function refreshChildList(selectId){
+      const children=await ChildDB.listChildren();
+      const sel=document.getElementById('child-select');
+      sel.innerHTML='<option value="">-- 아동 선택 --</option>';
+      children.forEach(c=>{
+        const o=document.createElement('option');
+        o.value=c.id;o.textContent=c.name;
+        if(c.id===selectId)o.selected=true;
+        sel.appendChild(o);
+      });
+    }
+
+    async function onChildChange(){
+      const sel=document.getElementById('child-select');
+      const newId=sel.value?Number(sel.value):null;
+      if(window.rpChildId){
+        UI.collectInputs();
+        await window.rpSaveToIDB({patient:DataModel.patient,domains:DataModel.domains,std:DataModel.std}).catch(()=>{});
+      }
+      window.rpChildId=newId;
+      DataModel.reset();
+      UI.loadUIFromData();
+      if(newId){
+        const data=await ChildDB.loadData(RPT_STORE,newId);
+        if(data){
+          DataModel.patient=data.patient||DataModel.patient;
+          DataModel.domains=data.domains||DataModel.domains;
+          if(data.std)DataModel.std=Object.assign({csp2:null,dtvp2:null,csp2Mode:'separate',dtvp2Mode:'separate'},data.std);
+          UI.loadUIFromData();
+        }
+        setCbStatus(data?'불러옴 '+new Date().toLocaleTimeString():'새 아동');
+      }else{setCbStatus('');}
+    }
+
+    async function addNewChild(){
+      const name=prompt('아동 이름을 입력하세요:');
+      if(!name||!name.trim())return;
+      const id=await ChildDB.addChild(name.trim());
+      window.rpChildId=id;
+      DataModel.reset();
+      UI.loadUIFromData();
+      await refreshChildList(id);
+      setCbStatus('새 아동 생성됨');
+    }
+
+    async function deleteCurrentChild(){
+      const sel=document.getElementById('child-select');
+      if(!sel.value){alert('삭제할 아동을 선택하세요.');return;}
+      const name=sel.options[sel.selectedIndex].text;
+      if(!confirm(`"${name}" 아동의 모든 데이터를 삭제합니다. 계속하시겠습니까?`))return;
+      await ChildDB.deleteChild(Number(sel.value));
+      window.rpChildId=null;
+      await refreshChildList(null);
+      DataModel.reset();
+      UI.loadUIFromData();
+      setCbStatus('삭제됨');
+    }
+
+    window._rpIDBInit=async()=>{
+      await ChildDB.listChildren().catch(()=>{});
+      try{
+        const raw=localStorage.getItem(RPT_LEGACY_KEY);
+        if(raw){
+          const data=JSON.parse(raw);
+          const name=(data.patient&&data.patient.name)||'가져온 데이터';
+          if(confirm(`기존 저장 데이터(${name})를 IndexedDB로 이전하겠습니까?`)){
+            const id=await ChildDB.addChild(name);
+            await ChildDB.saveData(RPT_STORE,id,data);
+            localStorage.removeItem(RPT_LEGACY_KEY);
+            window.rpChildId=id;
+            await refreshChildList(id);
+            DataModel.patient=data.patient||DataModel.patient;
+            DataModel.domains=data.domains||DataModel.domains;
+            if(data.std)DataModel.std=Object.assign({csp2:null,dtvp2:null,csp2Mode:'separate',dtvp2Mode:'separate'},data.std);
+            UI.loadUIFromData();
+            setCbStatus('기존 데이터 이전 완료');
+          }else{
+            localStorage.removeItem(RPT_LEGACY_KEY);
+            await refreshChildList(null);
+          }
+        }else{
+          await refreshChildList(null);
+        }
+      }catch(e){await refreshChildList(null);}
+    };
+
+    // Init on DOM ready
+    document.addEventListener('DOMContentLoaded', () => UI.init());
+
+    // ── ①+③ 병합 자동완성 함수 ──
+
+    function parseSIMotorForCPRG(json) {
+      const scores = json.scores || {};
+      function domainAch(id) {
+        const pat = `_${id}_`;
+        let sum = 0, max = 0;
+        Object.keys(scores).forEach(k => {
+          if (k.includes(pat)) {
+            const v = Number(scores[k]);
+            if (!isNaN(v)) { sum += v; max += 4; }
+          }
+        });
+        return max > 0 ? Math.round((sum / max) * 100) : null;
+      }
+      const p = json.patient || {};
+      return {
+        _source: 'si',
+        patient: { name: p.name, birth: p.birth, evalDate: p.evalDate, evaluator: p.evaluator, diagnosis: p.diagnosis },
+        SI: { 'MC-PS': domainAch('postural'), 'MC-BL': domainAch('bilateral'), 'MC-PX': domainAch('praxis') },
+        GF: { 'GM': domainAch('gross'), 'FM': domainAch('fine') }
+      };
+    }
+
+    function parseCognitiveForCPRG(json) {
+      const ss = json.sectionScores || {};
+      const p = json.patient || {};
+      function ach(sec) { return ss[sec] ? ss[sec].achRate : null; }
+      function rf(sec)  { return ss[sec] ? ss[sec].rfCount  : 0;    }
+      return {
+        _source: 'cog',
+        patient: { name: p.name, birth: p.dob, evalDate: p.edate, evaluator: p.evaluator },
+        COG: {
+          'ATT': { achRate: ach('주의력'),    rfCount: rf('주의력')    },
+          'MEM': { achRate: ach('기억력'),    rfCount: rf('기억력')    },
+          'PER': { achRate: ach('지각/변별'), rfCount: rf('지각/변별') },
+          'THK': { achRate: ach('사고/추론'), rfCount: rf('사고/추론') },
+          'EXF': { achRate: ach('실행기능'),  rfCount: rf('실행기능')  },
+          'LNG': { achRate: ach('언어인지'),  rfCount: rf('언어인지')  }
+        },
+        OC: {
+          'OC-T1': { achRate: ach('주의력'),   rfCount: rf('주의력')   },
+          'OC-T2': { achRate: ach('실행기능'), rfCount: rf('실행기능') }
+        }
+      };
+    }
+
+    function applyMergedToCPRG(parsedList) {
+      // 환자 정보 병합
+      const pat = {};
+      parsedList.forEach(p => {
+        if (!p.patient) return;
+        Object.keys(p.patient).forEach(k => { if (p.patient[k] && !pat[k]) pat[k] = p.patient[k]; });
+      });
+      if (pat.name)      document.getElementById('patientName').value  = pat.name;
+      if (pat.birth)     document.getElementById('patientBirth').value = pat.birth;
+      if (pat.evalDate)  document.getElementById('evalDate').value     = pat.evalDate;
+      if (pat.evaluator) document.getElementById('evaluator').value    = pat.evaluator;
+      if (pat.diagnosis) document.getElementById('diagnosis').value    = pat.diagnosis;
+
+      // 도메인 입력 채우기
+      function fill(domain, areaCode, achRate, rfCount) {
+        if (achRate === null || achRate === undefined) return;
+        const aEl = document.querySelector(`[data-domain="${domain}"][data-area="${areaCode}"][data-field="achRate"]`);
+        const rEl = document.querySelector(`[data-domain="${domain}"][data-area="${areaCode}"][data-field="rfCount"]`);
+        if (aEl) aEl.value = achRate;
+        if (rEl && rfCount != null) rEl.value = rfCount;
+      }
+
+      parsedList.forEach(p => {
+        if (p.SI)  Object.keys(p.SI).forEach(c  => fill('SI',  c, p.SI[c]));
+        if (p.GF)  Object.keys(p.GF).forEach(c  => fill('GF',  c, p.GF[c]));
+        if (p.COG) Object.keys(p.COG).forEach(c => fill('COG', c, p.COG[c].achRate, p.COG[c].rfCount));
+        if (p.OC)  Object.keys(p.OC).forEach(c  => fill('OC',  c, p.OC[c].achRate,  p.OC[c].rfCount));
+      });
+    }
+  </script>
+  <a href="../" id="pwa-back-btn" title="메인으로 돌아가기" style="
+    position:fixed;
+    bottom:calc(20px + env(safe-area-inset-bottom, 0px));
+    right:calc(20px + env(safe-area-inset-right, 0px));
+    z-index:2147483647;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#1a1a1a;
+    color:#fff;
+    border:2px solid #fff;
+    border-radius:30px;
+    padding:12px 20px 12px 16px;
+    font-size:14px;
+    font-weight:700;
+    text-decoration:none;
+    font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);
+    -webkit-tap-highlight-color:transparent;
+    cursor:pointer;
+    pointer-events:auto;
+    -webkit-transform:translateZ(0);
+    transform:translateZ(0);
+  ">
+    <span style="font-size:18px;line-height:1;">←</span>
+    <span>메인으로</span>
+  </a>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "CDA-MSC · 다회기 비교 분석",
+  "short_name": "CDA-MSC",
+  "description": "SI-Cog CDA — 다회기 평가 데이터 비교 분석 및 Excel 내보내기",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#37474F",
+  "orientation": "portrait",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "education"]
+}

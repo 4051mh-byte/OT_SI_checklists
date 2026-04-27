@@ -1,0 +1,16 @@
+{
+  "name": "CDA-OBS2 기초인지 임상관찰 체크리스트",
+  "short_name": "CDA-OBS2",
+  "description": "기초인지 임상관찰 체크리스트",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#FAAB23",
+  "orientation": "portrait-primary",
+  "lang": "ko",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
