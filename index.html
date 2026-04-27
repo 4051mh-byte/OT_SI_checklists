@@ -63,6 +63,17 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 .phase-tbl tr:last-child td { border-bottom:none; }
 .phase-tbl .ph-badge { display:inline-block; font-size:10px; font-weight:700; color:#fff; border-radius:3px; padding:1px 7px; white-space:nowrap; }
 
+/* dict table — mobile card layout */
+@media (max-width:640px) {
+  .dict-tbl thead { display:none; }
+  .dict-tbl, .dict-tbl tbody, .dict-tbl tr, .dict-tbl td { display:block; width:100%; }
+  .dict-tbl tr { background:#fff; border-radius:8px; border:1px solid #e0e0e0; margin-bottom:10px; padding:10px 12px; }
+  .dict-tbl td { padding:3px 0; border:none; }
+  .dict-tbl td:first-child { font-size:12px; font-weight:700; margin-bottom:2px; }
+  .dict-tbl td:nth-child(2) { font-size:11px; color:#666; padding-bottom:6px; border-bottom:1px dashed #e8e8e8; margin-bottom:4px; }
+  .dict-tbl td:nth-child(3) { font-size:12px; color:#333; line-height:1.7; }
+}
+
 /* install tip inside accordion */
 .tip-section { margin-top:10px; padding-top:10px; border-top:1px dashed #ddd; font-size:12px; color:#555; line-height:1.7; }
 .tip-section:first-of-type { margin-top:4px; padding-top:0; border-top:none; }
@@ -300,9 +311,9 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 
       <!-- 1. 시스템 전체 명칭 -->
       <div style="font-size:12px;font-weight:700;color:#1B4F72;margin-bottom:6px;">1. 시스템 전체 명칭</div>
-      <table class="phase-tbl" style="margin-bottom:16px;">
+      <table class="phase-tbl dict-tbl" style="margin-bottom:16px;">
         <thead>
-          <tr><th style="width:18%;">약어</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미</th></tr>
+          <tr><th style="width:12%;">약어</th><th style="width:23%;">풀네임</th><th style="width:65%;">의미</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -315,9 +326,9 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 
       <!-- 2. Phase A -->
       <div style="font-size:12px;font-weight:700;color:#E55D62;margin-bottom:6px;">2. Phase A · 임상 관찰 (Clinical Observation)</div>
-      <table class="phase-tbl" style="margin-bottom:16px;">
+      <table class="phase-tbl dict-tbl" style="margin-bottom:16px;">
         <thead>
-          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+          <tr><th style="width:12%;">코드</th><th style="width:23%;">풀네임</th><th style="width:65%;">의미·풀이</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -335,9 +346,9 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 
       <!-- 3. Phase B -->
       <div style="font-size:12px;font-weight:700;color:#DB7E6A;margin-bottom:6px;">3. Phase B · Red Flag 판별 (Clinical Flagging)</div>
-      <table class="phase-tbl" style="margin-bottom:16px;">
+      <table class="phase-tbl dict-tbl" style="margin-bottom:16px;">
         <thead>
-          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+          <tr><th style="width:12%;">코드</th><th style="width:23%;">풀네임</th><th style="width:65%;">의미·풀이</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -355,9 +366,9 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 
       <!-- 4. Phase C -->
       <div style="font-size:12px;font-weight:700;color:#7DB0C7;margin-bottom:6px;">4. Phase C · 표준화 평가 채점 (Standardized Scoring)</div>
-      <table class="phase-tbl" style="margin-bottom:16px;">
+      <table class="phase-tbl dict-tbl" style="margin-bottom:16px;">
         <thead>
-          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+          <tr><th style="width:12%;">코드</th><th style="width:23%;">풀네임</th><th style="width:65%;">의미·풀이</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -375,9 +386,9 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 
       <!-- 5. Phase D -->
       <div style="font-size:12px;font-weight:700;color:#1B4F72;margin-bottom:6px;">5. Phase D · 종합 분석 (Integration)</div>
-      <table class="phase-tbl" style="margin-bottom:16px;">
+      <table class="phase-tbl dict-tbl" style="margin-bottom:16px;">
         <thead>
-          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+          <tr><th style="width:12%;">코드</th><th style="width:23%;">풀네임</th><th style="width:65%;">의미·풀이</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -390,9 +401,9 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 
       <!-- 6. Phase E -->
       <div style="font-size:12px;font-weight:700;color:#1565C0;margin-bottom:6px;">6. Phase E · 중재 계획 (Intervention Planning)</div>
-      <table class="phase-tbl" style="margin-bottom:16px;">
+      <table class="phase-tbl dict-tbl" style="margin-bottom:16px;">
         <thead>
-          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+          <tr><th style="width:12%;">코드</th><th style="width:23%;">풀네임</th><th style="width:65%;">의미·풀이</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -405,9 +416,9 @@ body { font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-se
 
       <!-- 7. Phase F -->
       <div style="font-size:12px;font-weight:700;color:#37474F;margin-bottom:6px;">7. Phase F · 다회기 비교 분석 (Multi-Session Comparative Analysis)</div>
-      <table class="phase-tbl">
+      <table class="phase-tbl dict-tbl">
         <thead>
-          <tr><th style="width:18%;">코드</th><th style="width:32%;">풀네임</th><th style="width:50%;">의미·풀이</th></tr>
+          <tr><th style="width:12%;">코드</th><th style="width:23%;">풀네임</th><th style="width:65%;">의미·풀이</th></tr>
         </thead>
         <tbody>
           <tr>
